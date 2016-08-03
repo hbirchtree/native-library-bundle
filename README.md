@@ -9,6 +9,7 @@ A repository containing pre-compiled libraries and their respective headers for 
 | **OpenSSL**     | Not yet ©     | Inc., shared      | Inc., shared           | Latest, shared      |
 | **glbinding**   | master        | master            | master                 | master              |
 | **assimp**      | master        | master            | master                 | master              |
+| **ffmpeg**      | master        | Inc., shared      | master                 | master              |
 
 *(Assume Android to include armeabi-v7a, arm64-v8a, x86, x86_64 and mips architectures)*
 
