@@ -2,18 +2,10 @@
 
 A repository containing pre-compiled libraries and their respective headers for use in various projects. The libraries are as follows per platform:
 
-## Android
- - SDL2 (2.0.4) (static)
- - OpenAL-Soft (1.1) (shared)
- - OpenSSL (static)
-
-## OS X/iOS
- - SDL2 (2.0.4) (static on iOS, shared on OS X)
- 
-## Linux/SteamOS
- - None (all dependencies are included in Steam RT :) )
-
-## Windows
- - SDL2 (2.0.4) (static)
- - OpenAL-Soft (1.1) (shared)
- - OpenSSL (???) (static)
+| Library     | Android       | Linux/SteamOS    | OSX / iOS              | Windows (win32) |
+|------------:|:-------------:|:----------------:|:----------------------:|:---------------:|
+| SDL2        | 2.0.4, static | Inc., shared     | 2.0.4, shared / static | 2.0.4, static   |
+| OpenAL-soft | 1.???, shared | Inc., shared     | Inc., shared           | 1.1, shared     |
+| OpenSSL     | Not yet       | Inc., shared     | Inc., shared           | Latest, shared  |
+| glbinding   | master        | master           | master                 | master          |
+| assimp      | master        | master           | master                 | master          |
