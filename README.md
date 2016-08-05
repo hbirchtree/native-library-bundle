@@ -6,11 +6,11 @@ A repository containing pre-compiled libraries and their respective headers for 
 |:----------------|--------------:|-------------:|--------------:|--------------:|--------------:|---------------:|---------------:|
 | **Variant**     |               | **SteamOS**  | **Linux**     | **OS X**      | **iOS**       | **Win32**      | **UWP**        |
 | **SDL2**        | 2.0.4, static | Inc., shared | 2.0.4, static | 2.0.4, shared | 2.0.4, static | 2.0.4, static  | 2.0.4, static  |
-| **OpenAL-soft** | 1.1, shared   | Inc., shared | master        | Inc., shared  | -             | 1.1, shared    | 1.1, shared    |
-| **OpenSSL**     | Not yet ©     | Inc., shared | master        | Inc., shared  | Inc., shared? | Latest, shared | Latest, shared |
-| **glbinding**   | -             | master       | master        | master        | -             | master         | master         |
-| **assimp**      | master        | master       | master        | master        | master        | master         | master         |
-| **ffmpeg**      | -             | Inc., shared | master        | master        | -             | master         | master         |
+| **OpenAL-soft** | 1.1, shared   | Inc., shared | master        | Inc., shared  | -             | 1.1, shared    | -              |
+| **OpenSSL**     | Not yet ©     | Inc., shared | master        | Inc., shared  | Inc., shared? | Latest, shared | -              |
+| **glbinding**   | -             | master       | master        | master        | -             | master         | -              |
+| **assimp**      | master        | master       | master        | master        | master        | master         | -              |
+| **ffmpeg**      | -             | Inc., shared | master        | master        | -             | master         | -              |
 
 *(Assume Android to include armeabi-v7a, arm64-v8a, x86, x86_64 and mips architectures)*
 
