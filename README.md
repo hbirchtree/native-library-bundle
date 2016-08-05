@@ -24,7 +24,7 @@ A repository containing pre-compiled libraries and their respective headers for 
 For most systems:
 
  - $SYSTEM_NAME (eg. SteamOS)
-   - common
+   - include
      - (header directory)
      - header.h
    - amd64
