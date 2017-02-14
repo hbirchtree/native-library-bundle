@@ -8,9 +8,19 @@ A repository containing pre-compiled libraries and their respective headers for 
 | **SDL2**     | 2.0.4, static | Inc., shared | 2.0.4, static | 2.0.4, shared | 2.0.4, static | 2.0.4, static  | 2.0.4, static  |
 | **OpenAL**   | 1.1, shared   | Inc., shared | master        | Inc., shared  | -             | 1.1, shared    | -              |
 | **OpenSSL**  | Not yet ©     | Inc., shared | master        | Inc., shared  | Inc., shared? | Latest, shared | -              |
-| **glbinding**| -             | master       | master        | master        | -             | master         | -              |
 | **assimp**   | master        | master       | master        | master        | master        | master         | -              |
 | **ffmpeg**   | -             | Inc., shared | master        | master        | -             | master         | -              |
+
+| **Library**  | **SDL2**      | **OpenAL**   | **OpenSSL**   | **assimp**    | **ffmpeg**    | **Bullet**   |
+|:-------------|--------------:|-------------:|--------------:|--------------:|--------------:|-------------:|
+|**Android**   | 2.0.4, static | 1.1, shared  | Not Yet ©     | master        | -             |              |
+|**Apple OS X**| 2.0.4, shared | Inc., shared | Inc., shared  | master        | master        |              |
+|**Apple iOS** | 2.0.4, static | -            | Inc., shared  | master        | -             |              |
+|**Emscripten**| 2.0.4, static |              |               |               |               |              |
+|**Linux**     |               |              |               |               |               |              |
+|**NaCL**      | 2.0.4, static | -            | -             | -             | -             |              |
+|**RaspPi**    | Inc., shared  | Inc., shared | Inc., shared  | -             |               |              |
+|**Windows**   |               |              |               |               |               |              |
 
 *(Assume Android to include armeabi-v7a, arm64-v8a, x86, x86_64 and mips architectures)*
 
