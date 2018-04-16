@@ -195,6 +195,7 @@ protected:
 	void emit_function(SPIRFunction &func, const Bitset &return_flags);
 
 	bool has_extension(const std::string &ext) const;
+	void require_extension_internal(const std::string &ext);
 
 	// Virtualize methods which need to be overridden by subclass targets like C++ and such.
 	virtual void emit_function_prototype(SPIRFunction &func, const Bitset &return_flags);
@@ -216,6 +217,7 @@ protected:
 	virtual void emit_header();
 	virtual void emit_sampled_image_op(uint32_t result_type, uint32_t result_id, uint32_t image_id, uint32_t samp_id);
 	virtual void emit_texture_op(const Instruction &i);
+	virtual void emit_subgroup_op(const Instruction &i);
 	virtual std::string type_to_glsl(const SPIRType &type, uint32_t id = 0);
 	virtual std::string builtin_to_glsl(spv::BuiltIn builtin, spv::StorageClass storage);
 	virtual void emit_struct_member(const SPIRType &type, uint32_t member_type_id, uint32_t index,
@@ -353,6 +355,7 @@ protected:
 		bool can_return_array = true;
 		bool allow_truncated_access_chain = false;
 		bool supports_extensions = false;
+		bool supports_empty_struct = false;
 	} backend;
 
 	void emit_struct(SPIRType &type);
@@ -562,6 +565,6 @@ private:
 		}
 	}
 };
-}
+} // namespace spirv_cross
 
 #endif

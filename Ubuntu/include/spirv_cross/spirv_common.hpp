@@ -92,7 +92,7 @@ void join_helper(std::ostringstream &stream, T &&t, Ts &&... ts)
 	stream << std::forward<T>(t);
 	join_helper(stream, std::forward<Ts>(ts)...);
 }
-}
+} // namespace inner
 
 class Bitset
 {
@@ -1185,6 +1185,7 @@ struct Meta
 	{
 		std::string alias;
 		std::string qualified_alias;
+		std::string hlsl_semantic;
 		Bitset decoration_flags;
 		spv::BuiltIn builtin_type;
 		uint32_t location = 0;
@@ -1195,6 +1196,7 @@ struct Meta
 		uint32_t matrix_stride = 0;
 		uint32_t input_attachment = 0;
 		uint32_t spec_id = 0;
+		uint32_t index = 0;
 		bool builtin = false;
 	};
 
@@ -1211,6 +1213,11 @@ struct Meta
 	// is not a valid identifier in any high-level language.
 	std::string hlsl_magic_counter_buffer_name;
 	bool hlsl_magic_counter_buffer_candidate = false;
+
+	// For SPV_GOOGLE_hlsl_functionality1, this avoids the workaround.
+	bool hlsl_is_magic_counter_buffer = false;
+	// ID for the sibling counter buffer.
+	uint32_t hlsl_magic_counter_buffer = 0;
 };
 
 // A user callback that remaps the type of any variable.
@@ -1256,6 +1263,6 @@ static inline bool type_is_floating_point(const SPIRType &type)
 {
 	return type.basetype == SPIRType::Half || type.basetype == SPIRType::Float || type.basetype == SPIRType::Double;
 }
-}
+} // namespace spirv_cross
 
 #endif
