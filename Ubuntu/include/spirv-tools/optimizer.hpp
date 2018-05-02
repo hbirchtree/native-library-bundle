@@ -24,6 +24,9 @@
 #include "libspirv.hpp"
 
 namespace spvtools {
+namespace opt {
+class Pass;
+}
 
 // C++ interface for SPIR-V optimization functionalities. It wraps the context
 // (including target environment and the corresponding SPIR-V grammar) and
@@ -38,6 +41,8 @@ class Optimizer {
   // only support move; copying is not allowed.
   struct PassToken {
     struct Impl;  // Opaque struct for holding inernal data.
+
+    static PassToken CreateWrap(std::unique_ptr<opt::Pass>&& pass);
 
     PassToken(std::unique_ptr<Impl>);
 
@@ -483,6 +488,14 @@ Optimizer::PassToken CreateLocalRedundancyEliminationPass();
 // the loops preheader.
 Optimizer::PassToken CreateLoopInvariantCodeMotionPass();
 
+// Creates a loop peeling pass.
+// This pass will look for conditions inside a loop that are true or false only
+// for the N first or last iteration. For loop with such condition, those N
+// iterations of the loop will be executed outside of the main loop.
+// To limit code size explosion, the loop peeling can only happen if the code
+// size growth for each loop is under |code_growth_threshold|.
+Optimizer::PassToken CreateLoopPeelingPass();
+
 // Creates a loop unswitch pass.
 // This pass will look for loop independent branch conditions and move the
 // condition out of the loop and version the loop based on the taken branch.
@@ -552,6 +565,13 @@ Optimizer::PassToken CreateSSARewritePass();
 // This pass looks to copy propagate memory references for arrays.  It looks
 // for specific code patterns to recognize array copies.
 Optimizer::PassToken CreateCopyPropagateArraysPass();
+
+// Create a vector dce pass.
+// This pass looks for components of vectors that are unused, and removes them
+// from the vector.  Note this would still leave around lots of dead code that
+// a pass of ADCE will be able to remove.
+Optimizer::PassToken CreateVectorDCEPass();
+
 }  // namespace spvtools
 
 #endif  // SPIRV_TOOLS_OPTIMIZER_HPP_
