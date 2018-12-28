@@ -1,0 +1,57 @@
+after_success:
+- toolchain/ci/travis-deploy.sh
+apt:
+  update: true
+before_script:
+- toolchain/ci/travis-deps.sh
+branches:
+  only:
+  - master
+  - testing
+compiles:
+- clang
+dist: trusty
+env:
+  global:
+  - MAKEFILE_DIR=toolchain/makers
+  - DEPENDENCIES=hbirchtree/coffeecutie%
+  - CONFIGURATION=Release
+  matrix:
+  - BUILDVARIANT=emscripten.asmjs
+  - BUILDVARIANT=emscripten.wasm
+  - BUILDVARIANT=fedora.amd64
+  - BUILDVARIANT=raspberry.armhf
+  - BUILDVARIANT=steam.amd64
+  - BUILDVARIANT=ubuntu.amd64
+  - BUILDVARIANT=ios.x86_64
+  - BUILDVARIANT=osx
+language: cpp
+matrix:
+  allow_failures: []
+  exclude:
+  - env: BUILDVARIANT=emscripten.asmjs
+    os: osx
+  - env: BUILDVARIANT=emscripten.wasm
+    os: osx
+  - env: BUILDVARIANT=fedora.amd64
+    os: osx
+  - env: BUILDVARIANT=raspberry.armhf
+    os: osx
+  - env: BUILDVARIANT=steam.amd64
+    os: osx
+  - env: BUILDVARIANT=ubuntu.amd64
+    os: osx
+  - env: BUILDVARIANT=ios.x86_64
+    os: linux
+  - env: BUILDVARIANT=osx
+    os: linux
+notifications:
+  email: true
+os:
+- linux
+- osx
+script:
+- toolchain/ci/travis-build.sh
+services:
+- docker
+sudo: required

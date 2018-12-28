@@ -1,0 +1,43 @@
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+102               ICON                    "icon.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+
+// From : http://stackoverflow.com/questions/16831866/how-to-add-version-details-to-exe-or-dll-through-cmake
+1 VERSIONINFO
+FILEFLAGSMASK 0x17L
+#ifdef _DEBUG
+FILEFLAGS 0x1L
+#else
+FILEFLAGS 0x0L
+#endif
+FILEOS 0x4L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+BLOCK "StringFileInfo"
+BEGIN
+BLOCK "040904E4"
+BEGIN
+VALUE "Comments", "@WINDOWS_APP_DESCRIPTION_LONG@\0"
+VALUE "CompanyName", "@WINDOWS_APP_COMPANY@\0"
+VALUE "FileDescription", "@WINDOWS_APP_DESCRIPTION@\0"
+VALUE "FileVersion", "@WINDOWS_APP_FILEVER@\0"
+VALUE "InternalName", "@WINDOWS_APP_INTERNALNAME@\0"
+VALUE "LegalCopyright", "@WINDOWS_APP_COPYRIGHT@\0"
+VALUE "OriginalFilename", "@WINDOWS_APP_EXECNAME@\0"
+VALUE "ProductName", "@WINDOWS_APP_TITLE@\0"
+VALUE "ProductVersion", "@WINDOWS_APP_VERSION@\0"
+END
+END
+BLOCK "VarFileInfo"
+BEGIN
+VALUE "Translation", 0x409, 1252
+END
+END

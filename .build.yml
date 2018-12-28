@@ -1,0 +1,47 @@
+branches:
+- build: true
+  deploy: true
+  name: master
+- build: true
+  name: testing
+coverage: false
+dependencies:
+  hbirchtree/coffeecutie: automated-release-4.3.1.1.0-30-g8b4c7ad
+display_name: Coffee Project
+makefile_location: toolchain/makers
+name: coffee_project
+platforms:
+  android:
+  - armv7a
+  - armv8a
+  - armv7a.kitkat
+  emscripten:
+  - asmjs
+  - wasm
+  fedora:
+  - amd64
+  maemo:
+  - armv7a
+  osx:
+  - osx
+  - ios.x86_64
+  raspberry:
+  - armhf
+  steam:
+  - amd64
+  ubuntu:
+  - amd64
+  - i686
+  - armhf
+  windows:
+  - win32
+  - uwp
+script_location: toolchain/ci
+template_location: toolchain/cmake/Templates
+version:
+  hotfix: 0
+  major: 0
+  minor: 0
+  patch: 0
+  release: 1
+versionprefix: automated-release-
