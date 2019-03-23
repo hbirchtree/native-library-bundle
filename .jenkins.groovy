@@ -1,6 +1,6 @@
-def linux_targets = ['ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'fedora.amd64', 'emscripten.wasm', 'emscripten.asmjs', ]
-def osx_targets = ['osx', 'ios.x86_64', ]
-def windows_targets = ['win32.amd64', 'uwp.amd64', ]
+def linux_targets = ['ubuntu.i686.gles2', 'ubuntu.i686.gles', 'ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'fedora.amd64', 'emscripten.wasm', 'android.armv8a.nougat.gles3', 'android.armv8a.lollipop.gles3', 'android.armv7a.nougat.gles3', 'android.armv7a.nougat.gles2', 'android.armv7a.lollipop.gles3', 'android.armv7a.kitkat.gles2', 'android.armv7a.gingerbread.gles2', ]
+def osx_targets = ['ios.x86_64', ]
+def windows_targets = ['win32.x86', 'win32.amd64', 'uwp.amd64', ]
 
 String linux_label = 'linux && docker'
 String osx_label = 'osx'
@@ -62,7 +62,7 @@ void GetBuildStep(job, srcDir, platform, targetLabel, target)
                     env('TRAVIS_OS_NAME', platform)
                     env('TRAVIS_BUILD_DIR', srcDir)
                     env('MAKEFILE_DIR', 'toolchain/makers')
-                    env('DEPENDENCIES', 'hbirchtree/coffeecutie%')
+                    env('DEPENDENCIES', '')
                     env('GITHUB_TOKEN', '${GH_API_TOKEN}')
                     env('MANUAL_DEPLOY', '1')
                     env('MANUAL_CONTEXT', 'continuous-integration/jenkins')
@@ -71,7 +71,7 @@ void GetBuildStep(job, srcDir, platform, targetLabel, target)
         }
     }else if(platform == 'windows')
     {
-        cmd = "powershell \"${srcDir}\\toolchain/ci\\appveyor-build.ps1\""
+        cmd = "powershell \"${srcDir}\toolchain\ci\appveyor-build.ps1\""
 
         job.with {
             steps {
@@ -80,7 +80,7 @@ void GetBuildStep(job, srcDir, platform, targetLabel, target)
                     env('BUILD_DIR', '${WORKSPACE}/build_' + target)
                     env('CMAKE_BIN', 'C:\\Program Files\\CMake\\bin\\cmake.exe')
                     env('MAKEFILE_DIR', 'toolchain/makers')
-                    env('DEPENDENCIES', 'hbirchtree/coffeecutie%')
+                    env('DEPENDENCIES', '')
                     env('GITHUB_TOKEN', '${GITHUB_TOKEN}')
                     env('BUILDVARIANT', target)
                     env('MANUAL_DEPLOY', '1')
@@ -99,7 +99,7 @@ void GetBuildStep(job, srcDir, platform, targetLabel, target)
 }
 
 linux_targets.each {
-    def j = job("coffee_project_${it}")
+    def j = job("Dependencies_${it}")
 
     def srcDir = '${WORKSPACE}'
 
@@ -108,7 +108,7 @@ linux_targets.each {
 }
 
 osx_targets.each {
-    def j = job("coffee_project_${it}")
+    def j = job("Dependencies_${it}")
 
     def srcDir = '${WORKSPACE}'
 
@@ -117,7 +117,7 @@ osx_targets.each {
 }
 
 windows_targets.each {
-    def j = job("coffee_project_${it}")
+    def j = job("Dependencies_${it}")
 
     def srcDir = '${WORKSPACE}'
 

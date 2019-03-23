@@ -8,7 +8,7 @@ branches:
   - testing
 build:
   parallel: true
-  project: coffee_project.sln
+  project: Dependencies.sln
   verbosity: minimal
 clone_script:
 - cmd: git clone -q --recursive --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git
@@ -21,7 +21,7 @@ deploy_script:
 environment:
   BUILD_DIR: C:\projects\%APPVEYOR_PROJECT_SLUG%
   CMAKE_BIN: cmake.exe
-  DEPENDENCIES: hbirchtree/coffeecutie;
+  DEPENDENCIES: ''
   DEPLOY_PATTERNS: ''
   GITHUB_TOKEN:
     secure: ''
@@ -32,6 +32,7 @@ environment:
   matrix:
   - BUILDVARIANT: uwp.amd64
   - BUILDVARIANT: win32.amd64
+  - BUILDVARIANT: win32.x86
 image:
 - Visual Studio 2015
 - Visual Studio 2017
