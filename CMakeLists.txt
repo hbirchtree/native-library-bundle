@@ -67,7 +67,7 @@ if(
                 )
             )
         AND (
-            ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64"
+            "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64"
             )
         )
     set ( BUILD_PLATFORM ON )
