@@ -43,10 +43,12 @@ if(EMSCRIPTEN)
 endif()
 
 if(APPLE)
-    set ( TOOLCHAIN_GENERATOR "Xcode" )
+    set ( TOOLCHAIN_GENERATOR "Unix Makefiles" )
 
     if(IOS)
         set ( TOOLCHAIN_OPTIONS
+            ${TOOLCHAIN_OPTIONS}
+
             -DIOS_PLATFORM=${IOS_PLATFORM}
             )
     endif()
