@@ -34,7 +34,10 @@ env:
   - BUILDVARIANT=osx
 language: cpp
 matrix:
-  allow_failures: []
+  allow_failures:
+  - env: BUILDVARIANT=raspberry.armhf
+  - env: BUILDVARIANT=ubuntu.i686.gles
+  - env: BUILDVARIANT=ubuntu.i686.gles2
   exclude:
   - env: BUILDVARIANT=android.armv7a.kitkat.gles2
     os: osx

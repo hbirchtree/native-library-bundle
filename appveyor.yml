@@ -39,7 +39,10 @@ image:
 install:
 - ps: toolchain\ci\appveyor-deps.ps1
 matrix:
-  allow_failures: []
+  allow_failures:
+  - BUILDVARIANT: raspberry.armhf
+  - BUILDVARIANT: ubuntu.i686.gles
+  - BUILDVARIANT: ubuntu.i686.gles2
   exclude:
   - BUILDVARIANT: uwp.amd64
     image: Visual Studio 2015

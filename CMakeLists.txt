@@ -5,7 +5,7 @@ include ( ExternalProject )
 
 set ( TOOLCHAIN_OPTIONS
     -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    -DCMAKE_BUILD_TYPE=Release
     )
 
 set ( TOOLCHAIN_GENERATOR "CodeBlocks - Ninja" )
@@ -29,11 +29,16 @@ if(ANDROID)
         )
 endif()
 
+if(APPLE)
+    set ( TOOLCHAIN_GENERATOR "Xcode" )
+endif()
+
 #
 # For libraries that are not going to be cross-compiled
 #
 set ( BUILD_PLATFORM OFF )
 
+message ( "${CMAKE_SYSTEM_NAME} + ${CMAKE_SYSTEM_PROCESSOR}" )
 if(
         (
             (
@@ -43,7 +48,7 @@ if(
                 )
             )
         AND (
-            ${CMAKE_SYSTEM} STREQUAL "x86_64"
+            ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64"
             )
         )
     set ( BUILD_PLATFORM ON )
@@ -155,10 +160,10 @@ endif()
 #
 # libsquish (doesn't cross-compile)
 #
-if(BUILD_PLATFORM)
-    ExternalProject_Add ( GLSLang
+if(BUILD_PLATFORM AND OFF)
+    ExternalProject_Add ( squish
 
-        PREFIX ${CMAKE_BINARY_DIR}/glslang
+        PREFIX ${CMAKE_BINARY_DIR}/squish
 
         SOURCE_DIR ${CMAKE_BINARY_DIR}/source/squish
         BINARY_DIR ${CMAKE_BINARY_DIR}/build/squish
@@ -243,6 +248,8 @@ if(BUILD_PLATFORM)
         CMAKE_ARGS
 
             ${TOOLCHAIN_OPTIONS}
+            -DCMAKE_C_COMPILER=gcc
+            -DCMAKE_CXX_COMPILER=g++
 
             -DCMAKE_CXX_FLAGS="-fPIC"
 

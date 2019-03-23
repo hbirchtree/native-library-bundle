@@ -1,3 +1,7 @@
+allow_fail:
+- env: BUILDVARIANT=raspberry.armhf
+- env: BUILDVARIANT=ubuntu.i686.gles
+- env: BUILDVARIANT=ubuntu.i686.gles2
 branches:
 - build: true
   deploy: true
