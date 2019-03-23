@@ -2,3 +2,4 @@
 .DS_Store
 .local.yml
 *.pyc
+multi_build
