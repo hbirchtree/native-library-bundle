@@ -17,7 +17,6 @@ env:
   - DEPENDENCIES=
   - CONFIGURATION=Release
   matrix:
-  - BUILDVARIANT=android.armv7a.gingerbread.gles2
   - BUILDVARIANT=android.armv7a.kitkat.gles2
   - BUILDVARIANT=android.armv7a.lollipop.gles3
   - BUILDVARIANT=android.armv7a.nougat.gles2
@@ -37,8 +36,6 @@ language: cpp
 matrix:
   allow_failures: []
   exclude:
-  - env: BUILDVARIANT=android.armv7a.gingerbread.gles2
-    os: osx
   - env: BUILDVARIANT=android.armv7a.kitkat.gles2
     os: osx
   - env: BUILDVARIANT=android.armv7a.lollipop.gles3

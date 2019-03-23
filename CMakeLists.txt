@@ -8,6 +8,27 @@ set ( TOOLCHAIN_OPTIONS
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     )
 
+set ( TOOLCHAIN_GENERATOR "CodeBlocks - Ninja" )
+
+if(ANDROID)
+    add_custom_target ( AndroidPackage ) # Dummy package to make CI happy
+#    set ( TOOLCHAIN_GENERATOR "Unix Makefiles" )
+
+    set ( TOOLCHAIN_OPTIONS
+        ${TOOLCHAIN_OPTIONS}
+
+        -DANDROID_SDK=${ANDROID_SDK}
+        -DANDROID_NDK=${ANDROID_NDK}
+
+        -DANDROID_ARM_NEON=${ANDROID_ARM_NEON}
+        -DANDROID_PLATFORM=${ANDROID_PLATFORM}
+        -DANDROID_CPP_FEATURES=${ANDROID_CPP_FEATURES}
+        -DANDROID_ABI=${ANDROID_ABI}
+        -DANDROID_STL=${ANDROID_STL}
+        -DANDROID_TOOLCHAIN=${ANDROID_TOOLCHAIN}
+        )
+endif()
+
 #
 # For libraries that are not going to be cross-compiled
 #
@@ -30,8 +51,9 @@ endif()
 
 #
 # OpenAL-soft
+# For now, OpenAL is not cross-compiler friendly >:(
 #
-if(ANDROID)
+if(OFF)
     ExternalProject_Add ( OpenALSoft
 
         PREFIX ${CMAKE_BINARY_DIR}/openal
@@ -43,7 +65,7 @@ if(ANDROID)
         GIT_REPOSITORY https://github.com/kcat/openal-soft.git
         GIT_TAG openal-soft-1.19.1
 
-        CMAKE_GENERATOR "Ninja"
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         CMAKE_ARGS
 
@@ -53,6 +75,11 @@ if(ANDROID)
             -DALSOFT_EXAMPLES=OFF
             -DALSOFT_TESTS=OFF
             -DALSOFT_NO_CONFIG_UTIL=ON
+
+            -DALSOFT_HRTF_DEFS=OFF
+            -DALSOFT_AMBDEC_PRESETS=OFF
+            -DALSOFT_CONFIG=OFF
+            -DALSOFT_EMBED_HRTF_DATA=OFF
 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/openal
         )
@@ -71,7 +98,7 @@ ExternalProject_Add ( Bullet
 
     GIT_REPOSITORY https://github.com/bulletphysics/bullet3.git
 
-    CMAKE_GENERATOR "Ninja"
+    CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
     CMAKE_ARGS
 
@@ -101,7 +128,7 @@ if(BUILD_PLATFORM)
 
         GIT_REPOSITORY https://github.com/assimp/assimp.git
 
-        CMAKE_GENERATOR "Ninja"
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         CMAKE_ARGS
 
@@ -158,7 +185,7 @@ if(BUILD_PLATFORM)
 
         GIT_REPOSITORY https://github.com/KhronosGroup/glslang.git
 
-        CMAKE_GENERATOR "Ninja"
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         CMAKE_ARGS
 
@@ -184,7 +211,7 @@ if(BUILD_PLATFORM)
 
         GIT_REPOSITORY https://github.com/hbirchtree/shaderc.git
 
-        CMAKE_GENERATOR "Ninja"
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         CMAKE_ARGS
 
@@ -211,7 +238,7 @@ if(BUILD_PLATFORM)
 
         GIT_REPOSITORY https://github.com/hbirchtree/SPIRV-Cross.git
 
-        CMAKE_GENERATOR "Ninja"
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         CMAKE_ARGS
 

@@ -10,8 +10,13 @@ makefile_location: toolchain/makers
 name: CoffeeDependencies
 platforms:
   android:
-  - armv7a
-  - armv8a
+    armv7a:
+    - nougat
+    - lollipop
+    - kitkat
+    armv8a:
+    - nougat
+    - lollipop
   emscripten:
   - wasm
   fedora:

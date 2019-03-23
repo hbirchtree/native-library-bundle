@@ -41,6 +41,10 @@ macro( GENERATE_FINDSCRIPT )
 
     get_property( COMP_DEFS_RAW DIRECTORY . PROPERTY COMPILE_DEFINITIONS )
 
+    if ( "${LIBRARY_DEFINITIONS}" STREQUAL "" )
+        return()
+    endif()
+
     set ( CONFIG_H "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Def.h" )
     file ( WRITE "${CONFIG_H}" "#pragma once\n\n" )
     foreach ( DEF ${COMP_DEFS_RAW} )

@@ -1,4 +1,4 @@
-def linux_targets = ['ubuntu.i686.gles2', 'ubuntu.i686.gles', 'ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'fedora.amd64', 'emscripten.wasm', 'android.armv8a.nougat.gles3', 'android.armv8a.lollipop.gles3', 'android.armv7a.nougat.gles3', 'android.armv7a.nougat.gles2', 'android.armv7a.lollipop.gles3', 'android.armv7a.kitkat.gles2', 'android.armv7a.gingerbread.gles2', ]
+def linux_targets = ['ubuntu.i686.gles2', 'ubuntu.i686.gles', 'ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'fedora.amd64', 'emscripten.wasm', 'android.armv8a.nougat.gles3', 'android.armv8a.lollipop.gles3', 'android.armv7a.nougat.gles3', 'android.armv7a.nougat.gles2', 'android.armv7a.lollipop.gles3', 'android.armv7a.kitkat.gles2', ]
 def osx_targets = ['osx', 'ios.x86_64', ]
 def windows_targets = ['win32.x86', 'win32.amd64', 'uwp.amd64', ]
 
