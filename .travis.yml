@@ -32,6 +32,7 @@ env:
   - BUILDVARIANT=ubuntu.i686.gles
   - BUILDVARIANT=ubuntu.i686.gles2
   - BUILDVARIANT=ios.x86_64
+  - BUILDVARIANT=osx
 language: cpp
 matrix:
   allow_failures: []
@@ -65,6 +66,8 @@ matrix:
   - env: BUILDVARIANT=ubuntu.i686.gles2
     os: osx
   - env: BUILDVARIANT=ios.x86_64
+    os: linux
+  - env: BUILDVARIANT=osx
     os: linux
 notifications:
   email: true

@@ -31,7 +31,7 @@ endif()
 #
 # OpenAL-soft
 #
-if(NOT EMSCRIPTEN)
+if(ANDROID)
     ExternalProject_Add ( OpenALSoft
 
         PREFIX ${CMAKE_BINARY_DIR}/openal
