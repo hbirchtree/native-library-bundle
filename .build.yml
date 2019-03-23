@@ -7,7 +7,7 @@ branches:
 coverage: false
 display_name: Coffee Dependencies
 makefile_location: toolchain/makers
-name: Dependencies
+name: CoffeeDependencies
 platforms:
   android:
   - armv7a

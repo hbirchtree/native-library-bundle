@@ -8,7 +8,7 @@ branches:
   - testing
 build:
   parallel: true
-  project: Dependencies.sln
+  project: CoffeeDependencies.sln
   verbosity: minimal
 clone_script:
 - cmd: git clone -q --recursive --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git

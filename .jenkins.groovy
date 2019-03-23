@@ -99,7 +99,7 @@ void GetBuildStep(job, srcDir, platform, targetLabel, target)
 }
 
 linux_targets.each {
-    def j = job("Dependencies_${it}")
+    def j = job("CoffeeDependencies_${it}")
 
     def srcDir = '${WORKSPACE}'
 
@@ -108,7 +108,7 @@ linux_targets.each {
 }
 
 osx_targets.each {
-    def j = job("Dependencies_${it}")
+    def j = job("CoffeeDependencies_${it}")
 
     def srcDir = '${WORKSPACE}'
 
@@ -117,7 +117,7 @@ osx_targets.each {
 }
 
 windows_targets.each {
-    def j = job("Dependencies_${it}")
+    def j = job("CoffeeDependencies_${it}")
 
     def srcDir = '${WORKSPACE}'
 
