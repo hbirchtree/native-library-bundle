@@ -10,9 +10,11 @@ set ( TOOLCHAIN_OPTIONS
 
 set ( TOOLCHAIN_GENERATOR "CodeBlocks - Ninja" )
 
+#
+# We set up some toolchain-specific options
+#
 if(ANDROID)
     add_custom_target ( AndroidPackage ) # Dummy package to make CI happy
-#    set ( TOOLCHAIN_GENERATOR "Unix Makefiles" )
 
     set ( TOOLCHAIN_OPTIONS
         ${TOOLCHAIN_OPTIONS}
@@ -29,8 +31,25 @@ if(ANDROID)
         )
 endif()
 
+if(EMSCRIPTEN)
+    set ( TOOLCHAIN_GENERATOR "Unix Makefiles" )
+
+    set ( TOOLCHAIN_OPTIONS
+        ${TOOLCHAIN_OPTIONS}
+
+        -DEMSCRIPTEN_ROOT_PATH=${EMSCRIPTEN_ROOT_PATH}
+        -DGENERATE_WASM=${GENERATE_WASM}
+        )
+endif()
+
 if(APPLE)
     set ( TOOLCHAIN_GENERATOR "Xcode" )
+
+    if(IOS)
+        set ( TOOLCHAIN_OPTIONS
+            -DIOS_PLATFORM=${IOS_PLATFORM}
+            )
+    endif()
 endif()
 
 #
