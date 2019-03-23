@@ -56,16 +56,16 @@ endif()
 
 #
 # For libraries that are not going to be cross-compiled
+# This applies to texture compressors, shader compilers and preprocessing models
 #
 set ( BUILD_PLATFORM OFF )
 
-message ( "${CMAKE_SYSTEM_NAME} + ${CMAKE_SYSTEM_PROCESSOR}" )
 if(
         (
             (
-                ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR
-                (APPLE AND NOT IOS) OR
-                WIN32
+                "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux"
+                OR (APPLE AND NOT IOS)
+#                OR WIN32 # Not tested
                 )
             )
         AND (
