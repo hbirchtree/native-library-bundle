@@ -10,6 +10,8 @@ set ( TOOLCHAIN_OPTIONS
 
 set ( TOOLCHAIN_GENERATOR "CodeBlocks - Ninja" )
 
+set ( BUILD_PIC "ON" )
+
 #
 # We set up some toolchain-specific options
 #
@@ -112,6 +114,43 @@ if(OFF)
 endif()
 
 #
+# SDL2
+#
+if(ANDROID)
+    ExternalProject_Add ( SDL2
+
+        PREFIX ${CMAKE_BINARY_DIR}/sdl2
+
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/sdl2
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/sdl2
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/sdl2
+
+        HG_REPOSITORY https://hg.libsdl.org/SDL
+        HG_TAG release-2.0.9
+
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
+
+        CMAKE_ARGS
+
+            ${TOOLCHAIN_OPTIONS}
+
+            -DSDL_ATOMIC=OFF
+            -DSDL_AUDIO=OFF
+            -DSDL_THREADS=OFF
+            -DSDL_TIMERS=OFF
+            -DSDL_FILE=OFF
+            -DSDL_CPUINFO=OFF
+            -DSDL_FILESYSTEM=OFF
+            -DSDL_SENSOR=OFF
+            -DSDL_SHARED=OFF
+            -DSDL_STATIC_PIC=${BUILD_PIC}
+
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/sdl2
+        )
+endif()
+
+#
 # Bullet
 #
 ExternalProject_Add ( Bullet
@@ -181,19 +220,27 @@ endif()
 #
 # libsquish (doesn't cross-compile)
 #
-if(BUILD_PLATFORM AND OFF)
+if(BUILD_PLATFORM)
     ExternalProject_Add ( squish
 
         PREFIX ${CMAKE_BINARY_DIR}/squish
 
+        # libsquish doesn't support out-of-source compilation, bleh
         SOURCE_DIR ${CMAKE_BINARY_DIR}/source/squish
-        BINARY_DIR ${CMAKE_BINARY_DIR}/build/squish
+        BINARY_DIR ${CMAKE_BINARY_DIR}/source/squish
 
         GIT_REPOSITORY https://github.com/Cavewhere/squish.git
 
         CONFIGURE_COMMAND true
 
-        BUILD_COMMAND make -f ${CMAKE_BINARY_DIR}/source/squish/Makefile install
+        BUILD_COMMAND
+            make
+                -f ${CMAKE_BINARY_DIR}/source/squish/Makefile
+
+                install
+                -e INSTALL_DIR=${CMAKE_BINARY_DIR}/build/squish
+
+        INSTALL_COMMAND true
         )
 endif()
 
