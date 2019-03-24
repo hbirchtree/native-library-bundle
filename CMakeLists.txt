@@ -228,17 +228,20 @@ if(BUILD_PLATFORM)
         # libsquish doesn't support out-of-source compilation, bleh
         SOURCE_DIR ${CMAKE_BINARY_DIR}/source/squish
         BINARY_DIR ${CMAKE_BINARY_DIR}/source/squish
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/squish
 
         GIT_REPOSITORY https://github.com/Cavewhere/squish.git
 
-        CONFIGURE_COMMAND true
+        CONFIGURE_COMMAND
+            ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/lib
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/include
 
         BUILD_COMMAND
             make
                 -f ${CMAKE_BINARY_DIR}/source/squish/Makefile
 
                 install
-                -e INSTALL_DIR=${CMAKE_BINARY_DIR}/build/squish
+                -e INSTALL_DIR=${CMAKE_BINARY_DIR}/install/squish
 
         INSTALL_COMMAND true
         )
@@ -326,6 +329,6 @@ if(BUILD_PLATFORM)
 endif()
 
 install (
-    DIRECTORY ${CMAKE_BINARY_DIR}/install
+    FILES ${CMAKE_BINARY_DIR}/CMakeCache.txt
     DESTINATION libs
     )
