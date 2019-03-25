@@ -1,4 +1,4 @@
-project ( native-libs )
+project ( native-libs C CXX ASM )
 cmake_minimum_required(VERSION 3.1)
 
 include ( ExternalProject )
@@ -6,6 +6,7 @@ include ( ExternalProject )
 set ( TOOLCHAIN_OPTIONS
     -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
     -DCMAKE_BUILD_TYPE=Release
+    -DBUILD_SHARED_LIBS=OFF
     )
 
 set ( TOOLCHAIN_GENERATOR "CodeBlocks - Ninja" )
@@ -162,6 +163,7 @@ ExternalProject_Add ( Bullet
     INSTALL_DIR ${CMAKE_BINARY_DIR}/install/bullet
 
     GIT_REPOSITORY https://github.com/bulletphysics/bullet3.git
+    GIT_TAG 2.88
 
     CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -182,40 +184,39 @@ ExternalProject_Add ( Bullet
 #
 # Building Assimp
 #
-if(BUILD_PLATFORM)
-    ExternalProject_Add ( Assimp
+ExternalProject_Add ( Assimp
 
-        PREFIX ${CMAKE_BINARY_DIR}/assimp
+    PREFIX ${CMAKE_BINARY_DIR}/assimp
 
-        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/assimp
-        BINARY_DIR ${CMAKE_BINARY_DIR}/build/assimp
-        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/assimp
+    SOURCE_DIR ${CMAKE_BINARY_DIR}/source/assimp
+    BINARY_DIR ${CMAKE_BINARY_DIR}/build/assimp
+    INSTALL_DIR ${CMAKE_BINARY_DIR}/install/assimp
 
-        GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG v4.1.0
 
-        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
+    CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
-        CMAKE_ARGS
+    CMAKE_ARGS
 
-            ${TOOLCHAIN_OPTIONS}
+        ${TOOLCHAIN_OPTIONS}
 
-            -DBUILD_SHARED_LIBS=OFF
-            -DBUILD_TESTING=OFF
-            -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
-            -DASSIMP_BUILD_TESTS=OFF
+        -DBUILD_SHARED_LIBS=OFF
+        -DBUILD_TESTING=OFF
+        -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
+        -DASSIMP_BUILD_TESTS=OFF
 
-            -DASSIMP_BUILD_ZLIB=ON
+        -DASSIMP_BUILD_ZLIB=ON
 
-            -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF
-            -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF
+        -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF
+        -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF
 
-            -DASSIMP_BUILD_BLEND_IMPORTER=ON
-            -DASSIMP_BUILD_COLLADA_IMPORTER=ON
-            -DASSIMP_BUILD_FBX_IMPORTER=ON
+        -DASSIMP_BUILD_BLEND_IMPORTER=ON
+        -DASSIMP_BUILD_COLLADA_IMPORTER=ON
+        -DASSIMP_BUILD_FBX_IMPORTER=ON
 
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/assimp
-        )
-endif()
+        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/assimp
+    )
 
 #
 # libsquish (doesn't cross-compile)
@@ -237,13 +238,14 @@ if(BUILD_PLATFORM)
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/include
 
         BUILD_COMMAND
-            make
+            COMMAND make
                 -f ${CMAKE_BINARY_DIR}/source/squish/Makefile
 
                 install
                 -e INSTALL_DIR=${CMAKE_BINARY_DIR}/install/squish
+            COMMAND make clean
 
-        INSTALL_COMMAND true
+        INSTALL_COMMAND make clean
         )
 endif()
 
@@ -327,6 +329,63 @@ if(BUILD_PLATFORM)
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/spirvcross
         )
 endif()
+
+#
+# FFMPEG
+# Doesn't support cross-compiling for now
+#
+if(BUILD_PLATFORM)
+    set ( FFMPEG_OPTS
+        --disable-x86asm
+        )
+else()
+    set ( FFMPEG_OPTS
+        --enable-cross-compile
+
+        --cc=${CMAKE_C_COMPILER}
+        --cxx=${CMAKE_CXX_COMPILER}
+        --nm=${CMAKE_NM}
+        --ar=${CMAKE_AR}
+        --as=${CMAKE_ASM_COMPILER}
+        --ld=${CMAKE_LINKER}
+        --ranlib=${CMAKE_RANLIB}
+        --strip=${CMAKE_STRIP}
+        )
+endif()
+ExternalProject_Add ( FFMPEG
+
+    PREFIX ${CMAKE_BINARY_DIR}/ffmpeg
+
+    SOURCE_DIR ${CMAKE_BINARY_DIR}/source/ffmpeg
+    BINARY_DIR ${CMAKE_BINARY_DIR}/build/ffmpeg
+    INSTALL_DIR ${CMAKE_BINARY_DIR}/install/ffmpeg
+
+    GIT_REPOSITORY https://git.ffmpeg.org/ffmpeg.git
+    GIT_TAG n4.1.2
+
+    CONFIGURE_COMMAND
+        ${CMAKE_BINARY_DIR}/source/ffmpeg/configure
+
+            --disable-protocols
+            --disable-devices
+            --disable-outdevs
+            --disable-bsfs
+            --disable-filters
+            --disable-network
+
+            --disable-programs
+            --disable-doc
+
+            ${FFMPEG_OPTS}
+
+            --enable-pic
+            --prefix=${CMAKE_BINARY_DIR}/install/ffmpeg
+
+    BUILD_COMMAND
+        make -j8 install
+
+    INSTALL_COMMAND true
+    )
 
 install (
     FILES ${CMAKE_BINARY_DIR}/CMakeCache.txt

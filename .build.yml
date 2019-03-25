@@ -27,6 +27,8 @@ platforms:
   - amd64
   ios:
   - x86_64
+  mingw:
+  - .
   osx:
   - .
   raspberry:
@@ -48,5 +50,5 @@ version:
   major: 0
   minor: 1
   patch: 0
-  release: 4
+  release: 5
 versionprefix: rel-

@@ -25,6 +25,7 @@ env:
   - BUILDVARIANT=android.armv8a.nougat.gles3
   - BUILDVARIANT=emscripten.wasm
   - BUILDVARIANT=fedora.amd64
+  - BUILDVARIANT=mingw.w64
   - BUILDVARIANT=raspberry.armhf
   - BUILDVARIANT=steam.amd64
   - BUILDVARIANT=ubuntu.amd64
@@ -54,6 +55,8 @@ matrix:
   - env: BUILDVARIANT=emscripten.wasm
     os: osx
   - env: BUILDVARIANT=fedora.amd64
+    os: osx
+  - env: BUILDVARIANT=mingw.w64
     os: osx
   - env: BUILDVARIANT=raspberry.armhf
     os: osx
