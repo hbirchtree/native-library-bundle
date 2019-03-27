@@ -13,6 +13,12 @@ set ( TOOLCHAIN_GENERATOR "CodeBlocks - Ninja" )
 
 set ( BUILD_PIC "ON" )
 
+set ( LINUX OFF )
+
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+    set ( LINUX ON )
+endif()
+
 #
 # We set up some toolchain-specific options
 #
@@ -66,7 +72,7 @@ set ( BUILD_PLATFORM OFF )
 if(
         (
             (
-                "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux"
+                LINUX
                 OR (APPLE AND NOT IOS)
 #                OR WIN32 # Not tested
                 )
@@ -180,6 +186,117 @@ ExternalProject_Add ( Bullet
 
         -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/bullet
     )
+
+#
+# OpenSSL, a real bastard to compile
+#
+if(ANDROID AND OPENSSL_BUILD)
+    ExternalProject_Add ( OpenSSL
+
+        PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+        URL https://github.com/paulo-raca/android-openssl/archive/master.zip
+
+        PATCH_COMMAND
+            COMMAND patch
+                -p0
+                -i ${CMAKE_SOURCE_DIR}/patches/android-openssl.patch
+            COMMAND env
+
+        CONFIGURE_COMMAND true
+
+        BUILD_COMMAND
+            ${CMAKE_COMMAND} -E env
+
+                ANDROID_NDK_ROOT=${ANDROID_NDK}
+
+                ${CMAKE_BINARY_DIR}/source/openssl/build-all-arch.sh
+                    1.0.2r
+                    ${ANDROID_ABI}
+#                    ${CMAKE_EXE_LINKER_FLAGS}
+
+        INSTALL_COMMAND true
+        )
+#    ExternalProject_Add ( OpenSSL
+
+#        PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+#        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+#        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+#        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+#        GIT_REPOSITORY https://github.com/openssl/openssl.git
+#        GIT_TAG OpenSSL_1_1_1b
+
+#        CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
+#            --prefix=${CMAKE_BINARY_DIR}/install/openssl
+#            no-shared
+
+#        BUILD_COMMAND make
+
+#        INSTALL_COMMAND make install
+#        )
+
+elseif(APPLE AND IOS) # Just in case
+    set ( OPENSSL_PLATFORM ios64-cross )
+    set ( OPENSSL_ARCH arm64 )
+
+    ExternalProject_Add ( OpenSSL
+
+        PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+        GIT_REPOSITORY https://github.com/openssl/openssl.git
+        GIT_TAG OpenSSL_1_0_2r
+
+        CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/Configure
+
+            ${OPENSSL_PLATFORM}
+            "-arch ${OPENSSL_ARCH} -fembed-bitcode"
+            no-asm
+            no-ssl3
+            no-comp
+            no-hw
+            no-engine
+            no-async
+
+            --prefix=${CMAKE_BINARY_DIR}/install/openssl
+            no-shared
+
+        BUILD_COMMAND make
+
+        INSTALL_COMMAND make install_sw
+        )
+elseif(LINUX OR APPLE)
+    ExternalProject_Add ( OpenSSL
+
+        PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+        GIT_REPOSITORY https://github.com/openssl/openssl.git
+        GIT_TAG OpenSSL_1_1_1b
+
+        CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
+            --prefix=${CMAKE_BINARY_DIR}/install/openssl
+            no-shared
+
+        BUILD_COMMAND make
+
+        INSTALL_COMMAND make install
+        )
+elseif(WIN32)
+
+endif()
 
 #
 # Building Assimp
@@ -352,40 +469,43 @@ else()
         --strip=${CMAKE_STRIP}
         )
 endif()
-ExternalProject_Add ( FFMPEG
 
-    PREFIX ${CMAKE_BINARY_DIR}/ffmpeg
+if(BUILD_PLATFORM)
+    ExternalProject_Add ( FFMPEG
 
-    SOURCE_DIR ${CMAKE_BINARY_DIR}/source/ffmpeg
-    BINARY_DIR ${CMAKE_BINARY_DIR}/build/ffmpeg
-    INSTALL_DIR ${CMAKE_BINARY_DIR}/install/ffmpeg
+        PREFIX ${CMAKE_BINARY_DIR}/ffmpeg
 
-    GIT_REPOSITORY https://git.ffmpeg.org/ffmpeg.git
-    GIT_TAG n4.1.2
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/ffmpeg
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/ffmpeg
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/ffmpeg
 
-    CONFIGURE_COMMAND
-        ${CMAKE_BINARY_DIR}/source/ffmpeg/configure
+        GIT_REPOSITORY https://git.ffmpeg.org/ffmpeg.git
+        GIT_TAG n4.1.2
 
-            --disable-protocols
-            --disable-devices
-            --disable-outdevs
-            --disable-bsfs
-            --disable-filters
-            --disable-network
+        CONFIGURE_COMMAND
+            ${CMAKE_BINARY_DIR}/source/ffmpeg/configure
 
-            --disable-programs
-            --disable-doc
+                --disable-protocols
+                --disable-devices
+                --disable-outdevs
+                --disable-bsfs
+                --disable-filters
+                --disable-network
 
-            ${FFMPEG_OPTS}
+                --disable-programs
+                --disable-doc
 
-            --enable-pic
-            --prefix=${CMAKE_BINARY_DIR}/install/ffmpeg
+                ${FFMPEG_OPTS}
 
-    BUILD_COMMAND
-        make -j8 install
+                --enable-pic
+                --prefix=${CMAKE_BINARY_DIR}/install/ffmpeg
 
-    INSTALL_COMMAND true
-    )
+        BUILD_COMMAND
+            make -j8 install
+
+        INSTALL_COMMAND true
+        )
+endif()
 
 install (
     FILES ${CMAKE_BINARY_DIR}/CMakeCache.txt

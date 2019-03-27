@@ -1,0 +1,62 @@
+diff --git build-all-arch.sh build-all-arch.sh
+index fdd51f8..8e0811d 100755
+--- build-all-arch.sh
++++ build-all-arch.sh
+@@ -3,7 +3,7 @@
+ # http://wiki.openssl.org/index.php/Android
+ #
+ 
+-OPENSSL_VERSION=1.0.2j
++OPENSSL_VERSION=$1
+ 
+ if [ ! -d openssl-$OPENSSL_VERSION ]; then
+     if [ ! -f openssl-$OPENSSL_VERSION.tar.gz ]; then
+@@ -16,7 +16,7 @@ set -e
+ rm -rf prebuilt
+ mkdir prebuilt
+ 
+-archs=(armeabi armeabi-v7a arm64-v8a mips mips64 x86 x86_64)
++archs=($2)
+ 
+ for arch in ${archs[@]}; do
+     xLIB="/lib"
+@@ -65,7 +65,7 @@ for arch in ${archs[@]}; do
+ 
+     mkdir prebuilt/${arch}
+ 
+-    . ./setenv-android-mod.sh
++    . $(dirname $0)/setenv-android-mod.sh
+ 
+     echo "CROSS COMPILE ENV : $CROSS_COMPILE"
+     cd openssl-$OPENSSL_VERSION
+@@ -73,7 +73,7 @@ for arch in ${archs[@]}; do
+     xCFLAGS="-DSHARED_EXTENSION=.so -fPIC -DOPENSSL_PIC -DDSO_DLFCN -DHAVE_DLFCN_H -mandroid -I$ANDROID_DEV/include -B$ANDROID_DEV/$xLIB -O3 -fomit-frame-pointer -Wall"
+ 
+     perl -pi -e 's/install: all install_docs install_sw/install: install_docs install_sw/g' Makefile.org
+-    ./Configure shared no-threads no-asm no-zlib no-ssl2 no-ssl3 no-comp no-hw no-engine --openssldir=/usr/local/ssl/android-19/ $configure_platform $xCFLAGS
++    ./Configure no-shared no-threads no-asm no-zlib no-ssl2 no-ssl3 no-comp no-hw no-engine --openssldir=/usr/local/ssl/android-19/ $configure_platform $xCFLAGS ${@:3}
+ 
+     # patch SONAME
+ 
+@@ -86,7 +86,7 @@ for arch in ${archs[@]}; do
+     make depend
+     make all
+ 
+-    for file in libcrypto.so libssl.so libcrypto.a libssl.a; do
++    for file in libcrypto.a libssl.a; do
+         file "$file"
+         cp "$file" "../prebuilt/$arch/$file"
+     done
+diff --git setenv-android-mod.sh setenv-android-mod.sh
+index af84065..c51d235 100755
+--- setenv-android-mod.sh
++++ setenv-android-mod.sh
+@@ -37,7 +37,7 @@ _ANDROID_NDK="android-ndk-r10d"
+ # This value is always used.
+ # _ANDROID_API="android-14"
+ #_ANDROID_API="android-18"
+-_ANDROID_API="android-21"
++_ANDROID_API="android-21"
+ 
+ #####################################################################
+ 
