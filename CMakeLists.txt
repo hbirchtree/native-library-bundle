@@ -244,6 +244,23 @@ if(ANDROID AND OPENSSL_BUILD)
 elseif(APPLE AND IOS) # Just in case
     set ( OPENSSL_PLATFORM ios64-cross )
     set ( OPENSSL_ARCH arm64 )
+    set ( OPENSSL_SDK iPhoneOS )
+
+    if("${IOS_PLATFORM}" STREQUAL "SIMULATOR64")
+        set ( OPENSSL_PLATFORM ios64sim-cross )
+        set ( OPENSSL_ARCH x86_64 )
+        set ( OPENSSL_SDK iPhoneSimulator )
+    endif()
+
+    execute_process ( 
+        COMMAND xcode-select --print-path
+        OUTPUT_VARIABLE OPENSSL_XCODE_PATH
+        )
+
+    string ( REPLACE "\n" "" OPENSSL_XCODE_PATH "${OPENSSL_XCODE_PATH}" )
+
+    set ( OPENSSL_TOP "${OPENSSL_XCODE_PATH}/Platforms/${OPENSSL_SDK}.platform/Developer" )
+    set ( OPENSSL_TOOLCHAIN "${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/" )
 
     ExternalProject_Add ( OpenSSL
 
@@ -254,25 +271,48 @@ elseif(APPLE AND IOS) # Just in case
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
 
         GIT_REPOSITORY https://github.com/openssl/openssl.git
-        GIT_TAG OpenSSL_1_0_2r
+        GIT_TAG OpenSSL_1_1_1b
 
-        CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/Configure
+        PATCH_COMMAND ${GIT_COMMAND} apply ${CMAKE_SOURCE_DIR}/patches/ios-openssl.patch
 
-            ${OPENSSL_PLATFORM}
-            "-arch ${OPENSSL_ARCH} -fembed-bitcode"
-            no-asm
-            no-ssl3
-            no-comp
-            no-hw
-            no-engine
-            no-async
+        CONFIGURE_COMMAND 
+            ${CMAKE_COMMAND} -E env
 
-            --prefix=${CMAKE_BINARY_DIR}/install/openssl
-            no-shared
+            CROSS_COMPILE="${OPENSSL_TOOLCHAIN}"
+            CROSS_SDK=${OPENSSL_SDK}.sdk
+            CROSS_TOP=${OPENSSL_TOP}
+       
+            ${CMAKE_BINARY_DIR}/source/openssl/Configure
 
-        BUILD_COMMAND make
+                ${OPENSSL_PLATFORM}
+                "-arch ${OPENSSL_ARCH} -fembed-bitcode"
+                no-asm
+                no-ssl3
+                no-comp
+                no-hw
+                no-engine
+                no-async
 
-        INSTALL_COMMAND make install_sw
+                --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                no-shared
+
+        BUILD_COMMAND
+            ${CMAKE_COMMAND} -E env
+
+            CROSS_COMPILE="${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/"
+            CROSS_SDK=${OPENSSL_SDK}.sdk
+            CROSS_TOP=${OPENSSL_TOP}
+       
+            make
+
+        INSTALL_COMMAND 
+            ${CMAKE_COMMAND} -E env
+
+            CROSS_COMPILE="${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/"
+            CROSS_SDK=${OPENSSL_SDK}.sdk
+            CROSS_TOP=${OPENSSL_TOP}
+
+            make install_sw
         )
 elseif(LINUX OR APPLE)
     ExternalProject_Add ( OpenSSL
