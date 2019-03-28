@@ -273,7 +273,7 @@ elseif(APPLE AND IOS) # Just in case
         GIT_REPOSITORY https://github.com/openssl/openssl.git
         GIT_TAG OpenSSL_1_1_1b
 
-        PATCH_COMMAND ${GIT_COMMAND} apply ${CMAKE_SOURCE_DIR}/patches/ios-openssl.patch
+        PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/ios-openssl.patch
 
         CONFIGURE_COMMAND 
             ${CMAKE_COMMAND} -E env
