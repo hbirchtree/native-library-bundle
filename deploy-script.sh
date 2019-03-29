@@ -1,16 +1,17 @@
-ASSETS=(openal bullet assimp squish glslang shaderc spirvcross sdl2)
+ASSETS=(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl)
 
 INSTALL_BASE_DIR=$BUILD_DIR/$BUILDVARIANT/install
 
 for a in ${ASSETS[@]}; do
-    ASSET="${a}_${BUILDVARIANT}.tar.gz"
+    ASSET="${PWD}/${a}_${BUILDVARIANT}.tar.gz"
 
     if [[ ! -d "$INSTALL_BASE_DIR/$a" ]]; then
         continue
     fi
 
-    tar -zcvf "$ASSET" -C $INSTALL_BASE_DIR/$a \
-        $INSTALL_BASE_DIR/$a
+    pushd $INSTALL_BASE_DIR/$a
+    tar -zcvf "$ASSET" *
+    popd
 
     deploy_asset "${ASSET}" ${TARGET_SLUG}
 done
