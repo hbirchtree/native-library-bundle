@@ -242,6 +242,10 @@ if(ANDROID AND OPENSSL_BUILD)
 #        )
 
 elseif(APPLE AND IOS) # Just in case
+    # Just in case, and because Travis CI is a dick
+    unset ( ENV${CC} )
+    unset ( ENV${CXX} )
+
     set ( OPENSSL_PLATFORM ios64-cross )
     set ( OPENSSL_ARCH arm64 )
     set ( OPENSSL_SDK iPhoneOS )
