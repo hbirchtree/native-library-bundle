@@ -1,4 +1,4 @@
-ASSETS=(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl)
+ASSETS=(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl ffmpeg compressonator)
 
 INSTALL_BASE_DIR=$BUILD_DIR/$BUILDVARIANT/install
 
@@ -13,5 +13,5 @@ for a in ${ASSETS[@]}; do
     tar -zcvf "$ASSET" *
     popd
 
-    deploy_asset "${ASSET}" ${TARGET_SLUG}
+    deploy_asset "$(basename ${ASSET})" ${TARGET_SLUG}
 done

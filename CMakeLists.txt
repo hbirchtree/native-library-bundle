@@ -155,6 +155,11 @@ if(ANDROID)
 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/sdl2
         )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/sdl2/COPYING.txt
+        DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/license
+        )
 endif()
 
 #
@@ -187,6 +192,11 @@ ExternalProject_Add ( Bullet
         -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/bullet
     )
 
+install (
+    FILES       ${CMAKE_BINARY_DIR}/source/bullet/LICENSE.txt
+    DESTINATION ${CMAKE_BINARY_DIR}/install/bullet/license
+    )
+
 #
 # OpenSSL, a real bastard to compile
 #
@@ -205,7 +215,6 @@ if(ANDROID AND OPENSSL_BUILD)
             COMMAND patch
                 -p0
                 -i ${CMAKE_SOURCE_DIR}/patches/android-openssl.patch
-            COMMAND env
 
         CONFIGURE_COMMAND true
 
@@ -217,29 +226,9 @@ if(ANDROID AND OPENSSL_BUILD)
                 ${CMAKE_BINARY_DIR}/source/openssl/build-all-arch.sh
                     1.0.2r
                     ${ANDROID_ABI}
-#                    ${CMAKE_EXE_LINKER_FLAGS}
 
         INSTALL_COMMAND true
         )
-#    ExternalProject_Add ( OpenSSL
-
-#        PREFIX ${CMAKE_BINARY_DIR}/openssl
-
-#        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
-#        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
-#        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
-
-#        GIT_REPOSITORY https://github.com/openssl/openssl.git
-#        GIT_TAG OpenSSL_1_1_1b
-
-#        CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
-#            --prefix=${CMAKE_BINARY_DIR}/install/openssl
-#            no-shared
-
-#        BUILD_COMMAND make
-
-#        INSTALL_COMMAND make install
-#        )
 
 elseif(APPLE AND IOS) # Just in case
     # Just in case, and because Travis CI is a dick
@@ -342,6 +331,11 @@ elseif(WIN32)
 
 endif()
 
+install (
+    FILES       ${CMAKE_BINARY_DIR}/source/openssl/LICENSE
+    DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/license
+    )
+
 #
 # Building Assimp
 #
@@ -379,6 +373,11 @@ ExternalProject_Add ( Assimp
         -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/assimp
     )
 
+install (
+    FILES       ${CMAKE_BINARY_DIR}/source/assimp/LICENSE
+    DESTINATION ${CMAKE_BINARY_DIR}/install/assimp/license
+    )
+
 #
 # libsquish (doesn't cross-compile)
 #
@@ -408,6 +407,11 @@ if(BUILD_PLATFORM)
 
         INSTALL_COMMAND make clean
         )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/squish/README
+        DESTINATION ${CMAKE_BINARY_DIR}/install/squish/license
+        )
 endif()
 
 #
@@ -433,6 +437,11 @@ if(BUILD_PLATFORM)
             -DBUILD_TESTING=OFF
 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/glslang
+        )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/glslang/LICENSE.txt
+        DESTINATION ${CMAKE_BINARY_DIR}/install/glslang/license
         )
 endif()
 
@@ -461,6 +470,11 @@ if(BUILD_PLATFORM)
 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/shaderc
         )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/shaderc/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/shaderc/license
+        )
 endif()
 
 #
@@ -488,6 +502,11 @@ if(BUILD_PLATFORM)
             -DCMAKE_CXX_FLAGS="-fPIC"
 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/spirvcross
+        )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/spirvcross/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/spirvcross/license
         )
 endif()
 
@@ -549,8 +568,49 @@ if(BUILD_PLATFORM)
 
         INSTALL_COMMAND true
         )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/ffmpeg/LICENSE.md
+        DESTINATION ${CMAKE_BINARY_DIR}/install/ffmpeg/license
+        )
 endif()
 
+#
+# Compressonator, for ASTC/ATC/BC{5,6,7}
+#
+if(BUILD_PLATFORM)
+    ExternalProject_Add ( Compressonator
+
+        PREFIX ${CMAKE_BINARY_DIR}/compressonator
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/compressonator
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/compressonator
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/compressonator
+
+        GIT_REPOSITORY https://github.com/GPUOpen-Tools/Compressonator.git
+
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/compressonator.patch
+
+        CONFIGURE_COMMAND ${CMAKE_COMMAND}
+            -GNinja
+
+            ${TOOLCHAIN_OPTIONS}
+
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/compressonator
+
+            ${CMAKE_BINARY_DIR}/source/compressonator/Compressonator/Make
+        )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/compressonator/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/compressonator/license
+        )
+endif()
+
+# Just trick CMake into making an install target
 install (
     FILES ${CMAKE_BINARY_DIR}/CMakeCache.txt
     DESTINATION libs
