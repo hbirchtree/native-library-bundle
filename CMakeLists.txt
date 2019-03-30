@@ -200,7 +200,11 @@ install (
 #
 # OpenSSL, a real bastard to compile
 #
+
+set ( OPENSSL_BUILT OFF )
+
 if(ANDROID AND OPENSSL_BUILD)
+    set ( OPENSSL_BUILT ON )
     ExternalProject_Add ( OpenSSL
 
         PREFIX ${CMAKE_BINARY_DIR}/openssl
@@ -231,6 +235,7 @@ if(ANDROID AND OPENSSL_BUILD)
         )
 
 elseif(APPLE AND IOS) # Just in case
+    set ( OPENSSL_BUILT ON )
     # Just in case, and because Travis CI is a dick
     unset ( ENV{CC} )
     unset ( ENV{CXX} )
@@ -308,6 +313,7 @@ elseif(APPLE AND IOS) # Just in case
             make install_sw
         )
 elseif(LINUX OR APPLE)
+    set ( OPENSSL_BUILT ON )
     ExternalProject_Add ( OpenSSL
 
         PREFIX ${CMAKE_BINARY_DIR}/openssl
@@ -331,10 +337,12 @@ elseif(WIN32)
 
 endif()
 
-install (
-    FILES       ${CMAKE_BINARY_DIR}/source/openssl/LICENSE
-    DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/license
+if(OPENSSL_BUILT)
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/openssl/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/license
     )
+endif()
 
 #
 # Building Assimp
