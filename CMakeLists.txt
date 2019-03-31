@@ -203,8 +203,12 @@ install (
 
 set ( OPENSSL_BUILT OFF )
 
-if(ANDROID AND OPENSSL_BUILD)
-    set ( OPENSSL_BUILT ON )
+set ( OPENSSL_VER "1_1_1b" )
+
+if(ANDROID)
+    # Android isn't compatible with every version?
+    set ( OPENSSL_VER "1.0.2r" )
+
     ExternalProject_Add ( OpenSSL
 
         PREFIX ${CMAKE_BINARY_DIR}/openssl
@@ -228,10 +232,28 @@ if(ANDROID AND OPENSSL_BUILD)
                 ANDROID_NDK_ROOT=${ANDROID_NDK}
 
                 ${CMAKE_BINARY_DIR}/source/openssl/build-all-arch.sh
-                    1.0.2r
+                    ${OPENSSL_VER}
                     ${ANDROID_ABI}
 
         INSTALL_COMMAND true
+        )
+    install (
+        FILES ${CMAKE_BINARY_DIR}/build/openssl/openssl-${OPENSSL_VER}/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/license
+        )
+
+    install (
+        FILES
+
+        ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/${ANDROID_ABI}/libcrypto.a
+        ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/${ANDROID_ABI}/libssl.a
+
+        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/lib
+        )
+
+    install (
+        DIRECTORY ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/include/openssl
+        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/include
         )
 
 elseif(APPLE AND IOS) # Just in case
@@ -269,7 +291,7 @@ elseif(APPLE AND IOS) # Just in case
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
 
         GIT_REPOSITORY https://github.com/openssl/openssl.git
-        GIT_TAG OpenSSL_1_1_1b
+        GIT_TAG OpenSSL_${OPENSSL_VER}
 
         PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/ios-openssl.patch
 
@@ -323,7 +345,7 @@ elseif(LINUX OR APPLE)
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
 
         GIT_REPOSITORY https://github.com/openssl/openssl.git
-        GIT_TAG OpenSSL_1_1_1b
+        GIT_TAG OpenSSL_${OPENSSL_VER}
 
         CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
             --prefix=${CMAKE_BINARY_DIR}/install/openssl
