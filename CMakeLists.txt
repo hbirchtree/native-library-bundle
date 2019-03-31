@@ -586,7 +586,7 @@ endif()
 #
 # Compressonator, for ASTC/ATC/BC{5,6,7}
 #
-if(BUILD_PLATFORM)
+if(BUILD_PLATFORM AND NOT "${CMAKE_INSTALL_PREFIX}" MATCHES "steam.amd64")
     ExternalProject_Add ( Compressonator
 
         PREFIX ${CMAKE_BINARY_DIR}/compressonator
@@ -603,7 +603,6 @@ if(BUILD_PLATFORM)
             COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/compressonator.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
-            -GNinja
 
             ${TOOLCHAIN_OPTIONS}
 
