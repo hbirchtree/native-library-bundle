@@ -1,5 +1,5 @@
 diff --git a/Compressonator/Header/CMP_Math/TootlePCH.h b/Compressonator/Header/CMP_Math/TootlePCH.h
-index a71b302..2ae82e6 100644
+index a71b3027..2ae82e6d 100644
 --- a/Compressonator/Header/CMP_Math/TootlePCH.h
 +++ b/Compressonator/Header/CMP_Math/TootlePCH.h
 @@ -17,9 +17,17 @@
@@ -23,7 +23,7 @@ index a71b302..2ae82e6 100644
  
  #ifdef __cplusplus
 diff --git a/Compressonator/Make/CMakeLists.txt b/Compressonator/Make/CMakeLists.txt
-index 413782e..104d71e 100644
+index 413782ec..104d71e9 100644
 --- a/Compressonator/Make/CMakeLists.txt
 +++ b/Compressonator/Make/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -80,8 +80,29 @@ index 413782e..104d71e 100644
 +    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Header/
 +    DESTINATION include
 +    )
+diff --git a/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp b/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp
+index 7b0cb957..7194a17c 100644
+--- a/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp
++++ b/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp
+@@ -15,13 +15,13 @@
+ // Copyright (c) 2017  Advanced Micro Devices, Inc. All rights reserved
+ //=====================================================================
+ 
++#include <iostream>
++#include <fstream>
++
+ #include "ASTC_Host.h"
+ #include "ASTC_Encode_Kernel.h"
+ #include "Compressonator.h"
+ 
+-#include <iostream>
+-#include <fstream>
+-
+ using namespace std;
+ 
+ //================================= ASTC CPU HOST CODE  ===========================================
 diff --git a/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp b/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp
-index 414a61c..aa03527 100644
+index 414a61ca..aa035279 100644
 --- a/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp
 +++ b/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp
 @@ -37,6 +37,7 @@

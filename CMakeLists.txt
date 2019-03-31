@@ -618,6 +618,7 @@ if(BUILD_PLATFORM AND NOT "${CMAKE_INSTALL_PREFIX}" MATCHES "steam.amd64")
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/compressonator
 
         GIT_REPOSITORY https://github.com/GPUOpen-Tools/Compressonator.git
+        GIT_TAG v3.1.4064
 
         PATCH_COMMAND
             COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
