@@ -298,6 +298,7 @@ elseif(APPLE AND IOS) # Just in case
         CONFIGURE_COMMAND 
             ${CMAKE_COMMAND} -E env
 
+            CC="clang"
             CROSS_COMPILE="${OPENSSL_TOOLCHAIN}"
             CROSS_SDK=${OPENSSL_SDK}.sdk
             CROSS_TOP=${OPENSSL_TOP}
