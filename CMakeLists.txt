@@ -88,7 +88,7 @@ endif()
 # OpenAL-soft
 # For now, OpenAL is not cross-compiler friendly >:(
 #
-if(OFF)
+if(ANDROID)
     ExternalProject_Add ( OpenALSoft
 
         PREFIX ${CMAKE_BINARY_DIR}/openal
