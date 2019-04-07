@@ -524,6 +524,11 @@ if(BUILD_PLATFORM)
 
         GIT_REPOSITORY https://github.com/hbirchtree/SPIRV-Cross.git
 
+        PATCH_COMMAND
+        COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+        COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+        COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/spirvcross.patch
+
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         CMAKE_ARGS
