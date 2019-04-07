@@ -133,8 +133,9 @@ if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
         SOURCE_DIR ${CMAKE_BINARY_DIR}/source/sdl2
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/sdl2
 
-        HG_REPOSITORY https://hg.libsdl.org/SDL
-        HG_TAG release-2.0.9
+        URL https://www.libsdl.org/release/SDL2-2.0.9.tar.gz
+#        HG_REPOSITORY https://hg.libsdl.org/SDL
+#        HG_TAG release-2.0.9
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
