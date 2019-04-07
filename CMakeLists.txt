@@ -15,7 +15,7 @@ set ( BUILD_PIC "ON" )
 
 set ( LINUX OFF )
 
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" AND NOT ANDROID)
     set ( LINUX ON )
 endif()
 
@@ -88,7 +88,7 @@ endif()
 # OpenAL-soft
 # For now, OpenAL is not cross-compiler friendly >:(
 #
-if(ANDROID)
+if(ANDROID OR LINUX)
     ExternalProject_Add ( OpenALSoft
 
         PREFIX ${CMAKE_BINARY_DIR}/openal
@@ -123,7 +123,7 @@ endif()
 #
 # SDL2
 #
-if(ANDROID)
+if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
     ExternalProject_Add ( SDL2
 
         PREFIX ${CMAKE_BINARY_DIR}/sdl2
@@ -230,6 +230,7 @@ if(ANDROID)
             ${CMAKE_COMMAND} -E env
 
                 ANDROID_NDK_ROOT=${ANDROID_NDK}
+                ANDROID_API=${ANDROID_PLATFORM}
 
                 ${CMAKE_BINARY_DIR}/source/openssl/build-all-arch.sh
                     ${OPENSSL_VER}
@@ -640,6 +641,36 @@ if(BUILD_PLATFORM AND NOT "${CMAKE_INSTALL_PREFIX}" MATCHES "steam.amd64")
         DESTINATION ${CMAKE_BINARY_DIR}/install/compressonator/license
         )
 endif()
+
+#
+# AppImage runtime
+# This is only used for Ubuntu and Fedora
+#
+#if(LINUX)
+#    ExternalProject_Add ( AppImageRuntime
+
+#        PREFIX ${CMAKE_BINARY_DIR}/compressonator
+
+#        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/appimage
+##        BINARY_DIR ${CMAKE_BINARY_DIR}/build/appimage
+#        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/appimage
+
+#        GIT_REPOSITORY https://github.com/AppImage/AppImageKit.git
+#        GIT_TAG 11
+
+#        BUILD_IN_SOURCE ON
+
+#        CMAKE_ARGS
+#            ${TOOLCHAIN_OPTIONS}
+
+#            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/appimage
+#        )
+
+#    install (
+#        FILES       ${CMAKE_BINARY_DIR}/source/appimage/LICENSE
+#        DESTINATION ${CMAKE_BINARY_DIR}/install/appimage/license
+#        )
+#endif()
 
 # Just trick CMake into making an install target
 install (

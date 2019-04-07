@@ -56,7 +56,7 @@ index af84065..c51d235 100755
  # _ANDROID_API="android-14"
  #_ANDROID_API="android-18"
 -_ANDROID_API="android-21"
-+_ANDROID_API="android-21"
++_ANDROID_API="${ANDROID_API:-android-21}"
  
  #####################################################################
  
