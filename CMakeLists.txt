@@ -143,13 +143,7 @@ if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
 
             ${TOOLCHAIN_OPTIONS}
 
-            -DSDL_ATOMIC=OFF
             -DSDL_AUDIO=OFF
-            -DSDL_THREADS=OFF
-            -DSDL_TIMERS=OFF
-            -DSDL_CPUINFO=OFF
-            -DSDL_FILESYSTEM=OFF
-            -DSDL_SENSOR=OFF
             -DSDL_SHARED=OFF
             -DSDL_STATIC_PIC=${BUILD_PIC}
 
