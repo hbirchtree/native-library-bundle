@@ -124,6 +124,12 @@ endif()
 # SDL2
 #
 if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
+    set ( INSTALL_PREFIX install )
+
+    if(APPLE)
+        set ( INSTALL_PREFIX install.tmp )
+    endif()
+
     ExternalProject_Add ( SDL2
 
         PREFIX ${CMAKE_BINARY_DIR}/sdl2
@@ -131,7 +137,7 @@ if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
         BINARY_DIR ${CMAKE_BINARY_DIR}/build/sdl2
 
         SOURCE_DIR ${CMAKE_BINARY_DIR}/source/sdl2
-        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/sdl2
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/${INSTALL_PREFIX}/sdl2
 
         URL https://www.libsdl.org/release/SDL2-2.0.9.tar.gz
 #        HG_REPOSITORY https://hg.libsdl.org/SDL
@@ -147,8 +153,25 @@ if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
             -DSDL_SHARED=OFF
             -DSDL_STATIC_PIC=${BUILD_PIC}
 
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/sdl2
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/${INSTALL_PREFIX}/sdl2
         )
+
+    if(APPLE)
+        install (
+            DIRECTORY ${CMAKE_BINARY_DIR}/install.tmp/sdl2/SDL2.framework/Resources/
+            DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/lib/cmake/SDL2
+            )
+
+        install (
+            DIRECTORY ${CMAKE_BINARY_DIR}/install.tmp/sdl2/lib
+            DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/lib
+            )
+
+        install (
+            DIRECTORY ${CMAKE_BINARY_DIR}/install.tmp/sdl2/include
+            DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/lib
+            )
+    endif()
 
     install (
         FILES       ${CMAKE_BINARY_DIR}/source/sdl2/COPYING.txt
