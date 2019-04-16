@@ -1,0 +1,43 @@
+diff -r 8feb5da6f2fb CMakeLists.txt
+--- CMakeLists.txt	Tue Oct 30 20:11:02 2018 +0300
++++ CMakeLists.txt	Tue Apr 16 05:04:36 2019 +0200
+@@ -1471,32 +1471,25 @@
+ 
+   # Actually load the frameworks at the end so we don't duplicate include.
+   if(SDL_FRAMEWORK_COREVIDEO)
+-    find_library(COREVIDEO CoreVideo)
+-    list(APPEND EXTRA_LIBS ${COREVIDEO})
++    list(APPEND EXTRA_LIBS "-framework CoreVideo")
+   endif()
+   if(SDL_FRAMEWORK_COCOA)
+-    find_library(COCOA_LIBRARY Cocoa)
+-    list(APPEND EXTRA_LIBS ${COCOA_LIBRARY})
++    list(APPEND EXTRA_LIBS "-framework Cocoa")
+   endif()
+   if(SDL_FRAMEWORK_IOKIT)
+-    find_library(IOKIT IOKit)
+-    list(APPEND EXTRA_LIBS ${IOKIT})
++    list(APPEND EXTRA_LIBS "-framework IOKit")
+   endif()
+   if(SDL_FRAMEWORK_FF)
+-    find_library(FORCEFEEDBACK ForceFeedback)
+-    list(APPEND EXTRA_LIBS ${FORCEFEEDBACK})
++    list(APPEND EXTRA_LIBS "-framework ForceFeedback")
+   endif()
+   if(SDL_FRAMEWORK_CARBON)
+-    find_library(CARBON_LIBRARY Carbon)
+-    list(APPEND EXTRA_LIBS ${CARBON_LIBRARY})
++    list(APPEND EXTRA_LIBS "-framework Carbon")
+   endif()
+   if(SDL_FRAMEWORK_COREAUDIO)
+-    find_library(COREAUDIO CoreAudio)
+-    list(APPEND EXTRA_LIBS ${COREAUDIO})
++    list(APPEND EXTRA_LIBS "-framework CoreAudio")
+   endif()
+   if(SDL_FRAMEWORK_AUDIOTOOLBOX)
+-    find_library(AUDIOTOOLBOX AudioToolbox)
+-    list(APPEND EXTRA_LIBS ${AUDIOTOOLBOX})
++    list(APPEND EXTRA_LIBS "-framework AudioToolbox")
+   endif()
+ 
+   # iOS hack needed - http://code.google.com/p/ios-cmake/ ?

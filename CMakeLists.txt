@@ -128,6 +128,7 @@ if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
 
     if(APPLE)
         set ( INSTALL_PREFIX install.tmp )
+        set ( SDL_PATCH_COMMAND patch )
     endif()
 
     ExternalProject_Add ( SDL2
@@ -140,8 +141,11 @@ if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
         INSTALL_DIR ${CMAKE_BINARY_DIR}/${INSTALL_PREFIX}/sdl2
 
         URL https://www.libsdl.org/release/SDL2-2.0.9.tar.gz
-#        HG_REPOSITORY https://hg.libsdl.org/SDL
-#        HG_TAG release-2.0.9
+
+        PATCH_COMMAND
+            COMMAND patch
+                -p0
+                -i ${CMAKE_SOURCE_DIR}/patches/sdl-osx-frameworks.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -163,40 +167,7 @@ if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
         install (
             DIRECTORY ${SDL_CMAKE_DIR}/
             DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/lib/cmake/SDL2
-
-            PATTERN "SDL2Targets-*.cmake" EXCLUDE
             )
-
-        set ( DBG_FILE "${SDL_CMAKE_DIR}/SDL2Targets-debug.cmake" )
-        set ( REL_FILE "${SDL_CMAKE_DIR}/SDL2Targets-release.cmake" )
-
-        if(EXISTS ${REL_FILE})
-            file ( READ
-                ${REL_FILE}
-                TARGET_RELEASE_DATA
-                )
-            string ( REGEX REPLACE "${XCODE_PATH}/([A-Za-z]+).framework" "-framework \\1"
-                TARGET_RELEASE_DATA "${TARGET_RELEASE_DATA}"
-                )
-            file ( WRITE
-                ${CMAKE_BINARY_DIR}/install/sdl2/lib/cmake/SDL2/SDL2Targets-release.cmake
-                "${TARGET_RELEASE_DATA}"
-                )
-        endif()
-
-        if(EXISTS ${DBG_FILE})
-            file ( READ
-                ${DBG_FILE}
-                TARGET_DBG_DATA
-                )
-            string ( REGEX REPLACE "${XCODE_PATH}/([A-Za-z]+).framework" "-framework \\1"
-                TARGET_DBG_DATA "${TARGET_DBG_DATA}"
-                )
-            file ( WRITE
-                ${CMAKE_BINARY_DIR}/install/sdl2/lib/cmake/SDL2/SDL2Targets-debug.cmake
-                "${TARGET_DBG_DATA}"
-                )
-        endif()
 
         install (
             DIRECTORY ${CMAKE_BINARY_DIR}/install.tmp/sdl2/lib
