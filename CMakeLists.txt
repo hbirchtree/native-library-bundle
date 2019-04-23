@@ -85,10 +85,68 @@ if(
 endif()
 
 #
+# Top-level options for enabling/disabling builds
+#
+
+# Application libraries, for most platforms
+
+set ( SDL2_BUILD            OFF )
+set ( OPENAL_BUILD          OFF )
+set ( BULLET_BUILD          ON  )
+set ( ASSIMP_BUILD          ON  )
+set ( OPENSSL_BUILD         ON  )
+
+set ( OPENSSL_VER "1_1_1b" )
+
+# Build libraries, only for desktop (x86/amd64)
+
+set ( SQUISH_BUILD          OFF )
+set ( FFMPEG_BUILD          OFF )
+set ( COMPRESSONATOR_BUILD  OFF )
+set ( SPIRVCROSS_BUILD      OFF )
+set ( GLSLANG_BUILD         OFF )
+set ( SHADERC_BUILD         OFF )
+
+# Turning builds on/off
+
+if(BUILD_PLATFORM)
+    set ( SQUISH_BUILD          ON )
+    set ( FFMPEG_BUILD          ON )
+    set ( COMPRESSONATOR_BUILD  ON )
+    set ( SPIRVCROSS_BUILD      ON )
+    set ( GLSLANG_BUILD         ON )
+    set ( SHADERC_BUILD         ON )
+endif()
+
+# Only used on desktop platforms, Android and iOS use custom backends
+if(LINUX OR (APPLE AND NOT IOS))
+    set ( SDL2_BUILD ON )
+endif()
+
+# steam.amd64 is not used for building, and also does not support C++14
+if("${CMAKE_INSTALL_PREFIX}" MATCHES "steam.amd64")
+    set ( COMPRESSONATOR_BUILD OFF )
+endif()
+
+if(ANDROID OR LINUX)
+    set ( OPENAL_BUILD ON )
+endif()
+
+# Android's OpenSSL build is just impossible to understand
+# It currently uses a custom process for building
+if(ANDROID)
+    set ( OPENSSL_VER "1.0.2r" )
+endif()
+
+#
+#
+#
+
+#
 # OpenAL-soft
 # For now, OpenAL is not cross-compiler friendly >:(
 #
-if(ANDROID OR LINUX)
+if(OPENAL_BUILD)
     ExternalProject_Add ( OpenALSoft
 
         PREFIX ${CMAKE_BINARY_DIR}/openal
@@ -123,7 +181,7 @@ endif()
 #
 # SDL2
 #
-if(ANDROID OR LINUX OR (APPLE AND NOT IOS))
+if(SDL2_BUILD)
     set ( INSTALL_PREFIX install )
 
     if(APPLE)
@@ -189,69 +247,72 @@ endif()
 #
 # Bullet
 #
-ExternalProject_Add ( Bullet
+if(BULLET_BUILD)
+    ExternalProject_Add ( Bullet
 
-    PREFIX ${CMAKE_BINARY_DIR}/bullet
+        PREFIX ${CMAKE_BINARY_DIR}/bullet
 
-    SOURCE_DIR ${CMAKE_BINARY_DIR}/source/bullet
-    BINARY_DIR ${CMAKE_BINARY_DIR}/build/bullet
-    INSTALL_DIR ${CMAKE_BINARY_DIR}/install/bullet
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/bullet
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/bullet
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/bullet
 
-    GIT_REPOSITORY https://github.com/bulletphysics/bullet3.git
-    GIT_TAG 2.88
+        GIT_REPOSITORY https://github.com/bulletphysics/bullet3.git
+        GIT_TAG 2.88
 
-    CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
-    CMAKE_ARGS
+        CMAKE_ARGS
 
-        ${TOOLCHAIN_OPTIONS}
+            ${TOOLCHAIN_OPTIONS}
 
-        -DBUILD_BULLET2_DEMOS=OFF
-        -DBUILD_UNIT_TESTS=OFF
-        -DBUILD_CPU_DEMOS=OFF
-        -DBUILD_EXTRAS=OFF
-        -DUSE_GRAPHICAL_BENCHMARK=OFF
-        -DINSTALL_LIBS=ON
+            -DBUILD_BULLET2_DEMOS=OFF
+            -DBUILD_UNIT_TESTS=OFF
+            -DBUILD_CPU_DEMOS=OFF
+            -DBUILD_EXTRAS=OFF
+            -DUSE_GRAPHICAL_BENCHMARK=OFF
+            -DINSTALL_LIBS=ON
 
-        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/bullet
-    )
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/bullet
+        )
 
-install (
-    FILES       ${CMAKE_BINARY_DIR}/source/bullet/LICENSE.txt
-    DESTINATION ${CMAKE_BINARY_DIR}/install/bullet/license
-    )
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/bullet/LICENSE.txt
+        DESTINATION ${CMAKE_BINARY_DIR}/install/bullet/license
+        )
+endif()
 
 #
 # OpenSSL, a real bastard to compile
 #
 
-set ( OPENSSL_BUILT OFF )
+if(OPENSSL_BUILD)
+    set ( OPENSSL_BUILT OFF )
 
-set ( OPENSSL_VER "1_1_1b" )
+    if(ANDROID)
+        # Android isn't compatible with every version?
+        set ( OPENSSL_TARGET_PATH
+            ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/${ANDROID_ABI}
+            )
 
-if(ANDROID)
-    # Android isn't compatible with every version?
-    set ( OPENSSL_VER "1.0.2r" )
+        ExternalProject_Add ( OpenSSL
 
-    ExternalProject_Add ( OpenSSL
+            PREFIX ${CMAKE_BINARY_DIR}/openssl
 
-        PREFIX ${CMAKE_BINARY_DIR}/openssl
+            SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+            BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+            INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
 
-        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
-        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
-        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+            URL https://github.com/paulo-raca/android-openssl/archive/master.zip
 
-        URL https://github.com/paulo-raca/android-openssl/archive/master.zip
+            PATCH_COMMAND
+                COMMAND patch
+                    -p0
+                    -i ${CMAKE_SOURCE_DIR}/patches/android-openssl.patch
 
-        PATCH_COMMAND
-            COMMAND patch
-                -p0
-                -i ${CMAKE_SOURCE_DIR}/patches/android-openssl.patch
+            CONFIGURE_COMMAND true
 
-        CONFIGURE_COMMAND true
-
-        BUILD_COMMAND
-            ${CMAKE_COMMAND} -E env
+            BUILD_COMMAND
+                ${CMAKE_COMMAND} -E env
 
                 ANDROID_NDK_ROOT=${ANDROID_NDK}
                 ANDROID_API=${ANDROID_PLATFORM}
@@ -260,184 +321,199 @@ if(ANDROID)
                     ${OPENSSL_VER}
                     ${ANDROID_ABI}
 
-        INSTALL_COMMAND true
-        )
-    install (
-        FILES ${CMAKE_BINARY_DIR}/build/openssl/openssl-${OPENSSL_VER}/LICENSE
-        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/license
-        )
+            INSTALL_COMMAND true
+            )
+        install (
+            FILES
+            ${CMAKE_BINARY_DIR}/build/openssl/openssl-${OPENSSL_VER}/LICENSE
 
-    install (
-        FILES
+            DESTINATION
+            ${CMAKE_BINARY_DIR}/install/openssl/license
+            )
 
-        ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/${ANDROID_ABI}/libcrypto.a
-        ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/${ANDROID_ABI}/libssl.a
+        install (
+            FILES
+            ${OPENSSL_TARGET_PATH}/libcrypto.a
+            ${OPENSSL_TARGET_PATH}/libssl.a
 
-        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/lib
-        )
+            DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/lib
+            )
 
-    install (
-        DIRECTORY ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/include/openssl
-        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/include
-        )
+        install (
+            DIRECTORY ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/include/openssl
+            DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/include
+            )
 
-elseif(APPLE AND IOS) # Just in case
-    set ( OPENSSL_BUILT ON )
-    # Just in case, and because Travis CI is a dick
-    unset ( ENV{CC} )
-    unset ( ENV{CXX} )
+    elseif(APPLE AND IOS) # Just in case
+        set ( OPENSSL_BUILT ON )
+        # Just in case, and because Travis CI is a dick
+        unset ( ENV{CC} )
+        unset ( ENV{CXX} )
 
-    set ( OPENSSL_PLATFORM ios64-cross )
-    set ( OPENSSL_ARCH arm64 )
-    set ( OPENSSL_SDK iPhoneOS )
+        set ( OPENSSL_PLATFORM ios64-cross )
+        set ( OPENSSL_ARCH arm64 )
+        set ( OPENSSL_SDK iPhoneOS )
 
-    if("${IOS_PLATFORM}" STREQUAL "SIMULATOR64")
-        set ( OPENSSL_PLATFORM ios64sim-cross )
-        set ( OPENSSL_ARCH x86_64 )
-        set ( OPENSSL_SDK iPhoneSimulator )
-    endif()
+        if("${IOS_PLATFORM}" STREQUAL "SIMULATOR64")
+            set ( OPENSSL_PLATFORM ios64sim-cross )
+            set ( OPENSSL_ARCH x86_64 )
+            set ( OPENSSL_SDK iPhoneSimulator )
+        endif()
 
-    execute_process ( 
-        COMMAND xcode-select --print-path
-        OUTPUT_VARIABLE OPENSSL_XCODE_PATH
-        )
+        execute_process (
+            COMMAND xcode-select --print-path
+            OUTPUT_VARIABLE OPENSSL_XCODE_PATH
+            )
 
-    string ( REPLACE "\n" "" OPENSSL_XCODE_PATH "${OPENSSL_XCODE_PATH}" )
+        string ( REPLACE "\n" "" OPENSSL_XCODE_PATH "${OPENSSL_XCODE_PATH}" )
 
-    set ( OPENSSL_TOP "${OPENSSL_XCODE_PATH}/Platforms/${OPENSSL_SDK}.platform/Developer" )
-    set ( OPENSSL_TOOLCHAIN "${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/" )
+        set ( OPENSSL_TOP
+            "${OPENSSL_XCODE_PATH}/Platforms/${OPENSSL_SDK}.platform/Developer"
+            )
+        set ( OPENSSL_TOOLCHAIN
+            "${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/"
+            )
 
-    ExternalProject_Add ( OpenSSL
+        set ( OPENSSL_TOOLCHAIN_BIN
+            "${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/"
+            )
 
-        PREFIX ${CMAKE_BINARY_DIR}/openssl
+        ExternalProject_Add ( OpenSSL
 
-        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
-        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
-        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+            PREFIX ${CMAKE_BINARY_DIR}/openssl
 
-        GIT_REPOSITORY https://github.com/openssl/openssl.git
-        GIT_TAG OpenSSL_${OPENSSL_VER}
+            SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+            BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+            INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
 
-        PATCH_COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/ios-openssl.patch
+            GIT_REPOSITORY https://github.com/openssl/openssl.git
+            GIT_TAG OpenSSL_${OPENSSL_VER}
 
-        CONFIGURE_COMMAND 
-            ${CMAKE_COMMAND} -E env
+            PATCH_COMMAND
+                ${GIT_EXECUTABLE}
+                    apply ${CMAKE_SOURCE_DIR}/patches/ios-openssl.patch
 
-            CC="clang"
-            CROSS_COMPILE="${OPENSSL_TOOLCHAIN}"
-            CROSS_SDK=${OPENSSL_SDK}.sdk
-            CROSS_TOP=${OPENSSL_TOP}
-       
-            ${CMAKE_BINARY_DIR}/source/openssl/Configure
+            CONFIGURE_COMMAND
+                ${CMAKE_COMMAND} -E env
 
-                ${OPENSSL_PLATFORM}
-                "-arch ${OPENSSL_ARCH} -fembed-bitcode"
-                no-asm
-                no-ssl3
-                no-comp
-                no-hw
-                no-engine
-                no-async
+                CC="clang"
+                CROSS_COMPILE="${OPENSSL_TOOLCHAIN}"
+                CROSS_SDK=${OPENSSL_SDK}.sdk
+                CROSS_TOP=${OPENSSL_TOP}
 
-                --prefix=${CMAKE_BINARY_DIR}/install/openssl
-                no-shared
+                ${CMAKE_BINARY_DIR}/source/openssl/Configure
 
-        BUILD_COMMAND
-            ${CMAKE_COMMAND} -E env
+                    ${OPENSSL_PLATFORM}
+                    "-arch ${OPENSSL_ARCH} -fembed-bitcode"
+                    no-asm
+                    no-ssl3
+                    no-comp
+                    no-hw
+                    no-engine
+                    no-async
 
-            CROSS_COMPILE="${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/"
-            CROSS_SDK=${OPENSSL_SDK}.sdk
-            CROSS_TOP=${OPENSSL_TOP}
-       
-            make
+                    --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                    no-shared
 
-        INSTALL_COMMAND 
-            ${CMAKE_COMMAND} -E env
+            BUILD_COMMAND
+                ${CMAKE_COMMAND} -E env
 
-            CROSS_COMPILE="${OPENSSL_XCODE_PATH}/Toolchains/XcodeDefault.xctoolchain/usr/bin/"
-            CROSS_SDK=${OPENSSL_SDK}.sdk
-            CROSS_TOP=${OPENSSL_TOP}
+                CROSS_COMPILE="${OPENSSL_TOOLCHAIN_BIN}"
+                CROSS_SDK=${OPENSSL_SDK}.sdk
+                CROSS_TOP=${OPENSSL_TOP}
 
-            make install_sw
-        )
-elseif(LINUX OR APPLE)
-    set ( OPENSSL_BUILT ON )
-    ExternalProject_Add ( OpenSSL
+                make
 
-        PREFIX ${CMAKE_BINARY_DIR}/openssl
+            INSTALL_COMMAND
+                ${CMAKE_COMMAND} -E env
 
-        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
-        BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
-        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+                CROSS_COMPILE="${OPENSSL_TOOLCHAIN_BIN}"
+                CROSS_SDK=${OPENSSL_SDK}.sdk
+                CROSS_TOP=${OPENSSL_TOP}
 
-        GIT_REPOSITORY https://github.com/openssl/openssl.git
-        GIT_TAG OpenSSL_${OPENSSL_VER}
+                make install_sw
+            )
+    elseif(LINUX OR APPLE)
+        set ( OPENSSL_BUILT ON )
+        ExternalProject_Add ( OpenSSL
 
-        CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
+            PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+            SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+            BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+            INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+            GIT_REPOSITORY https://github.com/openssl/openssl.git
+            GIT_TAG OpenSSL_${OPENSSL_VER}
+
+            CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
             --prefix=${CMAKE_BINARY_DIR}/install/openssl
             no-shared
 
-        BUILD_COMMAND make
+            BUILD_COMMAND make
 
-        INSTALL_COMMAND make install
-        )
-elseif(WIN32)
+            INSTALL_COMMAND make install
+            )
+    elseif(WIN32)
 
-endif()
+    endif()
 
-if(OPENSSL_BUILT)
-    install (
-        FILES       ${CMAKE_BINARY_DIR}/source/openssl/LICENSE
-        DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/license
-    )
+    if(OPENSSL_BUILT)
+        install (
+            FILES       ${CMAKE_BINARY_DIR}/source/openssl/LICENSE
+            DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/license
+            )
+    endif()
 endif()
 
 #
 # Building Assimp
 #
-ExternalProject_Add ( Assimp
+if(ASSIMP_BUILD)
+    ExternalProject_Add ( Assimp
 
-    PREFIX ${CMAKE_BINARY_DIR}/assimp
+        PREFIX ${CMAKE_BINARY_DIR}/assimp
 
-    SOURCE_DIR ${CMAKE_BINARY_DIR}/source/assimp
-    BINARY_DIR ${CMAKE_BINARY_DIR}/build/assimp
-    INSTALL_DIR ${CMAKE_BINARY_DIR}/install/assimp
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/assimp
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/assimp
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/assimp
 
-    GIT_REPOSITORY https://github.com/assimp/assimp.git
-    GIT_TAG v4.1.0
+        GIT_REPOSITORY https://github.com/assimp/assimp.git
+        GIT_TAG v4.1.0
 
-    CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
-    CMAKE_ARGS
+        CMAKE_ARGS
 
-        ${TOOLCHAIN_OPTIONS}
+            ${TOOLCHAIN_OPTIONS}
 
-        -DBUILD_SHARED_LIBS=OFF
-        -DBUILD_TESTING=OFF
-        -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
-        -DASSIMP_BUILD_TESTS=OFF
+            -DBUILD_SHARED_LIBS=OFF
+            -DBUILD_TESTING=OFF
+            -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
+            -DASSIMP_BUILD_TESTS=OFF
 
-        -DASSIMP_BUILD_ZLIB=ON
+            -DASSIMP_BUILD_ZLIB=ON
 
-        -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF
-        -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF
+            -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF
+            -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF
 
-        -DASSIMP_BUILD_BLEND_IMPORTER=ON
-        -DASSIMP_BUILD_COLLADA_IMPORTER=ON
-        -DASSIMP_BUILD_FBX_IMPORTER=ON
+            -DASSIMP_BUILD_BLEND_IMPORTER=ON
+            -DASSIMP_BUILD_COLLADA_IMPORTER=ON
+            -DASSIMP_BUILD_FBX_IMPORTER=ON
 
-        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/assimp
-    )
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/assimp
+        )
 
-install (
-    FILES       ${CMAKE_BINARY_DIR}/source/assimp/LICENSE
-    DESTINATION ${CMAKE_BINARY_DIR}/install/assimp/license
-    )
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/assimp/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/assimp/license
+        )
+endif()
 
 #
 # libsquish (doesn't cross-compile)
 #
-if(BUILD_PLATFORM)
+if(SQUISH_BUILD)
     ExternalProject_Add ( squish
 
         PREFIX ${CMAKE_BINARY_DIR}/squish
@@ -473,7 +549,7 @@ endif()
 #
 # GLSLang
 #
-if(BUILD_PLATFORM)
+if(GLSLANG_BUILD)
     ExternalProject_Add ( GLSLang
 
         PREFIX ${CMAKE_BINARY_DIR}/glslang
@@ -504,7 +580,7 @@ endif()
 #
 # Shaderc
 #
-if(BUILD_PLATFORM)
+if(SHADERC_BUILD)
     ExternalProject_Add ( shaderc
 
         PREFIX ${CMAKE_BINARY_DIR}/shaderc
@@ -536,7 +612,7 @@ endif()
 #
 # SPIRV-Cross
 #
-if(BUILD_PLATFORM)
+if(SPIRVCROSS_BUILD)
     ExternalProject_Add ( SPIRVCross
 
         PREFIX ${CMAKE_BINARY_DIR}/spirvcross
@@ -575,7 +651,7 @@ endif()
 # FFMPEG
 # Doesn't support cross-compiling for now
 #
-if(BUILD_PLATFORM)
+if(FFMPEG_BUILD)
     set ( FFMPEG_OPTS
         --disable-x86asm
         )
@@ -594,7 +670,7 @@ else()
         )
 endif()
 
-if(BUILD_PLATFORM)
+if(FFMPEG_BUILD)
     ExternalProject_Add ( FFMPEG
 
         PREFIX ${CMAKE_BINARY_DIR}/ffmpeg
@@ -639,7 +715,7 @@ endif()
 #
 # Compressonator, for ASTC/ATC/BC{5,6,7}
 #
-if(BUILD_PLATFORM AND NOT "${CMAKE_INSTALL_PREFIX}" MATCHES "steam.amd64")
+if(COMPRESSONATOR_BUILD)
     ExternalProject_Add ( Compressonator
 
         PREFIX ${CMAKE_BINARY_DIR}/compressonator
