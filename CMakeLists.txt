@@ -525,6 +525,11 @@ if(SQUISH_BUILD)
 
         GIT_REPOSITORY https://github.com/Cavewhere/squish.git
 
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/squish.patch
+
         CONFIGURE_COMMAND
             ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/lib
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/include
@@ -624,9 +629,9 @@ if(SPIRVCROSS_BUILD)
         GIT_REPOSITORY https://github.com/hbirchtree/SPIRV-Cross.git
 
         PATCH_COMMAND
-        COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-        COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-        COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/spirvcross.patch
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/spirvcross.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
