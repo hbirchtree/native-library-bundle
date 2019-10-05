@@ -14,6 +14,7 @@
 =preload: nothing.cmake
 =lib.flavor: $(target-name)
 =program.workdir: $(env:CMAKE_BUILD_DIR)
+=shell: ''
 
 # Default dependency
 =dependencies: 
@@ -30,7 +31,7 @@
   - -DGIT_DEP_BUILDVARIANT=$(git-dep-target)
 
 # Android toolchain is always sourced from the Android NDK
-^((?!android).)*$:
+^((?!android|emscripten).)*$:
     +cmake-opts:
       - -DCMAKE_TOOLCHAIN_FILE=$(toolchain-dir)/Toolchains/$(toolchain)
 
@@ -43,7 +44,8 @@
 
 .*(osx|ios).*:
   =runner-choice: Makefile.mac-base
-  =target: build
+  ^((?!\$\(shell\)).)*$: # Don't apply this to shell targets
+      =target: build
   =build.prettyname: Apple
   =generator: Xcode
   =compiler: Clang
@@ -163,6 +165,8 @@ testing.linux.*:
   =preload: linux-steam.cmake
   =toolchain: cxx11.toolchain.cmake
   =container: steam
+  +cmake-opts:
+    - -DBUILD_CPP11=ON
   +container-opts:
     - -e CC=clang-3.6
     - -e CXX=clang++-3.6
@@ -173,14 +177,17 @@ testing.linux.*:
   =compiler: Clang 4+
   =container: emscripten
   =preload: js-emscripten.cmake
-  =toolchain: js-emscripten.toolchain.cmake
   =generator: Unix Makefiles
+  =emscripten.root: $(dependencies.emscripten.target)/emscripten/master
+  =emscripten.cmake: $(emscripten.root)/cmake
   +dependencies:
     - emscripten
   +cmake-opts:
-    - -DEMSCRIPTEN_ROOT_PATH=$(dependencies.emscripten.target)/emscripten/master
+    - -DEMSCRIPTEN_ROOT_PATH=$(emscripten.root)
+    - -DCMAKE_TOOLCHAIN_FILE=$(emscripten.cmake)/Modules/Platform/Emscripten.cmake
   +container-opts:
-    - -e EMSCRIPTEN=$(dependencies.emscripten.target)/emscripten/master
+    - -e EMSCRIPTEN=$(emscripten.root)
+    - -e CMAKE='emcmake cmake'
   .*wasm.*:
     =preload: js-emscripten-wasm.cmake
 
@@ -227,10 +234,7 @@ testing.linux.*:
     - -DANDROID_CPP_FEATURES=$(android.features)
     - -DANDROID_ARM_NEON=$(android.arm-neon)
     - -DCMAKE_TOOLCHAIN_FILE=$(android.ndk)/build/cmake/android.toolchain.cmake
-  #  +environment-vars:
-  # - -e OPENSSL_ROOT_DIR="$(cmake.native-lib)/$(build.prettyname)/libraries/$(android.abi)/ssl"
   =container: android
-  =toolchain: all-android.toolchain.cmake
 
 
 .*maemo.*:
@@ -251,19 +255,14 @@ testing.linux.*:
 
 
 .*raspberry.*:
-  =description: Raspberry Pi ARMv6 build
-  =compiler: GCC 4.9
+  =description: Raspberry Pi ARM 32-bit build
+  =compiler: GCC 8.3
   =preload: linux-raspberry.cmake
   =toolchain: linux-raspberry-armhf_linux.toolchain.cmake
-  =container: raspberry
+  =container: raspberry-v2
   +dependencies: rpi-sdk
-  +container-opts:
-    - -v $(dependencies.rpi-sdk.root)/$(dependencies.rpi-sdk.path):$(dependencies.rpi-sdk.target):ro
   +cmake-opts:
-    - -DRASPBERRY_SDK=$(dependencies.rpi-sdk.target)
-  .*armhf.*:
-    =dependencies.rpi-sdk.path: architectures/rpi-SDL2-X11-armv6
-
+    - -DRASPBERRY_SDK=/pi-sysroot
 
 .*mingw.*:
   =description: MinGW64 environment in Ubuntu Docker
@@ -276,8 +275,7 @@ testing.linux.*:
   =description: Nintendo Gamecube through DevkitPPC
   =compiler: GCC 6+
   =toolchain: none-cube-powerpc-eabi_linux.toolchain.cmake
-  =preload: gamecube.cmake
-  =container: ubuntu
+  =container: hbirch/devkit:ppc
 
 (ubuntu.*|coverage|testing.linux|docs):
   =build.prettyname: Ubuntu
@@ -297,3 +295,5 @@ testing.linux.*:
   =build.prettyname: Emscripten
 .*(gamecube.*):
   =build.prettyname: GCN/DevkitPPC
+.*\$\(shell\)$:
+  =target: shell

@@ -48,6 +48,11 @@ ios: FORCE
 	$(SOURCE_DIR) \
 	-C$(SOURCE_DIR)/toolchain/cmake/Preload/osx-ios.cmake \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_GLKIT=ON \
+	-DBUILD_SDL2=OFF \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(BUILD_DIR)/build/ios \
 	-DCMAKE_TOOLCHAIN_FILE=$(SOURCE_DIR)/toolchain/cmake/Toolchains/all-ios.toolchain.cmake \
@@ -67,6 +72,11 @@ ios.x86_64: FORCE
 	$(SOURCE_DIR) \
 	-C$(SOURCE_DIR)/toolchain/cmake/Preload/osx-ios.cmake \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_GLKIT=ON \
+	-DBUILD_SDL2=OFF \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(BUILD_DIR)/build/ios.x86_64 \
 	-DCMAKE_TOOLCHAIN_FILE=$(SOURCE_DIR)/toolchain/cmake/Toolchains/all-ios.toolchain.cmake \
@@ -87,6 +97,11 @@ ios.x86: FORCE
 	$(SOURCE_DIR) \
 	-C$(SOURCE_DIR)/toolchain/cmake/Preload/osx-ios.cmake \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_GLKIT=ON \
+	-DBUILD_SDL2=OFF \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(BUILD_DIR)/build/ios.x86 \
 	-DCMAKE_TOOLCHAIN_FILE=$(SOURCE_DIR)/toolchain/cmake/Toolchains/all-ios.toolchain.cmake \
@@ -106,7 +121,9 @@ osx: FORCE
 	-e EXTRA_OPTIONS=" \
 	$(SOURCE_DIR) \
 	-C$(SOURCE_DIR)/toolchain/cmake/Preload/osx-generic.cmake \
+	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_ETC2COMP=ON \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(BUILD_DIR)/build/osx \
 	-DCMAKE_TOOLCHAIN_FILE=$(SOURCE_DIR)/toolchain/cmake/Toolchains/osx-generic_osx.toolchain.cmake \
@@ -130,6 +147,7 @@ osx.coverage: FORCE
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
 	-DBUILD_COVERAGE=ON \
+	-DBUILD_ETC2COMP=ON \
 	-DBUILD_EXAMPLES=OFF \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(BUILD_DIR)/build/osx.coverage \

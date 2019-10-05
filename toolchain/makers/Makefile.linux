@@ -55,8 +55,10 @@ android.armv7a.gingerbread.gles2: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -95,8 +97,10 @@ android.armv7a.kitkat.gles2: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -135,8 +139,10 @@ android.armv7a.lollipop.gles3: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=OFF \
 	-DBUILD_SDL2=OFF \
@@ -175,8 +181,52 @@ android.armv7a.nougat.gles2: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_SDL2=OFF \
+	-DBUILD_TESTS=OFF \
+	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/android.armv7a.nougat.gles2 \
+	-DCMAKE_TOOLCHAIN_FILE=$(ANDROID_NDK_INTERNAL)/build/cmake/android.toolchain.cmake \
+	-DGIT_DEP_BUILDVARIANT=android.armv7a.nougat.gles2 \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'CodeBlocks - Ninja'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	 \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/android.armv7a.nougat.gles2:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONFIG=android \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=android.armv7a.nougat.gles2 \
+	-e CMAKE_TARGET=AndroidPackage
+
+# Android builds, ARMv8-A and ARMv7-A mostly
+# Compiler: Clang
+android.armv7a.nougat.gles2.shell: FORCE
+	make -f $(ROOT_DIR)/$(RUNNER) shell \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
+	-DANDROID_ABI='armeabi-v7a with NEON' \
+	-DANDROID_ARM_NEON=OFF \
+	-DANDROID_CPP_FEATURES=rtti\;exceptions \
+	-DANDROID_NDK=$(ANDROID_NDK_INTERNAL) \
+	-DANDROID_PLATFORM=android-24 \
+	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
+	-DANDROID_STL=c++_static \
+	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
+	-DBUILD_ASSIMP=ON \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -215,8 +265,52 @@ android.armv7a.nougat.gles3: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=OFF \
+	-DBUILD_SDL2=OFF \
+	-DBUILD_TESTS=OFF \
+	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/android.armv7a.nougat.gles3 \
+	-DCMAKE_TOOLCHAIN_FILE=$(ANDROID_NDK_INTERNAL)/build/cmake/android.toolchain.cmake \
+	-DGIT_DEP_BUILDVARIANT=android.armv7a.nougat.gles3 \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'CodeBlocks - Ninja'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	 \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/android.armv7a.nougat.gles3:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONFIG=android \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=android.armv7a.nougat.gles3 \
+	-e CMAKE_TARGET=AndroidPackage
+
+# Android builds, ARMv8-A and ARMv7-A mostly
+# Compiler: Clang
+android.armv7a.nougat.gles3.shell: FORCE
+	make -f $(ROOT_DIR)/$(RUNNER) shell \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
+	-DANDROID_ABI='armeabi-v7a with NEON' \
+	-DANDROID_ARM_NEON=OFF \
+	-DANDROID_CPP_FEATURES=rtti\;exceptions \
+	-DANDROID_NDK=$(ANDROID_NDK_INTERNAL) \
+	-DANDROID_PLATFORM=android-24 \
+	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
+	-DANDROID_STL=c++_static \
+	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
+	-DBUILD_ASSIMP=ON \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=OFF \
 	-DBUILD_SDL2=OFF \
@@ -255,8 +349,10 @@ android.armv8a.lollipop.gles3: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=OFF \
 	-DBUILD_SDL2=OFF \
@@ -295,8 +391,52 @@ android.armv8a.nougat.gles3: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=OFF \
+	-DBUILD_SDL2=OFF \
+	-DBUILD_TESTS=OFF \
+	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/android.armv8a.nougat.gles3 \
+	-DCMAKE_TOOLCHAIN_FILE=$(ANDROID_NDK_INTERNAL)/build/cmake/android.toolchain.cmake \
+	-DGIT_DEP_BUILDVARIANT=android.armv8a.nougat.gles3 \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'CodeBlocks - Ninja'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	 \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/android.armv8a.nougat.gles3:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONFIG=android \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=android.armv8a.nougat.gles3 \
+	-e CMAKE_TARGET=AndroidPackage
+
+# Android builds, ARMv8-A and ARMv7-A mostly
+# Compiler: Clang
+android.armv8a.nougat.gles3.shell: FORCE
+	make -f $(ROOT_DIR)/$(RUNNER) shell \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
+	-DANDROID_ABI='arm64-v8a' \
+	-DANDROID_ARM_NEON=OFF \
+	-DANDROID_CPP_FEATURES=rtti\;exceptions \
+	-DANDROID_NDK=$(ANDROID_NDK_INTERNAL) \
+	-DANDROID_PLATFORM=android-24 \
+	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
+	-DANDROID_STL=c++_static \
+	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
+	-DBUILD_ASSIMP=ON \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=OFF \
 	-DBUILD_SDL2=OFF \
@@ -335,8 +475,10 @@ android.mips.kitkat: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -375,8 +517,10 @@ android.mips64.kitkat: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -415,8 +559,10 @@ android.x86.kitkat: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -455,8 +601,10 @@ android.x86_64.kitkat: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -495,8 +643,10 @@ android.x86_64.nougat: FORCE
 	-DANDROID_SDK=$(ANDROID_SDK_INTERNAL) \
 	-DANDROID_STL=c++_static \
 	-DANDROID_TOOLCHAIN=clang \
+	-DBUILD_ANATIVE=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_SDL2=OFF \
@@ -586,17 +736,24 @@ emscripten.asmjs: FORCE
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/js-emscripten.cmake \
 	-DBUILD_ASSIMP=ON \
+	-DBUILD_AUDIO=OFF \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_OPENSSL=OFF \
+	-DBUILD_SDL2=ON \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/emscripten.asmjs \
-	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/js-emscripten.toolchain.cmake \
+	-DCMAKE_TOOLCHAIN_FILE=/home/coffee/emsdk_portable/emscripten/master/cmake/Modules/Platform/Emscripten.cmake \
 	-DEMSCRIPTEN_ROOT_PATH=/home/coffee/emsdk_portable/emscripten/master \
+	-DGENERATE_HTML=ON \
 	-DGIT_DEP_BUILDVARIANT=emscripten.asmjs \
 	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
 	-G'Unix Makefiles'" \
 	-e DOCKER_EXTRA_OPTIONS=" \
 	 \
 	-e EMSCRIPTEN=/home/coffee/emsdk_portable/emscripten/master \
+	-e CMAKE='emcmake cmake' \
 	-v $(SOURCE_DIR):/home/coffee/project:ro \
 	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
 	-v $(BUILD_DIR)/emscripten.asmjs:/home/coffee/build:rw \
@@ -616,17 +773,61 @@ emscripten.wasm: FORCE
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/js-emscripten-wasm.cmake \
 	-DBUILD_ASSIMP=ON \
+	-DBUILD_AUDIO=OFF \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_OPENSSL=OFF \
+	-DBUILD_SDL2=ON \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/emscripten.wasm \
-	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/js-emscripten.toolchain.cmake \
+	-DCMAKE_TOOLCHAIN_FILE=/home/coffee/emsdk_portable/emscripten/master/cmake/Modules/Platform/Emscripten.cmake \
 	-DEMSCRIPTEN_ROOT_PATH=/home/coffee/emsdk_portable/emscripten/master \
+	-DGENERATE_HTML=ON \
 	-DGIT_DEP_BUILDVARIANT=emscripten.wasm \
 	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
 	-G'Unix Makefiles'" \
 	-e DOCKER_EXTRA_OPTIONS=" \
 	 \
 	-e EMSCRIPTEN=/home/coffee/emsdk_portable/emscripten/master \
+	-e CMAKE='emcmake cmake' \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/emscripten.wasm:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONFIG=emscripten \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=emscripten.wasm \
+	-e CMAKE_TARGET=install
+
+# Emscripten with WebAsm and asm.js
+# Compiler: Clang 4+
+emscripten.wasm.shell: FORCE
+	make -f $(ROOT_DIR)/$(RUNNER) shell \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/js-emscripten-wasm.cmake \
+	-DBUILD_ASSIMP=ON \
+	-DBUILD_AUDIO=OFF \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_OPENSSL=OFF \
+	-DBUILD_SDL2=ON \
+	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/emscripten.wasm \
+	-DCMAKE_TOOLCHAIN_FILE=/home/coffee/emsdk_portable/emscripten/master/cmake/Modules/Platform/Emscripten.cmake \
+	-DEMSCRIPTEN_ROOT_PATH=/home/coffee/emsdk_portable/emscripten/master \
+	-DGENERATE_HTML=ON \
+	-DGIT_DEP_BUILDVARIANT=emscripten.wasm \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'Unix Makefiles'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	 \
+	-e EMSCRIPTEN=/home/coffee/emsdk_portable/emscripten/master \
+	-e CMAKE='emcmake cmake' \
 	-v $(SOURCE_DIR):/home/coffee/project:ro \
 	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
 	-v $(BUILD_DIR)/emscripten.wasm:/home/coffee/build:rw \
@@ -672,8 +873,16 @@ gamecube: FORCE
 	make -f $(ROOT_DIR)/$(RUNNER) multi \
 	-e EXTRA_OPTIONS=" \
 	$(CMAKE_SOURCE_DIR) \
-	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/gamecube.cmake \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
+	-DBUILD_ASIO=OFF \
+	-DBUILD_AUDIO=OFF \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_BLAM=OFF \
+	-DBUILD_CPP14=ON \
+	-DBUILD_GRAPHICS_COMMON=OFF \
+	-DBUILD_LIBOGC=ON \
+	-DBUILD_OPENGL=OFF \
+	-DBUILD_SDL2=OFF \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/gamecube \
 	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/none-cube-powerpc-eabi_linux.toolchain.cmake \
@@ -687,7 +896,7 @@ gamecube: FORCE
 	-v $(BUILD_DIR)/gamecube:/home/coffee/build:rw \
 	-v $(COFFEE_DIR):/home/coffee/library:ro \
 	--workdir \"$(CMAKE_BUILD_DIR)\"" \
-	-e DOCKER_CONFIG=ubuntu \
+	-e DOCKER_CONTAINER=hbirch/devkit:ppc \
 	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
 	-e OUTPUT_DIR=$(BUILD_DIR) \
 	-e BUILD_NAME=gamecube \
@@ -701,6 +910,42 @@ maemo.armel: FORCE
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/linux-maemo.cmake \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_SDL2=OFF \
+	-DBUILD_X11=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/maemo.armel \
+	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/linux-maemo-armv7_linux.toolchain.cmake \
+	-DGIT_DEP_BUILDVARIANT=maemo.armel \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'Unix Makefiles'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	-v $(COFFEE_DIR):/maemo//home/coffee/library:ro \
+	-v $(SOURCE_DIR):/maemo//home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/maemo//home/coffee/out:rw \
+	-v $(BUILD_DIR)/maemo.armel:/maemo//home/coffee/build:rw \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/maemo.armel:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONTAINER=hbirch/maemo-builder:v3 \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=maemo.armel \
+	-e CMAKE_TARGET=install
+
+# Maemo 5 builds, performed within a Maemo 5 armel chroot
+# Compiler: GCC 6
+maemo.armel.shell: FORCE
+	make -f $(ROOT_DIR)/$(RUNNER) shell \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/linux-maemo.cmake \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
+	-DBUILD_SDL2=OFF \
+	-DBUILD_X11=ON \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/maemo.armel \
 	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/linux-maemo-armv7_linux.toolchain.cmake \
@@ -750,8 +995,8 @@ mingw.w64: FORCE
 	-e BUILD_NAME=mingw.w64 \
 	-e CMAKE_TARGET=install
 
-# Raspberry Pi ARMv6 build
-# Compiler: GCC 4.9
+# Raspberry Pi ARM 32-bit build
+# Compiler: GCC 8.3
 raspberry.armhf: FORCE rpi-sdk
 	make -f $(ROOT_DIR)/$(RUNNER) multi \
 	-e EXTRA_OPTIONS=" \
@@ -763,18 +1008,46 @@ raspberry.armhf: FORCE rpi-sdk
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/raspberry.armhf \
 	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/linux-raspberry-armhf_linux.toolchain.cmake \
 	-DGIT_DEP_BUILDVARIANT=raspberry.armhf \
-	-DRASPBERRY_SDK=/rpi-sysroot \
+	-DRASPBERRY_SDK=/pi-sysroot \
 	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
 	-G'CodeBlocks - Ninja'" \
 	-e DOCKER_EXTRA_OPTIONS=" \
 	 \
-	-v $(BUILD_DIR)/dependencies/raspberry-sysroot/architectures/rpi-SDL2-X11-armv6:/rpi-sysroot:ro \
 	-v $(SOURCE_DIR):/home/coffee/project:ro \
 	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
 	-v $(BUILD_DIR)/raspberry.armhf:/home/coffee/build:rw \
 	-v $(COFFEE_DIR):/home/coffee/library:ro \
 	--workdir \"$(CMAKE_BUILD_DIR)\"" \
-	-e DOCKER_CONFIG=raspberry \
+	-e DOCKER_CONFIG=raspberry-v2 \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=raspberry.armhf \
+	-e CMAKE_TARGET=install
+
+# Raspberry Pi ARM 32-bit build
+# Compiler: GCC 8.3
+raspberry.armhf.shell: FORCE rpi-sdk
+	make -f $(ROOT_DIR)/$(RUNNER) shell \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/linux-raspberry.cmake \
+	-DBUILD_ASSIMP=ON \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/raspberry.armhf \
+	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/linux-raspberry-armhf_linux.toolchain.cmake \
+	-DGIT_DEP_BUILDVARIANT=raspberry.armhf \
+	-DRASPBERRY_SDK=/pi-sysroot \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'CodeBlocks - Ninja'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	 \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/raspberry.armhf:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONFIG=raspberry-v2 \
 	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
 	-e OUTPUT_DIR=$(BUILD_DIR) \
 	-e BUILD_NAME=raspberry.armhf \
@@ -789,6 +1062,7 @@ steam.amd64: FORCE
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/linux-steam.cmake \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_CPP11=ON \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/steam.amd64 \
 	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/cxx11.toolchain.cmake \

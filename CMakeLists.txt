@@ -96,7 +96,10 @@ set ( BULLET_BUILD          ON  )
 set ( ASSIMP_BUILD          ON  )
 set ( OPENSSL_BUILD         ON  )
 
-set ( OPENSSL_VER "1_1_1b" )
+set ( OPENSSL_VER "1_1_1d" )
+set ( SDL2_VER    "2.0.10" )
+set ( ASSIMP_VER  "5.0.0"  )
+set ( BULLET_VER  "2.88"   )
 
 # Build libraries, only for desktop (x86/amd64)
 
@@ -106,6 +109,8 @@ set ( COMPRESSONATOR_BUILD  OFF )
 set ( SPIRVCROSS_BUILD      OFF )
 set ( GLSLANG_BUILD         OFF )
 set ( SHADERC_BUILD         OFF )
+
+set ( FFMPEG_VER  "4.1.2"  )
 
 # Turning builds on/off
 
@@ -135,7 +140,7 @@ endif()
 # Android's OpenSSL build is just impossible to understand
 # It currently uses a custom process for building
 if(ANDROID)
-    set ( OPENSSL_VER "1.0.2r" )
+    set ( OPENSSL_VER "1.0.2t" )
 endif()
 
 #
@@ -146,7 +151,8 @@ endif()
 # OpenAL-soft
 # For now, OpenAL is not cross-compiler friendly >:(
 #
-if(OPENAL_BUILD)
+message ( STATUS "Cross compiling? ${CMAKE_CROSSCOMPILING}" )
+if(OPENAL_BUILD AND NOT CMAKE_CROSSCOMPILING)
     ExternalProject_Add ( OpenALSoft
 
         PREFIX ${CMAKE_BINARY_DIR}/openal
@@ -198,7 +204,7 @@ if(SDL2_BUILD)
         SOURCE_DIR ${CMAKE_BINARY_DIR}/source/sdl2
         INSTALL_DIR ${CMAKE_BINARY_DIR}/${INSTALL_PREFIX}/sdl2
 
-        URL https://www.libsdl.org/release/SDL2-2.0.9.tar.gz
+        URL https://www.libsdl.org/release/SDL2-${SDL2_VER}.tar.gz
 
         PATCH_COMMAND
             COMMAND patch
@@ -257,7 +263,7 @@ if(BULLET_BUILD)
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/bullet
 
         GIT_REPOSITORY https://github.com/bulletphysics/bullet3.git
-        GIT_TAG 2.88
+        GIT_TAG ${BULLET_VER}
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -433,6 +439,47 @@ if(OPENSSL_BUILD)
 
                 make install_sw
             )
+    elseif(CMAKE_CROSSCOMPILING)
+        set ( OPENSSL_BUILT ON )
+
+        if("${CMAKE_LIBRARY_ARCHITECTURE}" STREQUAL "arm-linux-gnueabihf")
+            set ( OPENSSL_PLATFORM "linux-armv4" )
+            set ( OPENSSL_ARCH "armv6" )
+        endif()
+
+        ExternalProject_Add ( OpenSSL
+
+            PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+            SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+            BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+            INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+            GIT_REPOSITORY https://github.com/openssl/openssl.git
+            GIT_TAG OpenSSL_${OPENSSL_VER}
+
+            CONFIGURE_COMMAND
+                ${CMAKE_COMMAND} -E env
+
+                ${CMAKE_BINARY_DIR}/source/openssl/Configure
+
+                    ${OPENSSL_PLATFORM}
+                    "-march=${OPENSSL_ARCH}"
+                    --cross-compile-prefix=${CMAKE_LIBRARY_ARCHITECTURE}-
+                    no-asm
+                    no-ssl3
+                    no-comp
+                    no-hw
+                    no-engine
+                    no-async
+
+                    --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                    no-shared
+
+            BUILD_COMMAND make
+
+            INSTALL_COMMAND make install
+            )
     elseif(LINUX OR APPLE)
         set ( OPENSSL_BUILT ON )
         ExternalProject_Add ( OpenSSL
@@ -447,8 +494,8 @@ if(OPENSSL_BUILD)
             GIT_TAG OpenSSL_${OPENSSL_VER}
 
             CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
-            --prefix=${CMAKE_BINARY_DIR}/install/openssl
-            no-shared
+                --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                no-shared
 
             BUILD_COMMAND make
 
@@ -479,7 +526,7 @@ if(ASSIMP_BUILD)
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/assimp
 
         GIT_REPOSITORY https://github.com/assimp/assimp.git
-        GIT_TAG v4.1.0
+        GIT_TAG v${ASSIMP_VER}
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -685,7 +732,7 @@ if(FFMPEG_BUILD)
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/ffmpeg
 
         GIT_REPOSITORY https://git.ffmpeg.org/ffmpeg.git
-        GIT_TAG n4.1.2
+        GIT_TAG n${FFMPEG_VER}
 
         CONFIGURE_COMMAND
             ${CMAKE_BINARY_DIR}/source/ffmpeg/configure

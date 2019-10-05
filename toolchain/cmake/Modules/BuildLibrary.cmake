@@ -116,13 +116,13 @@ macro( GENERATE_FINDSCRIPT )
         FILES
         "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-        DESTINATION share
+        DESTINATION lib/cmake/${PROJECT_NAME}
         )
 
     install (
         EXPORT ${PROJECT_NAME}
         NAMESPACE ${PROJECT_NAME}::
-        DESTINATION share
+        DESTINATION lib/cmake/${PROJECT_NAME}
         )
 endmacro()
 
@@ -252,7 +252,7 @@ macro(COFFEE_LIBRARY)
 
     target_compile_definitions ( ${LIB_TARGET}
         PUBLIC
-        -DFEATURE_ENABLE_${LIB_TARGET}
+        -DFEATURE_ENABLE_${LIB_TARGET}=1
         )
 
     if(NOT LIB_NO_EXPORT)
