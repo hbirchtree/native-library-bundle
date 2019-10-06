@@ -439,12 +439,31 @@ if(OPENSSL_BUILD)
 
                 make install_sw
             )
+    elseif(EMSCRIPTEN)
+
+        # We don't support this.
+
     elseif(CMAKE_CROSSCOMPILING)
-        set ( OPENSSL_BUILT ON )
+        set ( OPENSSL_BUILT ON  )
+        set ( USE_CROSS_OPT OFF )
 
         if("${CMAKE_LIBRARY_ARCHITECTURE}" STREQUAL "arm-linux-gnueabihf")
             set ( OPENSSL_PLATFORM "linux-armv4" )
             set ( OPENSSL_ARCH "armv6" )
+            set ( USE_CROSS_OPT ON )
+        elseif(MINGW64)
+            set ( OPENSSL_PLATFORM "mingw64" )
+            set ( USE_CROSS_OPT ON )
+        endif()
+
+        if(DEFINED OPENSSL_ARCH)
+            list ( APPEND EXTRA_OPTS -march=${OPENSSL_ARCH} )
+        endif()
+
+        if(USE_CROSS_OPT)
+            list ( APPEND EXTRA_OPTS
+                --cross-compile-prefix=${CMAKE_LIBRARY_ARCHITECTURE}-
+                )
         endif()
 
         ExternalProject_Add ( OpenSSL
@@ -464,8 +483,7 @@ if(OPENSSL_BUILD)
                 ${CMAKE_BINARY_DIR}/source/openssl/Configure
 
                     ${OPENSSL_PLATFORM}
-                    "-march=${OPENSSL_ARCH}"
-                    --cross-compile-prefix=${CMAKE_LIBRARY_ARCHITECTURE}-
+                    ${EXTRA_OPTS}
                     no-asm
                     no-ssl3
                     no-comp
@@ -474,6 +492,7 @@ if(OPENSSL_BUILD)
                     no-async
 
                     --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                    --openssldir=${CMAKE_BINARY_DIR}/install/openssl/data
                     no-shared
 
             BUILD_COMMAND make

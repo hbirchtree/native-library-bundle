@@ -259,7 +259,7 @@ testing.linux.*:
   =compiler: GCC 8.3
   =preload: linux-raspberry.cmake
   =toolchain: linux-raspberry-armhf_linux.toolchain.cmake
-  =container: raspberry-v2
+  =container: raspberry
   +dependencies: rpi-sdk
   +cmake-opts:
     - -DRASPBERRY_SDK=/pi-sysroot
