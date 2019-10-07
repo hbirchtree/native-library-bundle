@@ -188,13 +188,6 @@ endif()
 # SDL2
 #
 if(SDL2_BUILD)
-    set ( INSTALL_PREFIX install )
-
-    if(APPLE)
-        set ( INSTALL_PREFIX install.tmp )
-        set ( SDL_PATCH_COMMAND patch )
-    endif()
-
     ExternalProject_Add ( SDL2
 
         PREFIX ${CMAKE_BINARY_DIR}/sdl2
@@ -221,28 +214,8 @@ if(SDL2_BUILD)
             -DSDL_SHARED=OFF
             -DSDL_STATIC_PIC=${BUILD_PIC}
 
-            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/${INSTALL_PREFIX}/sdl2
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/sdl2
         )
-
-    if(APPLE)
-        set ( XCODE_PATH "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks" )
-        set ( SDL_CMAKE_DIR "${CMAKE_BINARY_DIR}/install.tmp/sdl2/SDL2.framework/Resources" )
-
-        install (
-            DIRECTORY ${SDL_CMAKE_DIR}/
-            DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/lib/cmake/SDL2
-            )
-
-        install (
-            DIRECTORY ${CMAKE_BINARY_DIR}/install.tmp/sdl2/lib
-            DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/lib
-            )
-
-        install (
-            DIRECTORY ${CMAKE_BINARY_DIR}/install.tmp/sdl2/include
-            DESTINATION ${CMAKE_BINARY_DIR}/install/sdl2/lib
-            )
-    endif()
 
     install (
         FILES       ${CMAKE_BINARY_DIR}/source/sdl2/COPYING.txt
