@@ -151,8 +151,7 @@ endif()
 # OpenAL-soft
 # For now, OpenAL is not cross-compiler friendly >:(
 #
-message ( STATUS "Cross compiling? ${CMAKE_CROSSCOMPILING}" )
-if(OPENAL_BUILD AND NOT CMAKE_CROSSCOMPILING)
+if(OPENAL_BUILD)
     ExternalProject_Add ( OpenALSoft
 
         PREFIX ${CMAKE_BINARY_DIR}/openal
