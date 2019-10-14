@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0fe939d..4ea7c0b 100644
+index 0fe939d..e49313a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -8,16 +8,17 @@ set(VERSION "1.2.11")
@@ -52,7 +52,7 @@ index 0fe939d..4ea7c0b 100644
  endif()
  if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
      install(FILES ${ZLIB_PUBLIC_HDRS} DESTINATION "${INSTALL_INC_DIR}")
-@@ -226,6 +236,18 @@ if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL )
+@@ -226,24 +236,36 @@ if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL )
      install(FILES ${ZLIB_PC} DESTINATION "${INSTALL_PKGCONFIG_DIR}")
  endif()
  
@@ -71,6 +71,28 @@ index 0fe939d..4ea7c0b 100644
  #============================================================================
  # Example binaries
  #============================================================================
+ 
+ add_executable(example test/example.c)
+-target_link_libraries(example zlib)
++target_link_libraries(example zlibstatic)
+ add_test(example example)
+ 
+ add_executable(minigzip test/minigzip.c)
+-target_link_libraries(minigzip zlib)
++target_link_libraries(minigzip zlibstatic)
+ 
+ if(HAVE_OFF64_T)
+     add_executable(example64 test/example.c)
+-    target_link_libraries(example64 zlib)
++    target_link_libraries(example64 zlibstatic)
+     set_target_properties(example64 PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64")
+     add_test(example64 example64)
+ 
+     add_executable(minigzip64 test/minigzip.c)
+-    target_link_libraries(minigzip64 zlib)
++    target_link_libraries(minigzip64 zlibstatic)
+     set_target_properties(minigzip64 PROPERTIES COMPILE_FLAGS "-D_FILE_OFFSET_BITS=64")
+ endif()
 diff --git a/Config.cmake.in b/Config.cmake.in
 new file mode 100644
 index 0000000..e58718e
