@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dcafb649..75d82e7d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -437,10 +437,10 @@ IF(HUNTER_ENABLED)
+   set(ASSIMP_BUILD_MINIZIP TRUE)
+ ELSE(HUNTER_ENABLED)
+   IF ( NOT ASSIMP_BUILD_ZLIB )
+-    FIND_PACKAGE(ZLIB)
++    FIND_PACKAGE(zlib REQUIRED)
+   ENDIF( NOT ASSIMP_BUILD_ZLIB )
+ 
+-  IF( NOT ZLIB_FOUND )
++  IF( NOT zlib_FOUND )
+     MESSAGE(STATUS "compiling zlib from sources")
+     INCLUDE(CheckIncludeFile)
+     INCLUDE(CheckTypeSize)
+@@ -461,11 +461,10 @@ ELSE(HUNTER_ENABLED)
+     SET(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib/zlib ${CMAKE_CURRENT_BINARY_DIR}/contrib/zlib)
+     # need to ensure we don't link with system zlib or minizip as well.
+     SET(ASSIMP_BUILD_MINIZIP 1)
+-  ELSE(NOT ZLIB_FOUND)
++  ELSE(NOT zlib_FOUND)
+     ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
+-    SET(ZLIB_LIBRARIES_LINKED -lz)
++    SET(ZLIB_LIBRARIES zlib::zlibstatic)
+   ENDIF(NOT ZLIB_FOUND)
+-  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
+ ENDIF(HUNTER_ENABLED)
+ 
+ IF( NOT IOS )

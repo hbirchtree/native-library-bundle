@@ -95,11 +95,13 @@ set ( OPENAL_BUILD          OFF )
 set ( BULLET_BUILD          ON  )
 set ( ASSIMP_BUILD          ON  )
 set ( OPENSSL_BUILD         ON  )
+set ( ZLIB_BUILD            ON  )
 
 set ( OPENSSL_VER "1_1_1d" )
 set ( SDL2_VER    "2.0.10" )
 set ( ASSIMP_VER  "5.0.0"  )
 set ( BULLET_VER  "2.88"   )
+set ( ZLIB_VER    "1.2.11" )
 
 # Build libraries, only for desktop (x86/amd64)
 
@@ -285,7 +287,7 @@ if(OPENSSL_BUILD)
             PATCH_COMMAND
                 COMMAND patch
                     -p0
-                    -i ${CMAKE_SOURCE_DIR}/patches/android-openssl.patch
+                    -i ${CMAKE_SOURCE_DIR}/patches/openssl-android.patch
 
             CONFIGURE_COMMAND true
 
@@ -369,7 +371,7 @@ if(OPENSSL_BUILD)
 
             PATCH_COMMAND
                 ${GIT_EXECUTABLE}
-                    apply ${CMAKE_SOURCE_DIR}/patches/ios-openssl.patch
+                    apply ${CMAKE_SOURCE_DIR}/patches/openssl-ios.patch
 
             CONFIGURE_COMMAND
                 ${CMAKE_COMMAND} -E env
@@ -505,10 +507,42 @@ if(OPENSSL_BUILD)
 endif()
 
 #
+# zlib, for platforms that don't have it
+#
+if(ZLIB_BUILD)
+    ExternalProject_Add ( Zlib
+
+        PREFIX ${CMAKE_BINARY_DIR}/zlib
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/zlib
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/zlib
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/zlib
+
+        GIT_REPOSITORY https://github.com/madler/zlib.git
+        GIT_TAG v${ZLIB_VER}
+
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/zlib-export.patch
+
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
+
+        CMAKE_ARGS
+
+            ${TOOLCHAIN_OPTIONS}
+
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/zlib
+        )
+endif()
+
+#
 # Building Assimp
 #
 if(ASSIMP_BUILD)
     ExternalProject_Add ( Assimp
+
+        DEPENDS Zlib
 
         PREFIX ${CMAKE_BINARY_DIR}/assimp
 
@@ -518,6 +552,11 @@ if(ASSIMP_BUILD)
 
         GIT_REPOSITORY https://github.com/assimp/assimp.git
         GIT_TAG v${ASSIMP_VER}
+
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/assimp-zlib-find.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -530,7 +569,7 @@ if(ASSIMP_BUILD)
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             -DASSIMP_BUILD_TESTS=OFF
 
-            -DASSIMP_BUILD_ZLIB=ON
+            -DASSIMP_BUILD_ZLIB=OFF
 
             -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF
             -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF
@@ -539,6 +578,7 @@ if(ASSIMP_BUILD)
             -DASSIMP_BUILD_COLLADA_IMPORTER=ON
             -DASSIMP_BUILD_FBX_IMPORTER=ON
 
+            -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/install/zlib/lib/cmake
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/assimp
         )
 
@@ -566,7 +606,7 @@ if(SQUISH_BUILD)
         PATCH_COMMAND
             COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
             COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/squish.patch
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/squish-pic.patch
 
         CONFIGURE_COMMAND
             ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/lib
@@ -669,7 +709,7 @@ if(SPIRVCROSS_BUILD)
         PATCH_COMMAND
             COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
             COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/spirvcross.patch
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/spirvcross-werror.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -773,7 +813,7 @@ if(COMPRESSONATOR_BUILD)
         PATCH_COMMAND
             COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
             COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/compressonator.patch
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/compressonator-linux-mac.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
 
