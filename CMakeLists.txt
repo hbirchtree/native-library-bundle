@@ -578,7 +578,7 @@ if(ASSIMP_BUILD)
             -DASSIMP_BUILD_COLLADA_IMPORTER=ON
             -DASSIMP_BUILD_FBX_IMPORTER=ON
 
-            -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/install/zlib/lib/cmake
+            -Dzlib_DIR=${CMAKE_BINARY_DIR}/install/zlib/lib/cmake
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/assimp
         )
 
