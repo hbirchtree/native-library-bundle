@@ -1,5 +1,5 @@
-def linux_targets = ['ubuntu.i686.gles2', 'ubuntu.i686.gles', 'ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.armv8a.nougat.gles3', 'android.armv8a.lollipop.gles3', 'android.armv7a.nougat.gles3', 'android.armv7a.nougat.gles2', 'android.armv7a.lollipop.gles3', 'android.armv7a.kitkat.gles2', ]
-def osx_targets = ['osx', 'ios.x86_64', ]
+def linux_targets = ['ubuntu.i686.gles2', 'ubuntu.i686.gles', 'ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.x86_64.nougat', 'android.x86.kitkat', 'android.armv8a.nougat.gles3$(shell)', 'android.armv8a.nougat.gles3', 'android.armv8a.lollipop.gles3', 'android.armv7a.nougat.gles3$(shell)', 'android.armv7a.nougat.gles3', 'android.armv7a.nougat.gles2$(shell)', 'android.armv7a.nougat.gles2', 'android.armv7a.lollipop.gles3', 'android.armv7a.kitkat.gles2', ]
+def osx_targets = ['osx', 'ios.x86_64', 'ios', ]
 def windows_targets = ['win32.x86', 'win32.amd64', 'uwp.amd64', ]
 
 String linux_label = 'linux && docker'
