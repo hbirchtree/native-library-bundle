@@ -2,6 +2,8 @@ allow_fail:
 - env: BUILDVARIANT=raspberry.armhf
 - env: BUILDVARIANT=ubuntu.i686.gles
 - env: BUILDVARIANT=ubuntu.i686.gles2
+- env: BUILDVARIANT=android.x86.kitkat
+- env: BUILDVARIANT=android.x86_64.nougat
 branches:
 - build: true
   deploy: true
@@ -21,11 +23,16 @@ platforms:
     armv8a:
     - nougat
     - lollipop
+    x86:
+    - kitkat
+    x86_64:
+    - nougat
   emscripten:
   - wasm
   fedora:
   - amd64
   ios:
+  - .
   - x86_64
   mingw:
   - .
@@ -46,7 +53,7 @@ platforms:
 script_location: toolchain/ci
 template_location: toolchain/cmake/Templates
 version:
-  hotfix: 0
+  hotfix: 1
   major: 0
   minor: 3
   patch: 2
