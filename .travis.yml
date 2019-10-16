@@ -29,12 +29,9 @@ env:
   - BUILDVARIANT=android.armv7a.kitkat.gles2
   - BUILDVARIANT=android.armv7a.lollipop.gles3
   - BUILDVARIANT=android.armv7a.nougat.gles2
-  - BUILDVARIANT=android.armv7a.nougat.gles2$(shell)
   - BUILDVARIANT=android.armv7a.nougat.gles3
-  - BUILDVARIANT=android.armv7a.nougat.gles3$(shell)
   - BUILDVARIANT=android.armv8a.lollipop.gles3
   - BUILDVARIANT=android.armv8a.nougat.gles3
-  - BUILDVARIANT=android.armv8a.nougat.gles3$(shell)
   - BUILDVARIANT=android.x86.kitkat
   - BUILDVARIANT=android.x86_64.nougat
   - BUILDVARIANT=emscripten.wasm
@@ -63,17 +60,11 @@ matrix:
     os: osx
   - env: BUILDVARIANT=android.armv7a.nougat.gles2
     os: osx
-  - env: BUILDVARIANT=android.armv7a.nougat.gles2$(shell)
-    os: osx
   - env: BUILDVARIANT=android.armv7a.nougat.gles3
-    os: osx
-  - env: BUILDVARIANT=android.armv7a.nougat.gles3$(shell)
     os: osx
   - env: BUILDVARIANT=android.armv8a.lollipop.gles3
     os: osx
   - env: BUILDVARIANT=android.armv8a.nougat.gles3
-    os: osx
-  - env: BUILDVARIANT=android.armv8a.nougat.gles3$(shell)
     os: osx
   - env: BUILDVARIANT=android.x86.kitkat
     os: osx
