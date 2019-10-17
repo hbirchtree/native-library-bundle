@@ -510,6 +510,9 @@ endif()
 # zlib, for platforms that don't have it
 #
 if(ZLIB_BUILD)
+    if(LINUX OR UNIX)
+        set ( ZLIB_FLAGS "-fPIC" )
+    endif()
     ExternalProject_Add ( Zlib
 
         PREFIX ${CMAKE_BINARY_DIR}/zlib
@@ -532,6 +535,7 @@ if(ZLIB_BUILD)
 
             ${TOOLCHAIN_OPTIONS}
 
+            -DCMAKE_CXX_FLAGS="${ZLIB_FLAGS}"
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/zlib
         )
 endif()
