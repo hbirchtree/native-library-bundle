@@ -41,7 +41,7 @@ if(ANDROID)
 endif()
 
 if(EMSCRIPTEN)
-    set ( TOOLCHAIN_GENERATOR "Unix Makefiles" )
+    set ( TOOLCHAIN_GENERATOR "Ninja" )
 
     set ( TOOLCHAIN_OPTIONS
         ${TOOLCHAIN_OPTIONS}
@@ -143,6 +143,10 @@ endif()
 # It currently uses a custom process for building
 if(ANDROID)
     set ( OPENSSL_VER "1.0.2t" )
+endif()
+
+if(EMSCRIPTEN)
+    set ( ZLIB_BUILD OFF )
 endif()
 
 #
@@ -540,9 +544,19 @@ endif()
 # Building Assimp
 #
 if(ASSIMP_BUILD)
+    set ( ASSIMP_DEPS )
+    set ( ASSIMP_BUILD_ZLIB ON )
+    set ( ASSIMP_CXX_FLAGS )
+    if(ZLIB_BUILD)
+        set ( ASSIMP_DEPS Zlib )
+        set ( ASSIMP_BUILD_ZLIB OFF )
+    endif()
+    if(EMSCRIPTEN)
+        set ( ASSIMP_BUILD_ZLIB OFF )
+    endif()
     ExternalProject_Add ( Assimp
 
-        DEPENDS Zlib
+        DEPENDS ${ASSIMP_DEPS}
 
         PREFIX ${CMAKE_BINARY_DIR}/assimp
 
@@ -569,7 +583,7 @@ if(ASSIMP_BUILD)
             -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
             -DASSIMP_BUILD_TESTS=OFF
 
-            -DASSIMP_BUILD_ZLIB=OFF
+            -DASSIMP_BUILD_ZLIB=${ASSIMP_BUILD_ZLIB}
 
             -DASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT=OFF
             -DASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT=OFF
