@@ -1,25 +1,15 @@
-addons:
-  homebrew:
-    packages:
-    - sdl2
-    - cmake
-    - python3
-    - python
-    - jq
-    update: true
-after_success:
-- toolchain/ci/travis-deploy.sh
-apt:
-  update: true
-before_script:
-- toolchain/ci/travis-deps.sh
-branches:
-  only:
-  - master
-  - testing
+language: cpp
+dist: bionic
+sudo: required
+services:
+- docker
+notifications:
+  email: true
+os:
+- linux
+- osx
 compiles:
 - clang
-dist: trusty
 env:
   global:
   - MAKEFILE_DIR=toolchain/makers
@@ -45,60 +35,70 @@ env:
   - BUILDVARIANT=ios
   - BUILDVARIANT=ios.x86_64
   - BUILDVARIANT=osx
-language: cpp
 matrix:
+  exclude:
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.kitkat.gles2
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.lollipop.gles3
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.nougat.gles2
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.nougat.gles3
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.lollipop.gles3
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.nougat.gles3
+  - os: osx
+    env: BUILDVARIANT=android.x86.kitkat
+  - os: osx
+    env: BUILDVARIANT=android.x86_64.nougat
+  - os: osx
+    env: BUILDVARIANT=emscripten.wasm
+  - os: osx
+    env: BUILDVARIANT=fedora.amd64
+  - os: osx
+    env: BUILDVARIANT=mingw.w64
+  - os: osx
+    env: BUILDVARIANT=raspberry.armhf
+  - os: osx
+    env: BUILDVARIANT=steam.amd64
+  - os: osx
+    env: BUILDVARIANT=ubuntu.amd64
+  - os: osx
+    env: BUILDVARIANT=ubuntu.i686.gles
+  - os: osx
+    env: BUILDVARIANT=ubuntu.i686.gles2
+  - os: linux
+    env: BUILDVARIANT=ios
+  - os: linux
+    env: BUILDVARIANT=ios.x86_64
+  - os: linux
+    env: BUILDVARIANT=osx
   allow_failures:
   - env: BUILDVARIANT=raspberry.armhf
   - env: BUILDVARIANT=ubuntu.i686.gles
   - env: BUILDVARIANT=ubuntu.i686.gles2
   - env: BUILDVARIANT=android.x86.kitkat
   - env: BUILDVARIANT=android.x86_64.nougat
-  exclude:
-  - env: BUILDVARIANT=android.armv7a.kitkat.gles2
-    os: osx
-  - env: BUILDVARIANT=android.armv7a.lollipop.gles3
-    os: osx
-  - env: BUILDVARIANT=android.armv7a.nougat.gles2
-    os: osx
-  - env: BUILDVARIANT=android.armv7a.nougat.gles3
-    os: osx
-  - env: BUILDVARIANT=android.armv8a.lollipop.gles3
-    os: osx
-  - env: BUILDVARIANT=android.armv8a.nougat.gles3
-    os: osx
-  - env: BUILDVARIANT=android.x86.kitkat
-    os: osx
-  - env: BUILDVARIANT=android.x86_64.nougat
-    os: osx
-  - env: BUILDVARIANT=emscripten.wasm
-    os: osx
-  - env: BUILDVARIANT=fedora.amd64
-    os: osx
-  - env: BUILDVARIANT=mingw.w64
-    os: osx
-  - env: BUILDVARIANT=raspberry.armhf
-    os: osx
-  - env: BUILDVARIANT=steam.amd64
-    os: osx
-  - env: BUILDVARIANT=ubuntu.amd64
-    os: osx
-  - env: BUILDVARIANT=ubuntu.i686.gles
-    os: osx
-  - env: BUILDVARIANT=ubuntu.i686.gles2
-    os: osx
-  - env: BUILDVARIANT=ios
-    os: linux
-  - env: BUILDVARIANT=ios.x86_64
-    os: linux
-  - env: BUILDVARIANT=osx
-    os: linux
-notifications:
-  email: true
-os:
-- linux
-- osx
+branches:
+  only:
+  - master
+  - testing
+apt:
+  update: true
+addons:
+  homebrew:
+    update: true
+    packages:
+    - sdl2
+    - cmake
+    - python3
+    - python
+    - jq
+before_script:
+- toolchain/ci/travis-deps.sh
 script:
 - toolchain/ci/travis-build.sh
-services:
-- docker
-sudo: required
+after_success:
+- toolchain/ci/travis-deploy.sh

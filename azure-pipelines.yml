@@ -1,0 +1,107 @@
+trigger:
+  paths:
+    include:
+    - examples/*
+    - src/*
+    - tests/*
+    - toolchain/*
+  branches:
+    include:
+    - master
+    - testing
+jobs:
+- job: Linux
+  pool:
+    vmImage: ubuntu-18.04
+  strategy:
+    matrix:
+      android.armv7a.kitkat.gles2:
+        variant: android.armv7a.kitkat.gles2
+      android.armv7a.lollipop.gles3:
+        variant: android.armv7a.lollipop.gles3
+      android.armv7a.nougat.gles2:
+        variant: android.armv7a.nougat.gles2
+      android.armv7a.nougat.gles3:
+        variant: android.armv7a.nougat.gles3
+      android.armv8a.lollipop.gles3:
+        variant: android.armv8a.lollipop.gles3
+      android.armv8a.nougat.gles3:
+        variant: android.armv8a.nougat.gles3
+      android.x86.kitkat:
+        variant: android.x86.kitkat
+      android.x86_64.nougat:
+        variant: android.x86_64.nougat
+      emscripten.wasm:
+        variant: emscripten.wasm
+      fedora.amd64:
+        variant: fedora.amd64
+      mingw.w64:
+        variant: mingw.w64
+      raspberry.armhf:
+        variant: raspberry.armhf
+      steam.amd64:
+        variant: steam.amd64
+      ubuntu.amd64:
+        variant: ubuntu.amd64
+      ubuntu.i686.gles:
+        variant: ubuntu.i686.gles
+      ubuntu.i686.gles2:
+        variant: ubuntu.i686.gles2
+  steps:
+  - checkout: self
+    submodules: true
+  - script: ./toolchain/ci/travis-deps.sh
+    displayName: Downloading dependencies
+    env:
+      TRAVIS_OS_NAME: linux
+  - script: ./cb quick-build $(variant)
+    displayName: Building project
+    env:
+      CONFIGURATION: Release
+- job: macOS_and_iOS
+  pool:
+    vmImage: macos-10.14
+  strategy:
+    matrix:
+      ios:
+        variant: ios
+      ios.x86_64:
+        variant: ios.x86_64
+      osx:
+        variant: osx
+  steps:
+  - checkout: self
+    submodules: true
+  - script: ./toolchain/ci/travis-deps.sh
+    displayName: Downloading dependencies
+    env:
+      TRAVIS_OS_NAME: osx
+  - script: ./cb quick-build $(variant)
+    displayName: Building project
+    env:
+      CONFIGURATION: Release
+      TRAVIS_OS_NAME: osx
+- job: Windows
+  pool:
+    vmImage: windows-2019
+  strategy:
+    matrix:
+      uwp.amd64:
+        variant: uwp.amd64
+      win32.amd64:
+        variant: win32.amd64
+      win32.x86:
+        variant: win32.x86
+  steps:
+  - checkout: self
+    submodules: true
+  - powershell: ./toolchain/ci/appveyor-deps.ps1
+    displayName: Downloading dependencies
+    env:
+      AZURE_IMAGE: vs2019-win2019
+      OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
+  - powershell: ./cb.ps1 quick-build $(variant)
+    displayName: Downloading dependencies
+    env:
+      AZURE_IMAGE: vs2019-win2019
+      OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
