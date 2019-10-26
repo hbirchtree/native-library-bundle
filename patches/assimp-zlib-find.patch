@@ -24,7 +24,7 @@ index dcafb649..b3d5c795 100644
      MESSAGE(STATUS "compiling zlib from sources")
      INCLUDE(CheckIncludeFile)
      INCLUDE(CheckTypeSize)
-@@ -461,11 +461,15 @@ ELSE(HUNTER_ENABLED)
+@@ -461,11 +461,16 @@ ELSE(HUNTER_ENABLED)
      SET(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib/zlib ${CMAKE_CURRENT_BINARY_DIR}/contrib/zlib)
      # need to ensure we don't link with system zlib or minizip as well.
      SET(ASSIMP_BUILD_MINIZIP 1)
@@ -36,6 +36,7 @@ index dcafb649..b3d5c795 100644
 -  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 +    SET(ZLIB_LIBRARIES zlib::zlibstatic)
 +  ELSEIF( EMSCRIPTEN )
++    ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
 +    ADD_LIBRARY(zlibstatic INTERFACE)
 +    TARGET_COMPILE_OPTIONS(zlibstatic INTERFACE "-s " USE_ZLIB=1 )
 +    TARGET_LINK_OPTIONS(zlibstatic INTERFACE "-s " USE_ZLIB=1 )
