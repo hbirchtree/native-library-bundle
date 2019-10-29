@@ -1,0 +1,18 @@
+diff --git a/Configurations/10-main.conf a/Configurations/10-main.conf
+index 930f2d3c92..f74ed4eb2a 100644
+--- a/Configurations/10-main.conf
++++ b/Configurations/10-main.conf
+@@ -1554,6 +1554,13 @@ my %targets = (
+         bn_ops           => "SIXTY_FOUR_BIT_LONG",
+         perlasm_scheme   => "macosx",
+     },
++    "ios64sim-cross"     => {
++        inherit_from     => [ "darwin-common", asm("no_asm") ],
++        cflags           => add("-arch x86_64 -DOPENSSL_NO_ASM -mios-version-min=7.0.0 -isysroot \$(CROSS_TOP)/SDKs/\$(CROSS_SDK) -fno-common"),
++        sys_id           => "iOS",
++        bn_ops           => "SIXTY_FOUR_BIT_LONG RC4_CHAR",
++        perlasm_scheme   => "ios64",
++    },
+ 
+ ##### GNU Hurd
+     "hurd-x86" => {

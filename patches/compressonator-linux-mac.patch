@@ -1,0 +1,213 @@
+diff --git a/Compressonator/Header/CMP_Math/TootlePCH.h b/Compressonator/Header/CMP_Math/TootlePCH.h
+index a71b3027..2ae82e6d 100644
+--- a/Compressonator/Header/CMP_Math/TootlePCH.h
++++ b/Compressonator/Header/CMP_Math/TootlePCH.h
+@@ -17,9 +17,17 @@
+ #define _SOFTWARE_ONLY_VERSION          // Do not use DirectX SDK 
+ 
+ #ifdef _LINUX
++    
+     #define __cdecl
+-    #define _isnan(x) isnan(x)
+-    #define _finite(x) finite(x)
++    #ifdef __cplusplus
++        #include <cmath>
++
++        #define _isnan(x) std::isnan(x)
++        #define _finite(x) std::isfinite(x)
++    #else
++        #define _isnan(x) isnan(x)
++        #define _finite(x) finite(x)
++    #endif
+ #endif
+ 
+ #ifdef __cplusplus
+diff --git a/Compressonator/Make/CMakeLists.txt b/Compressonator/Make/CMakeLists.txt
+index 413782ec..104d71e9 100644
+--- a/Compressonator/Make/CMakeLists.txt
++++ b/Compressonator/Make/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required (VERSION 2.8)
++cmake_minimum_required (VERSION 3.0)
+ 
+ project (Compressonator)
+ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+@@ -17,10 +17,8 @@ file(GLOB_RECURSE CMP_SOURCES3 "${CMAKE_CURRENT_SOURCE_DIR}/../Source/*.cxx")
+ file(GLOB_RECURSE CMP_HEADERS1 "${CMAKE_CURRENT_SOURCE_DIR}/../Header/*.h")
+ file(GLOB_RECURSE CMP_HEADERS2 "${CMAKE_CURRENT_SOURCE_DIR}/../Source/*.h")
+ 
+-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+-    list(APPEND CMP_HEADERS1 ${CMP_HEADERS1} "${CMAKE_CURRENT_SOURCE_DIR}/../../Common/Lib/Ext/OpenEXR/ilmbase-2.2.0/Half/half.h")
+-    list(APPEND CMP_SOURCES1 ${CMP_SOURCES1} "${CMAKE_CURRENT_SOURCE_DIR}/../../Common/Lib/Ext/OpenEXR/ilmbase-2.2.0/Half/half.cpp")
+-endif()
++list(APPEND CMP_HEADERS1 ${CMP_HEADERS1} "${CMAKE_CURRENT_SOURCE_DIR}/../../Common/Lib/Ext/OpenEXR/ilmbase-2.2.0/Half/half.h")
++list(APPEND CMP_SOURCES1 ${CMP_SOURCES1} "${CMAKE_CURRENT_SOURCE_DIR}/../../Common/Lib/Ext/OpenEXR/ilmbase-2.2.0/Half/half.cpp")
+ 
+ 
+ list(APPEND CMP_SOURCES1 ${CMP_SOURCES1} "${CMP_SOURCES2}")
+@@ -38,18 +36,23 @@ foreach (_headerFile ${CMP_HEADERS2})
+     list (APPEND CMP_INCLUDE_DIRS ${_dir})
+ endforeach()
+ 
+-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-    list(APPEND CMP_INCLUDE_DIRS "/usr/local/include/OpenEXR/")
+-    list(APPEND CMP_INCLUDE_DIRS "/usr/include/OpenEXR/")
+-    #build Openexr 2.2 from cmake
+-    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+-        list(APPEND CMP_INCLUDE_DIRS "/usr/local/ilmbase22build/include/OpenEXR/")
+-        list(APPEND CMP_INCLUDE_DIRS "/usr/local/openexr22build/include/OpenEXR/")
+-    endif()
+-endif()
+-
+ list(REMOVE_DUPLICATES CMP_INCLUDE_DIRS)
+ 
+-include_directories(${CMP_INCLUDE_DIRS})
+ 
+ add_library(Compressonator STATIC ${CMP_SOURCES1})
++target_include_directories( Compressonator PRIVATE ${CMP_INCLUDE_DIRS})
++
++set_property ( TARGET Compressonator PROPERTY CXX_STANDARD 14 )
++
++install (
++    TARGETS Compressonator
++    EXPORT Compressonator
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++    INCLUDES DESTINATION include
++    )
++
++install (
++    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Header/
++    DESTINATION include
++    )
+diff --git a/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp b/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp
+index 7b0cb957..7194a17c 100644
+--- a/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp
++++ b/Compressonator/Source/Codec/ASTC/ASTC_Host.cpp
+@@ -15,13 +15,13 @@
+ // Copyright (c) 2017  Advanced Micro Devices, Inc. All rights reserved
+ //=====================================================================
+ 
++#include <iostream>
++#include <fstream>
++
+ #include "ASTC_Host.h"
+ #include "ASTC_Encode_Kernel.h"
+ #include "Compressonator.h"
+ 
+-#include <iostream>
+-#include <fstream>
+-
+ using namespace std;
+ 
+ //================================= ASTC CPU HOST CODE  ===========================================
+diff --git a/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp b/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp
+index 414a61ca..aa035279 100644
+--- a/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp
++++ b/Compressonator/Source/Codec/BC6H/BC6H_Encode.cpp
+@@ -37,6 +37,7 @@
+ #include "BC6H_Definitions.h"
+ #include "BC6H_Encode.h"
+ #include "BC6H_utils.h"
++#include <cmath>
+ 
+ using namespace HDR_Encode;
+ 
+@@ -742,8 +743,8 @@ float CalcOneRegionEndPtsError(AMD_BC6H_Format &BC6H_data, float fEndPoints[MAX_
+         {
+             for (int n = 0; n < NCHANNELS; n++)
+             {
+-                float calencpts = fEndPoints[0][m][n] + (abs(fEndPoints[0][m][n] - fEndPoints[0][m][n]) * (shape_indices[0][i] / 15));
+-                error += abs(BC6H_data.din[i][n] - calencpts);
++                float calencpts = fEndPoints[0][m][n] + (std::fabs(fEndPoints[0][m][n] - fEndPoints[0][m][n]) * (shape_indices[0][i] / 15));
++                error += std::fabs(BC6H_data.din[i][n] - calencpts);
+             }
+         }
+     }
+@@ -782,16 +783,16 @@ float CalcShapeError(AMD_BC6H_Format &BC6H_data, float fEndPoints[MAX_SUBSETS][M
+         }
+ 
+         // initialize bestError to the difference for first data
+-        bestError = abs(BC6H_data.din[i][0] - BC6H_data.Paletef[subset][0].x) +
++        bestError = std::fabs(BC6H_data.din[i][0] - BC6H_data.Paletef[subset][0].x) +
+             abs(BC6H_data.din[i][1] - BC6H_data.Paletef[subset][0].y) +
+             abs(BC6H_data.din[i][2] - BC6H_data.Paletef[subset][0].z);
+ 
+         // loop through the rest of the data until find the best error 
+         for (int j = 1; j < maxPallet && bestError > 0; j++)
+         {
+-            error = abs(BC6H_data.din[i][0] - BC6H_data.Paletef[subset][j].x) +
+-                abs(BC6H_data.din[i][1] - BC6H_data.Paletef[subset][j].y) +
+-                abs(BC6H_data.din[i][2] - BC6H_data.Paletef[subset][j].z);
++            error = std::fabs(BC6H_data.din[i][0] - BC6H_data.Paletef[subset][j].x) +
++                std::fabs(BC6H_data.din[i][1] - BC6H_data.Paletef[subset][j].y) +
++                std::fabs(BC6H_data.din[i][2] - BC6H_data.Paletef[subset][j].z);
+ 
+             if (error <= bestError)
+                 bestError = error;
+@@ -831,9 +832,9 @@ void ReIndexShapef(AMD_BC6H_Format &BC6H_data, int shape_indices[BC6H_MAX_SUBSET
+             for (int j = 0; j < MaxPallet; j++)
+             {
+                 // Calculate error from original
+-                error = abs(BC6H_data.din[i][0] - BC6H_data.Paletef[1][j].x) +
+-                        abs(BC6H_data.din[i][1] - BC6H_data.Paletef[1][j].y) +
+-                        abs(BC6H_data.din[i][2] - BC6H_data.Paletef[1][j].z);
++                error = std::fabs(BC6H_data.din[i][0] - BC6H_data.Paletef[1][j].x) +
++                        std::fabs(BC6H_data.din[i][1] - BC6H_data.Paletef[1][j].y) +
++                        std::fabs(BC6H_data.din[i][2] - BC6H_data.Paletef[1][j].z);
+                 if (error < bestError)
+                 {
+                     bestError = error;
+@@ -853,9 +854,9 @@ void ReIndexShapef(AMD_BC6H_Format &BC6H_data, int shape_indices[BC6H_MAX_SUBSET
+             for (int j = 0; j < MaxPallet; j++)
+             {
+                 // Calculate error from original
+-                error = abs(BC6H_data.din[i][0] - BC6H_data.Paletef[0][j].x) +
+-                        abs(BC6H_data.din[i][1] - BC6H_data.Paletef[0][j].y) +
+-                        abs(BC6H_data.din[i][2] - BC6H_data.Paletef[0][j].z);
++                error = std::fabs(BC6H_data.din[i][0] - BC6H_data.Paletef[0][j].x) +
++                        std::fabs(BC6H_data.din[i][1] - BC6H_data.Paletef[0][j].y) +
++                        std::fabs(BC6H_data.din[i][2] - BC6H_data.Paletef[0][j].z);
+                 if (error < bestError)
+                 {
+                     bestError = error;
+@@ -1252,9 +1253,9 @@ void BC6HBlockEncoder::AverageEndPoint(float EndPoints[MAX_SUBSETS][MAX_END_POIN
+             EndPoints[subset][0][2]) / 3.0f;
+ 
+         // determine average diff 
+-        diff = (abs(EndPoints[subset][0][0] - avr) +
+-            abs(EndPoints[subset][0][1] - avr) +
+-            abs(EndPoints[subset][0][2] - avr)) / 3;
++        diff = (std::fabs(EndPoints[subset][0][0] - avr) +
++            std::fabs(EndPoints[subset][0][1] - avr) +
++            std::fabs(EndPoints[subset][0][2] - avr)) / 3;
+ 
+         if ((diff < m_DiffLevel) && (avr > m_DiffLevel))
+         {
+@@ -1524,7 +1525,7 @@ float BC6HBlockEncoder::CompressBlock(float in[MAX_SUBSET_SIZE][MAX_DIMENSION_BI
+         {
+             if (m_isSigned)
+             {
+-                BC6H_data.din[i][0] = (isnan(in[i][0]))? F16NEGPREC_LIMIT_VAL : -half(abs(in[i][0] / normalization)).bits();
++                BC6H_data.din[i][0] = (isnan(in[i][0]))? F16NEGPREC_LIMIT_VAL : -half(std::fabs(in[i][0] / normalization)).bits();
+                 if (BC6H_data.din[i][0] < F16NEGPREC_LIMIT_VAL) {
+                     BC6H_data.din[i][0] = F16NEGPREC_LIMIT_VAL;
+                 }
+@@ -1539,7 +1540,7 @@ float BC6HBlockEncoder::CompressBlock(float in[MAX_SUBSET_SIZE][MAX_DIMENSION_BI
+         {
+             if (m_isSigned)
+             {
+-                BC6H_data.din[i][1] = (isnan(in[i][1])) ? F16NEGPREC_LIMIT_VAL : -half(abs(in[i][1] / normalization)).bits();
++                BC6H_data.din[i][1] = (isnan(in[i][1])) ? F16NEGPREC_LIMIT_VAL : -half(std::fabs(in[i][1] / normalization)).bits();
+                 if (BC6H_data.din[i][1] < F16NEGPREC_LIMIT_VAL) {
+                     BC6H_data.din[i][1] = F16NEGPREC_LIMIT_VAL;
+                 }
+@@ -1554,7 +1555,7 @@ float BC6HBlockEncoder::CompressBlock(float in[MAX_SUBSET_SIZE][MAX_DIMENSION_BI
+         {
+             if (m_isSigned)
+             {
+-                BC6H_data.din[i][2] = (isnan(in[i][2])) ? F16NEGPREC_LIMIT_VAL : -half(abs(in[i][2] / normalization)).bits();
++                BC6H_data.din[i][2] = (isnan(in[i][2])) ? F16NEGPREC_LIMIT_VAL : -half(std::fabs(in[i][2] / normalization)).bits();
+                 if (BC6H_data.din[i][2] < F16NEGPREC_LIMIT_VAL) {
+                     BC6H_data.din[i][2] = F16NEGPREC_LIMIT_VAL;
+                 }

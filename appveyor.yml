@@ -1,0 +1,53 @@
+version: '{build}'
+skip_tags: true
+branches:
+  only:
+  - master
+  - testing
+configuration:
+- Debug
+platform: x64
+clone_script:
+- cmd: git clone -q --recursive --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git
+    %SOURCE_DIR%
+- cmd: cd %SOURCE_DIR% && git checkout -qf %APPVEYOR_REPO_COMMIT%
+image:
+- Visual Studio 2015
+- Visual Studio 2017
+matrix:
+  allow_failures:
+  - BUILDVARIANT: raspberry.armhf
+  - BUILDVARIANT: ubuntu.i686.gles
+  - BUILDVARIANT: ubuntu.i686.gles2
+  - BUILDVARIANT: android.x86.kitkat
+  - BUILDVARIANT: android.x86_64.nougat
+  exclude:
+  - BUILDVARIANT: uwp.amd64
+    image: Visual Studio 2015
+environment:
+  matrix:
+  - BUILDVARIANT: uwp.amd64
+  - BUILDVARIANT: win32.amd64
+  - BUILDVARIANT: win32.x86
+  BUILD_DIR: C:\projects\%APPVEYOR_PROJECT_SLUG%
+  SOURCE_DIR: C:\projects\%APPVEYOR_PROJECT_SLUG%\src
+  NOBUILD: 1
+  SAME_BUILD_DIR: 1
+  CMAKE_BIN: cmake.exe
+  MAKEFILE_DIR: toolchain\makers
+  DEPENDENCIES: ''
+  DEPLOY_PATTERNS: ''
+  GITHUB_TOKEN:
+    secure: ''
+install:
+- ps: toolchain\ci\appveyor-deps.ps1
+build:
+  parallel: true
+  verbosity: minimal
+  project: CoffeeDependencies.sln
+before_build:
+- ps: toolchain\ci\appveyor-build.ps1
+before_deploy:
+- cmd: cmake.exe --build %BUILD_DIR% --target install --config %CONFIGURATION%
+deploy_script:
+- ps: toolchain\ci\appveyor-deploy.ps1

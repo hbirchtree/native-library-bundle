@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 75a72fe..6cdb659 100755
+--- a/Makefile
++++ b/Makefile
+@@ -22,7 +22,7 @@ $(LIB) : $(OBJ)
+ 	ranlib $@
+ 
+ %.o : %.cpp
+-	$(CXX) $(CPPFLAGS) -I. $(CXXFLAGS) -o$@ -c $<
++	$(CXX) $(CPPFLAGS) -fPIC -I. $(CXXFLAGS) -o$@ -c $<
+ 
+ clean :
+ 	$(RM) $(OBJ) $(LIB)

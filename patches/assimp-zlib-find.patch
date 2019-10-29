@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dcafb649..b3d5c795 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,7 +36,7 @@
+ #----------------------------------------------------------------------
+ SET(CMAKE_POLICY_DEFAULT_CMP0074 NEW)
+ 
+-CMAKE_MINIMUM_REQUIRED( VERSION 3.0 )
++CMAKE_MINIMUM_REQUIRED( VERSION 3.5 )
+ 
+ # Toggles the use of the hunter package manager
+ option(HUNTER_ENABLED "Enable Hunter package manager support" OFF)
+@@ -437,10 +437,10 @@ IF(HUNTER_ENABLED)
+   set(ASSIMP_BUILD_MINIZIP TRUE)
+ ELSE(HUNTER_ENABLED)
+   IF ( NOT ASSIMP_BUILD_ZLIB )
+-    FIND_PACKAGE(ZLIB)
++    FIND_PACKAGE(zlib)
+   ENDIF( NOT ASSIMP_BUILD_ZLIB )
+ 
+-  IF( NOT ZLIB_FOUND )
++  IF( NOT zlib_FOUND AND FALSE )
+     MESSAGE(STATUS "compiling zlib from sources")
+     INCLUDE(CheckIncludeFile)
+     INCLUDE(CheckTypeSize)
+@@ -461,11 +461,16 @@ ELSE(HUNTER_ENABLED)
+     SET(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib/zlib ${CMAKE_CURRENT_BINARY_DIR}/contrib/zlib)
+     # need to ensure we don't link with system zlib or minizip as well.
+     SET(ASSIMP_BUILD_MINIZIP 1)
+-  ELSE(NOT ZLIB_FOUND)
++  ELSEIF( zlib_FOUND )
+     ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
+-    SET(ZLIB_LIBRARIES_LINKED -lz)
+-  ENDIF(NOT ZLIB_FOUND)
+-  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
++    SET(ZLIB_LIBRARIES zlib::zlibstatic)
++  ELSEIF( EMSCRIPTEN )
++    ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
++    ADD_LIBRARY(zlibstatic INTERFACE)
++    TARGET_COMPILE_OPTIONS(zlibstatic INTERFACE "-s " USE_ZLIB=1 )
++    TARGET_LINK_OPTIONS(zlibstatic INTERFACE "-s " USE_ZLIB=1 )
++    SET(ZLIB_LIBRARIES zlibstatic)
++  ENDIF( EMSCRIPTEN )
+ ENDIF(HUNTER_ENABLED)
+ 
+ IF( NOT IOS )

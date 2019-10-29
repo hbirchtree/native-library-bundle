@@ -1,0 +1,23 @@
+#include <coffee/application/application_start.h>
+#include <peripherals/build/application.h>
+
+#ifndef COFFEE_LOWFAT
+namespace Coffee {
+
+void SetApplicationData(platform::info::AppData& appdata)
+{
+    appdata.application_name  = "@APP_TITLE@";
+    appdata.organization_name = "@APP_COMPANY@";
+    appdata.version_code      = @APP_VERSION@;
+}
+
+} // namespace Coffee
+#else
+namespace Coffee {
+
+void SetApplicationData(platform::info::AppData&)
+{
+}
+
+} // namespace Coffee
+#endif

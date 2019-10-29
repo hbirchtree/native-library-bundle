@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE
+    plist
+    PUBLIC
+    "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd"
+>
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleDisplayName</key>
+  <string>$(PRODUCT_NAME)</string>
+  <key>CFBundleExecutable</key>
+  <string>@IOS_EXEC@</string>
+  <key>CFBundleGetInfoString</key>
+  <string>${MACOSX_BUNDLE_INFO_STRING}</string>
+  <key>CFBundleIconFile</key>
+  <string>${MACOSX_BUNDLE_ICON_FILE}</string>
+  <key>CFBundleIdentifier</key>
+  <string>$(BUNDLE_IDENTIFIER)</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleLongVersionString</key>
+  <string>${MACOSX_BUNDLE_LONG_VERSION_STRING}</string>
+  <key>CFBundleName</key>
+  <string>${MACOSX_BUNDLE_BUNDLE_NAME}</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0</string>
+  <key>CFBundleSignature</key>
+  <string>????</string>
+  <key>CFBundleVersion</key>
+  <string>1.0</string>
+  <key>CSResourcesFileMapped</key>
+  <true/>
+  <key>NSHumanReadableCopyright</key>
+  <string>${MACOSX_BUNDLE_COPYRIGHT}</string>
+  <key>LSRequiresIPhoneOS</key>
+  <true/>
+  <key>UIRequiredDeviceCapabilities</key>
+  <array>
+    <string>opengles-2</string>
+    <string>opengles-3</string>
+    <string>accelerometer</string>
+    <string>gyroscope</string>
+    <string>gamekit</string>
+    <string>wifi</string>
+  </array>
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+  <key>UILaunchImages</key>
+  <array>
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>11.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-2436h@3x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{2436, 1125}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>11.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-2208h@3x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{2208, 1242}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-1334h@2x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{1334, 750}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-960h@2x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{960, 640}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-1136h@2x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{1136, 640}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-480h@1x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{480, 320}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-3840h@2x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{3840, 2160}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-1920h@1x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{1920, 1080}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-2048h@2x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{2048, 1536}</string>
+    </dict>
+
+    <dict>
+      <key>UILaunchImageMinimumOSVersion</key>
+      <string>7.0</string>
+      <key>UILaunchImageName</key>
+      <string>Default-Landscape-1024h@1x</string>
+      <key>UILaunchImageOrientation</key>
+      <string>Landscape</string>
+      <key>UILaunchImageSize</key>
+      <string>{1024, 768}</string>
+    </dict>
+  </array>
+  <key>UILaunchStoryboardName</key>
+  <string>Coffee</string>
+</dict>
+</plist>

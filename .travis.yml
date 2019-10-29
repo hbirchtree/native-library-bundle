@@ -1,0 +1,104 @@
+language: cpp
+dist: bionic
+sudo: required
+services:
+- docker
+notifications:
+  email: true
+os:
+- linux
+- osx
+compiles:
+- clang
+env:
+  global:
+  - MAKEFILE_DIR=toolchain/makers
+  - DEPENDENCIES=
+  - CONFIGURATION=Release
+  matrix:
+  - BUILDVARIANT=android.armv7a.kitkat.gles2
+  - BUILDVARIANT=android.armv7a.lollipop.gles3
+  - BUILDVARIANT=android.armv7a.nougat.gles2
+  - BUILDVARIANT=android.armv7a.nougat.gles3
+  - BUILDVARIANT=android.armv8a.lollipop.gles3
+  - BUILDVARIANT=android.armv8a.nougat.gles3
+  - BUILDVARIANT=android.x86.kitkat
+  - BUILDVARIANT=android.x86_64.nougat
+  - BUILDVARIANT=emscripten.wasm
+  - BUILDVARIANT=fedora.amd64
+  - BUILDVARIANT=mingw.w64
+  - BUILDVARIANT=raspberry.armhf
+  - BUILDVARIANT=steam.amd64
+  - BUILDVARIANT=ubuntu.amd64
+  - BUILDVARIANT=ubuntu.i686.gles
+  - BUILDVARIANT=ubuntu.i686.gles2
+  - BUILDVARIANT=ios
+  - BUILDVARIANT=ios.x86_64
+  - BUILDVARIANT=osx
+matrix:
+  exclude:
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.kitkat.gles2
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.lollipop.gles3
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.nougat.gles2
+  - os: osx
+    env: BUILDVARIANT=android.armv7a.nougat.gles3
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.lollipop.gles3
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.nougat.gles3
+  - os: osx
+    env: BUILDVARIANT=android.x86.kitkat
+  - os: osx
+    env: BUILDVARIANT=android.x86_64.nougat
+  - os: osx
+    env: BUILDVARIANT=emscripten.wasm
+  - os: osx
+    env: BUILDVARIANT=fedora.amd64
+  - os: osx
+    env: BUILDVARIANT=mingw.w64
+  - os: osx
+    env: BUILDVARIANT=raspberry.armhf
+  - os: osx
+    env: BUILDVARIANT=steam.amd64
+  - os: osx
+    env: BUILDVARIANT=ubuntu.amd64
+  - os: osx
+    env: BUILDVARIANT=ubuntu.i686.gles
+  - os: osx
+    env: BUILDVARIANT=ubuntu.i686.gles2
+  - os: linux
+    env: BUILDVARIANT=ios
+  - os: linux
+    env: BUILDVARIANT=ios.x86_64
+  - os: linux
+    env: BUILDVARIANT=osx
+  allow_failures:
+  - env: BUILDVARIANT=raspberry.armhf
+  - env: BUILDVARIANT=ubuntu.i686.gles
+  - env: BUILDVARIANT=ubuntu.i686.gles2
+  - env: BUILDVARIANT=android.x86.kitkat
+  - env: BUILDVARIANT=android.x86_64.nougat
+branches:
+  only:
+  - master
+  - testing
+apt:
+  update: true
+addons:
+  homebrew:
+    update: true
+    packages:
+    - sdl2
+    - cmake
+    - python3
+    - python
+    - jq
+before_script:
+- toolchain/ci/travis-deps.sh
+script:
+- toolchain/ci/travis-build.sh
+after_success:
+- toolchain/ci/travis-deploy.sh
