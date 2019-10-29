@@ -81,6 +81,7 @@ matrix:
   - env: BUILDVARIANT=ubuntu.i686.gles2
   - env: BUILDVARIANT=android.x86.kitkat
   - env: BUILDVARIANT=android.x86_64.nougat
+  - env: BUILDVARIANT=ios
 branches:
   only:
   - master
