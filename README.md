@@ -2,20 +2,55 @@
 
 A repository containing pre-compiled libraries and their respective headers for use in various projects. The libraries are as follows per platform:
 
+## Client dependencies
+
+The platforms included are:
+ - Android (ARMv7-A, ARMv8, x86, x86-64) (flavors of Kitkat, Lollipop, Nougat)
+ - Linux (including Ubuntu, Fedora, SteamOS, Raspberry Pi)
+ - macOS
+ - iOS
+ - MinGW-W64
+
+Listed beneath are versions for the libraries across the board
+
+| **Library** | **Version** |
+|:-----------:|:-----------:|
+| **Assimp**  | 5.0.0       |
+| **Bullet**  | 2.88        |
+| **OpenSSL** | 1.1.1d<sup>1</sup><sup>,3</sup>  |
+| **OpenAL**  | 1.19.1<sup>2</sup>    |
+| **zlib**    | 1.2.11<sup>3</sup>    |
+
+<sup>1</sup> Android uses 1.0.2t
+
+<sup>2</sup> Only for Android and Linux
+
+<sup>3</sup> All platforms except Emscripten, `emscripten-ports` provides it
+
+SDL2 is only built for desktop platforms, with `emscripten-ports` providing SDL2 already.
+
 | **Library** | **Linux** | **macOS** | **Windows** |
+|:-----------:|:---------:|:---------:|:-----------:|
 | **SDL2**    | 2.0.10    | 2.0.10    | 2.0.10      |
 
-| **Library** | **Android** | **Linux** | **macOS + iOS** | **Windows** |
-|:-----------:|:-----------:|:---------:|:---------------:|:-----------:|
-| **OpenSSL** | 1.0.2t      | 1.1.1d    | 1.1.1d          | 1.1.1d      |
+## Build dependencies
 
-*(Assume Android to include armeabi-v7a, arm64-v8a, x86, x86_64 and mips architectures)*
+Desktop-only dependencies, not intended for client binaries. These are available for `ubuntu.amd64`, `fedora.amd64` and `osx`.
 
-*(Assume Windows to mean only 64-bit, because 32-bit is dead)*
+| **Library**        | **Version**        |
+|:------------------:|:------------------:|
+| **Squish**         | Latest             |
+| **FFMPEG**         | 4.1.2              |
+| **glslang**        | Patched version<sup>1</sup>  |
+| **shaderc**        | Patched version<sup>1</sup>  |
+| **spirv-cross**    | Patched version<sup>2</sup> |
+| **compressonator** | 3.1.4064<sup>3</sup>       |
 
-*(Assume iOS to include 32-bit and 64-bit architectures)*
+<sup>1</sup> Patches for CMake configuration
 
-*(Assume OSX to include only 64-bit)*
+<sup>2</sup> Patches for some GLESv2 features
+
+<sup>3</sup> Patches for compiling on Linux
 
 # How is this strucutred?
 
@@ -33,24 +68,3 @@ Each dependency may be downloaded piecewise. The structure of each package is as
     - *license files, eg. COPYING.txt, LICENSE etc.*
  - share/
     - *application data*
-
-
-| **Library**  | **Android**   | **Linux**                   || **Apple**                    || **Windows**                    ||
-|:-------------|--------------:|-------------:|--------------:|--------------:|--------------:|---------------:|---------------:|
-| **Variant**  |               | **SteamOS**  | **Linux**     | **OS X**      | **iOS**       | **Win32**      | **UWP**        |
-| **SDL2**     |               | Inc., shared | 2.0.10, static| 2.0.10, shared|               | 2.0.4, static  | 2.0.4, static  |
-| **OpenAL**   | 1.19, shared  | Inc., shared | master        | Inc., shared  | -             | 1.1, shared    | -              |
-| **OpenSSL**  | 1.0.2t        | Inc., shared | master        | Inc., shared  | Inc., shared? | Latest, shared | -              |
-| **assimp**   | master        | master       | master        | master        | master        | master         | -              |
-| **ffmpeg**   | -             | Inc., shared | master        | master        | -             | master         | -              |
-
-| **Library**  | **SDL2**      | **OpenAL**   | **OpenSSL**   | **assimp**    | **ffmpeg**    | **Bullet**   |
-|:-------------|--------------:|-------------:|--------------:|--------------:|--------------:|-------------:|
-|**Android**   | 2.0.4, static | 1.1, shared  | Not Yet ©     | master        | -             |              |
-|**Apple OS X**| 2.0.4, shared | Inc., shared | Inc., shared  | master        | master        |              |
-|**Apple iOS** | 2.0.4, static | -            | Inc., shared  | master        | -             |              |
-|**Emscripten**| 2.0.4, static |              |               |               |               |              |
-|**Linux**     |               |              |               |               |               |              |
-|**NaCL**      | 2.0.4, static | -            | -             | -             | -             |              |
-|**RaspPi**    | Inc., shared  | Inc., shared | Inc., shared  | -             |               |              |
-|**Windows**   |               |              |               |               |               |              |
