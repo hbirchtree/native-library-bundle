@@ -2,12 +2,45 @@
 
 A repository containing pre-compiled libraries and their respective headers for use in various projects. The libraries are as follows per platform:
 
+| **Library** | **Linux** | **macOS** | **Windows** |
+| **SDL2**    | 2.0.10    | 2.0.10    | 2.0.10      |
+
+| **Library** | **Android** | **Linux** | **macOS + iOS** | **Windows** |
+|:-----------:|:-----------:|:---------:|:---------------:|:-----------:|
+| **OpenSSL** | 1.0.2t      | 1.1.1d    | 1.1.1d          | 1.1.1d      |
+
+*(Assume Android to include armeabi-v7a, arm64-v8a, x86, x86_64 and mips architectures)*
+
+*(Assume Windows to mean only 64-bit, because 32-bit is dead)*
+
+*(Assume iOS to include 32-bit and 64-bit architectures)*
+
+*(Assume OSX to include only 64-bit)*
+
+# How is this strucutred?
+
+Built dependencies are published to releases for this repository.
+Each dependency may be downloaded piecewise. The structure of each package is as such:
+
+ - bin/
+    - *executable files, not common*
+ - lib/
+    - cmake
+        - $name
+            - *CMake files*
+    - *library files*
+ - license/
+    - *license files, eg. COPYING.txt, LICENSE etc.*
+ - share/
+    - *application data*
+
+
 | **Library**  | **Android**   | **Linux**                   || **Apple**                    || **Windows**                    ||
 |:-------------|--------------:|-------------:|--------------:|--------------:|--------------:|---------------:|---------------:|
 | **Variant**  |               | **SteamOS**  | **Linux**     | **OS X**      | **iOS**       | **Win32**      | **UWP**        |
-| **SDL2**     | 2.0.4, static | Inc., shared | 2.0.4, static | 2.0.4, shared | 2.0.4, static | 2.0.4, static  | 2.0.4, static  |
-| **OpenAL**   | 1.1, shared   | Inc., shared | master        | Inc., shared  | -             | 1.1, shared    | -              |
-| **OpenSSL**  | Not yet ©     | Inc., shared | master        | Inc., shared  | Inc., shared? | Latest, shared | -              |
+| **SDL2**     |               | Inc., shared | 2.0.10, static| 2.0.10, shared|               | 2.0.4, static  | 2.0.4, static  |
+| **OpenAL**   | 1.19, shared  | Inc., shared | master        | Inc., shared  | -             | 1.1, shared    | -              |
+| **OpenSSL**  | 1.0.2t        | Inc., shared | master        | Inc., shared  | Inc., shared? | Latest, shared | -              |
 | **assimp**   | master        | master       | master        | master        | master        | master         | -              |
 | **ffmpeg**   | -             | Inc., shared | master        | master        | -             | master         | -              |
 
@@ -21,31 +54,3 @@ A repository containing pre-compiled libraries and their respective headers for 
 |**NaCL**      | 2.0.4, static | -            | -             | -             | -             |              |
 |**RaspPi**    | Inc., shared  | Inc., shared | Inc., shared  | -             |               |              |
 |**Windows**   |               |              |               |               |               |              |
-
-*(Assume Android to include armeabi-v7a, arm64-v8a, x86, x86_64 and mips architectures)*
-
-*(Assume Windows to mean only 64-bit, because 32-bit is dead)*
-
-*(Assume iOS to include 32-bit and 64-bit architectures)*
-
-*(Assume OSX to include only 64-bit)*
-
-# How is this structured?
-For most systems:
-
- - $SYSTEM_NAME (eg. SteamOS)
-   - include
-     - (header directory)
-     - header.h
-   - amd64
-     - libLibrary.a
-     - libLibrary.so
-   - i686
-     - libLibrary.a
-     - libLibrary.so
-   - util
-     - SomeNecessarySmallProgram2
-
-*(Variations are found with Windows (32 and 64) and OSX/iOS)*
-
-*(Data meant for /usr/share is ignored)*

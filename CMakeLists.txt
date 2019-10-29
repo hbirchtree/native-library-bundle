@@ -102,6 +102,7 @@ set ( SDL2_VER    "2.0.10" )
 set ( ASSIMP_VER  "5.0.0"  )
 set ( BULLET_VER  "2.88"   )
 set ( ZLIB_VER    "1.2.11" )
+set ( OPENAL_VER  "1.19.1" )
 
 # Build libraries, only for desktop (x86/amd64)
 
@@ -167,7 +168,7 @@ if(OPENAL_BUILD)
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openal
 
         GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-        GIT_TAG openal-soft-1.19.1
+        GIT_TAG openal-soft-${OPENAL_VER}
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
