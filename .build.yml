@@ -54,7 +54,7 @@ platforms:
 script_location: toolchain/ci
 template_location: toolchain/cmake/Templates
 version:
-  hotfix: 9
+  hotfix: 10
   major: 0
   minor: 3
   patch: 2

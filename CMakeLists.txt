@@ -188,6 +188,10 @@ if(OPENAL_BUILD)
 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/openal
         )
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/openal/COPYING
+        DESTINATION ${CMAKE_BINARY_DIR}/install/openal/license
+        )
 endif()
 
 #
@@ -539,6 +543,10 @@ if(ZLIB_BUILD)
 
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/zlib
         )
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/zlib/README
+        DESTINATION ${CMAKE_BINARY_DIR}/install/zlib/license
+        )
 endif()
 
 #
@@ -805,7 +813,10 @@ if(FFMPEG_BUILD)
         )
 
     install (
-        FILES       ${CMAKE_BINARY_DIR}/source/ffmpeg/LICENSE.md
+        FILES
+            ${CMAKE_BINARY_DIR}/source/ffmpeg/LICENSE.md
+            ${CMAKE_BINARY_DIR}/source/ffmpeg/COPYING.GPLv3
+            ${CMAKE_BINARY_DIR}/source/ffmpeg/COPYING.LGPLv2.1
         DESTINATION ${CMAKE_BINARY_DIR}/install/ffmpeg/license
         )
 endif()
