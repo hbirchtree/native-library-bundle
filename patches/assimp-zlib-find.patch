@@ -11,11 +11,11 @@ index dcafb649..b3d5c795 100644
  
  # Toggles the use of the hunter package manager
  option(HUNTER_ENABLED "Enable Hunter package manager support" OFF)
-@@ -437,10 +437,10 @@ IF(HUNTER_ENABLED)
+@@ -437,10 +437,11 @@ IF(HUNTER_ENABLED)
    set(ASSIMP_BUILD_MINIZIP TRUE)
  ELSE(HUNTER_ENABLED)
    IF ( NOT ASSIMP_BUILD_ZLIB )
--    FIND_PACKAGE(ZLIB)
+     FIND_PACKAGE(ZLIB)
 +    FIND_PACKAGE(zlib)
    ENDIF( NOT ASSIMP_BUILD_ZLIB )
  
@@ -24,7 +24,7 @@ index dcafb649..b3d5c795 100644
      MESSAGE(STATUS "compiling zlib from sources")
      INCLUDE(CheckIncludeFile)
      INCLUDE(CheckTypeSize)
-@@ -461,11 +461,16 @@ ELSE(HUNTER_ENABLED)
+@@ -461,11 +461,19 @@ ELSE(HUNTER_ENABLED)
      SET(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib/zlib ${CMAKE_CURRENT_BINARY_DIR}/contrib/zlib)
      # need to ensure we don't link with system zlib or minizip as well.
      SET(ASSIMP_BUILD_MINIZIP 1)
@@ -35,6 +35,9 @@ index dcafb649..b3d5c795 100644
 -  ENDIF(NOT ZLIB_FOUND)
 -  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 +    SET(ZLIB_LIBRARIES zlib::zlibstatic)
++  ELSEIF( ZLIB_FOUND )
++    ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
++    SET(ZLIB_LIBRARIES_LINKED -lz)
 +  ELSEIF( EMSCRIPTEN )
 +    ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
 +    ADD_LIBRARY(zlibstatic INTERFACE)

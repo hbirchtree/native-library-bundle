@@ -118,6 +118,7 @@ set ( FFMPEG_VER  "4.1.2"  )
 # Turning builds on/off
 
 if(BUILD_PLATFORM)
+    set ( ZLIB_BUILD            OFF ) # There are problems with shared libs and static zlib
     set ( SQUISH_BUILD          ON )
     set ( FFMPEG_BUILD          ON )
     set ( COMPRESSONATOR_BUILD  ON )
