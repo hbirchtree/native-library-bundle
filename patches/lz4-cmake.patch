@@ -1,0 +1,86 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+new file mode 100644
+index 0000000..74d3d73
+--- /dev/null
++++ b/lib/CMakeLists.txt
+@@ -0,0 +1,55 @@
++project ( lz4 C )
++cmake_minimum_required ( VERSION 3.10 )
++
++include(CMakePackageConfigHelpers)
++
++set ( SOURCE_FILES
++    lz4.c
++    )
++set ( HC_SOURCE_FILES
++    lz4hc.c
++    )
++
++add_library ( lz4 STATIC ${SOURCE_FILES} )
++add_library ( lz4hc STATIC ${HC_SOURCE_FILES} )
++
++target_include_directories ( lz4 PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
++    $<INSTALL_INTERFACE:include/lz4>
++    )
++
++target_link_libraries ( lz4hc PUBLIC lz4 )
++
++install (
++    FILES
++        ${CMAKE_SOURCE_DIR}/lz4.h
++        ${CMAKE_SOURCE_DIR}/lz4hc.h
++    DESTINATION
++        include/lz4
++    )
++
++install (
++    TARGETS lz4 lz4hc
++    EXPORT lz4
++
++    RUNTIME DESTINATION bin
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    PUBLIC_HEADER DESTINATION include
++    )
++
++configure_package_config_file ( Config.cmake.in
++    ${CMAKE_BINARY_DIR}/lz4Config.cmake
++    INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}
++    )
++
++install (
++    EXPORT lz4
++    NAMESPACE lz4::
++    DESTINATION lib/cmake/lz4
++    )
++
++install (
++    FILES ${CMAKE_BINARY_DIR}/lz4Config.cmake
++    DESTINATION lib/cmake/lz4
++    )
+diff --git a/lib/Config.cmake.in b/lib/Config.cmake.in
+new file mode 100644
+index 0000000..e58718e
+--- /dev/null
++++ b/lib/Config.cmake.in
+@@ -0,0 +1,19 @@
++# Compute paths
++set ( @PROJECT_NAME@_VERSION @PROJECT_VERSION@ )
++
++@PACKAGE_INIT@
++
++get_filename_component(@PROJECT_NAME@_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
++set(@PROJECT_NAME@_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
++
++set(@PROJECT_NAME@_COMPILE_DEFINITIONS @COMP_DEFS@)
++
++# Our library dependencies (contains definitions for IMPORTED targets)
++if(NOT TARGET @PROJECT_NAME@ AND NOT @PROJECT_NAME@_BINARY_DIR)
++  include("${@PROJECT_NAME@_CMAKE_DIR}/@PROJECT_NAME@.cmake")
++endif()
++
++# These are IMPORTED targets created by FooBarTargets.cmake
++set(@PROJECT_NAME@_LIBRARIES @LIBRARY_DEFINITIONS@)
++
++check_required_components ( @PROJECT_NAME@ )

@@ -1,0 +1,33 @@
+diff --git a/build/cmake/lib/CMakeLists.txt b/build/cmake/lib/CMakeLists.txt
+index 7adca875..22f8fc56 100644
+--- a/build/cmake/lib/CMakeLists.txt
++++ b/build/cmake/lib/CMakeLists.txt
+@@ -172,3 +172,28 @@ if (NOT TARGET uninstall)
+     add_custom_target(uninstall
+             COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+ endif ()
++
++add_library ( zstdstatic INTERFACE )
++target_link_libraries ( zstdstatic INTERFACE libzstd_static )
++
++install (
++    TARGETS libzstd_static zstdstatic
++    EXPORT zstd
++    
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    PUBLIC_HEADER DESTINATION include
++    )
++
++install ( 
++    FILES ${LIBRARY_DIR}/zstd.h
++    DESTINATION include/zstd
++    )
++
++install (
++    EXPORT zstd
++    FILE zstdConfig.cmake
++    NAMESPACE zstd::
++    DESTINATION lib/cmake/zstd
++    )
++

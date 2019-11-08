@@ -96,6 +96,8 @@ set ( BULLET_BUILD          ON  )
 set ( ASSIMP_BUILD          ON  )
 set ( OPENSSL_BUILD         ON  )
 set ( ZLIB_BUILD            ON  )
+set ( ZSTD_BUILD            ON  )
+set ( LZ4_BUILD             ON  )
 
 set ( OPENSSL_VER "1_1_1d" )
 set ( SDL2_VER    "2.0.10" )
@@ -103,6 +105,8 @@ set ( ASSIMP_VER  "5.0.0"  )
 set ( BULLET_VER  "2.88"   )
 set ( ZLIB_VER    "1.2.11" )
 set ( OPENAL_VER  "1.19.1" )
+set ( ZSTD_VERSION "1.4.4" )
+set ( LZ4_VERSION "1.9.2"  )
 
 # Build libraries, only for desktop (x86/amd64)
 
@@ -609,6 +613,78 @@ if(ASSIMP_BUILD)
     install (
         FILES       ${CMAKE_BINARY_DIR}/source/assimp/LICENSE
         DESTINATION ${CMAKE_BINARY_DIR}/install/assimp/license
+        )
+endif()
+
+if(ZSTD_BUILD)
+    ExternalProject_Add( Zstd
+
+        PREFIX "${CMAKE_BINARY_DIR}/zstd"
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/zstd
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/zstd
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/zstd
+        
+        GIT_REPOSITORY https://github.com/facebook/zstd.git
+        GIT_TAG "v${ZSTD_VERSION}"
+
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
+
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/zstd-export.patch
+
+        CONFIGURE_COMMAND ${CMAKE_COMMAND}
+
+            ${TOOLCHAIN_OPTIONS}
+
+            -G${TOOLCHAIN_GENERATOR}
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/zstd
+
+            -DZSTD_MULTITHREAD_SUPPORT=OFF
+            -DZSTD_BUILD_PROGRAMS=OFF
+            -DZSTD_BUILD_SHARED=OFF
+
+            ${CMAKE_BINARY_DIR}/source/zstd/build/cmake
+        )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/zstd/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/zstd/license
+        )
+endif()
+
+if(LZ4_BUILD)
+    ExternalProject_Add( LZ4
+
+        PREFIX "${CMAKE_BINARY_DIR}/lz4"
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/lz4
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/lz4
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/lz4
+
+        GIT_REPOSITORY https://github.com/lz4/lz4.git
+        GIT_TAG "v${LZ4_VERSION}"
+
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/lz4-cmake.patch
+
+        CONFIGURE_COMMAND ${CMAKE_COMMAND}
+
+            ${TOOLCHAIN_OPTIONS}
+
+            -G${TOOLCHAIN_GENERATOR}
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/lz4
+
+            ${CMAKE_BINARY_DIR}/source/lz4/lib
+        )
+
+    install (
+        FILES       ${CMAKE_BINARY_DIR}/source/zstd/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/zstd/license
         )
 endif()
 
