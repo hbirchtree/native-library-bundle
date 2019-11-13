@@ -1,4 +1,4 @@
-ASSETS=(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl ffmpeg compressonator zlib lz4 zstd)
+ASSETS=(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl ffmpeg compressonator zlib lz4 zstddiscord-rpc)
 
 INSTALL_BASE_DIR=$BUILD_DIR/$BUILDVARIANT/install
 

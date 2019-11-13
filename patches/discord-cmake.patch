@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5dad9e9..3563782 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,20 +12,6 @@ file(GLOB_RECURSE ALL_SOURCE_FILES
+     src/*.cpp src/*.h src/*.c
+ )
+ 
+-# Set CLANG_FORMAT_SUFFIX if you are using custom clang-format, e.g. clang-format-5.0
+-find_program(CLANG_FORMAT_CMD clang-format${CLANG_FORMAT_SUFFIX})
+-
+-if (CLANG_FORMAT_CMD)
+-    add_custom_target(
+-        clangformat
+-        COMMAND ${CLANG_FORMAT_CMD}
+-        -i -style=file -fallback-style=none
+-        ${ALL_SOURCE_FILES}
+-        DEPENDS
+-        ${ALL_SOURCE_FILES}
+-    )
+-endif(CLANG_FORMAT_CMD)
+-
+ # thirdparty stuff
+ execute_process(
+     COMMAND mkdir ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty
+@@ -54,3 +40,10 @@ add_subdirectory(src)
+ if (BUILD_EXAMPLES)
+     add_subdirectory(examples/send-presence)
+ endif(BUILD_EXAMPLES)
++
++install (
++    EXPORT discord-rpc
++    FILE DiscordRpcConfig.cmake
++    NAMESPACE ${PROJECT_NAME}::
++    DESTINATION lib/cmake/${PROJECT_NAME}
++    )
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f9ec250..8789388 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -115,10 +115,6 @@ if (${BUILD_SHARED_LIBS})
+     target_compile_definitions(discord-rpc PRIVATE -DDISCORD_BUILDING_SDK)
+ endif(${BUILD_SHARED_LIBS})
+ 
+-if (CLANG_FORMAT_CMD)
+-    add_dependencies(discord-rpc clangformat)
+-endif(CLANG_FORMAT_CMD)
+-
+ # install
+ 
+ install(
+diff --git a/src/discord_register_linux.cpp b/src/discord_register_linux.cpp
+index 09911dc..c8cd7bd 100644
+--- a/src/discord_register_linux.cpp
++++ b/src/discord_register_linux.cpp
+@@ -31,7 +31,7 @@ extern "C" DISCORD_EXPORT void Discord_Register(const char* applicationId, const
+         return;
+     }
+ 
+-    char exePath[1024];
++    char exePath[1024] = {};
+     if (!command || !command[0]) {
+         ssize_t size = readlink("/proc/self/exe", exePath, sizeof(exePath));
+         if (size <= 0 || size >= (ssize_t)sizeof(exePath)) {

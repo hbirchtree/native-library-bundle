@@ -74,11 +74,12 @@ if(
             (
                 LINUX
                 OR (APPLE AND NOT IOS)
-#                OR WIN32 # Not tested
+                OR WIN32
                 )
             )
         AND (
             "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64"
+            OR "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "AMD64"
             )
         )
     set ( BUILD_PLATFORM ON )
@@ -98,6 +99,7 @@ set ( OPENSSL_BUILD         ON  )
 set ( ZLIB_BUILD            ON  )
 set ( ZSTD_BUILD            ON  )
 set ( LZ4_BUILD             ON  )
+set ( DISCORD_BUILD         OFF )
 
 set ( OPENSSL_VER "1_1_1d" )
 set ( SDL2_VER    "2.0.10" )
@@ -107,6 +109,7 @@ set ( ZLIB_VER    "1.2.11" )
 set ( OPENAL_VER  "1.19.1" )
 set ( ZSTD_VERSION "1.4.4" )
 set ( LZ4_VERSION "1.9.2"  )
+set ( DISCORD_VERSION "3.4.0" )
 
 # Build libraries, only for desktop (x86/amd64)
 
@@ -129,6 +132,8 @@ if(BUILD_PLATFORM)
     set ( SPIRVCROSS_BUILD      ON )
     set ( GLSLANG_BUILD         ON )
     set ( SHADERC_BUILD         ON )
+
+    set ( DISCORD_BUILD         ON )
 endif()
 
 # Only used on desktop platforms, Android and iOS use custom backends
@@ -685,6 +690,44 @@ if(LZ4_BUILD)
     install (
         FILES       ${CMAKE_BINARY_DIR}/source/zstd/LICENSE
         DESTINATION ${CMAKE_BINARY_DIR}/install/zstd/license
+        )
+endif()
+
+#
+# Discord-RPC
+# Only for desktop platforms
+#
+if(DISCORD_BUILD)
+    ExternalProject_Add( Discord
+
+        PREFIX "${CMAKE_BINARY_DIR}/discord-rpc"
+
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/source/discord-rpc
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/discord-rpc
+        INSTALL_DIR ${CMAKE_BINARY_DIR}/install/discord-rpc
+
+        GIT_REPOSITORY https://github.com/discordapp/discord-rpc.git
+        GIT_TAG "v${DISCORD_VERSION}"
+
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/discord-cmake.patch
+
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
+
+        CMAKE_ARGS
+
+            ${TOOLCHAIN_OPTIONS}
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/discord-rpc
+
+            -DBUILD_EXAMPLES=OFF
+            -DENABLE_IO_THREAD=OFF
+        )
+
+    install (
+        FILES ${CMAKE_BINARY_DIR}/source/discord-rpc/LICENSE
+        DESTINATION ${CMAKE_BINARY_DIR}/install/discord-rpc/license
         )
 endif()
 

@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..74d3d73
 --- /dev/null
 +++ b/lib/CMakeLists.txt
-@@ -0,0 +1,55 @@
+@@ -0,0 +1,56 @@
 +project ( lz4 C )
 +cmake_minimum_required ( VERSION 3.10 )
 +
@@ -51,6 +51,7 @@ index 0000000..74d3d73
 +
 +install (
 +    EXPORT lz4
++    FILE lz4Config.cmake
 +    NAMESPACE lz4::
 +    DESTINATION lib/cmake/lz4
 +    )
