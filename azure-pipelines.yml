@@ -1,10 +1,4 @@
 trigger:
-  paths:
-    include:
-    - examples/*
-    - src/*
-    - tests/*
-    - toolchain/*
   branches:
     include:
     - master

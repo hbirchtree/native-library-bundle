@@ -17,9 +17,6 @@ def pipelines_gen_config(build_info, repo_dir):
 
     return {
             'trigger': {
-                'paths': {
-                    'include': ['examples/*', 'src/*', 'tests/*', 'toolchain/*']
-                    },
                 'branches': {
                     'include': include_branches
                     }

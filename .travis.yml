@@ -82,6 +82,7 @@ matrix:
   - env: BUILDVARIANT=android.x86.kitkat
   - env: BUILDVARIANT=android.x86_64.nougat
   - env: BUILDVARIANT=ios
+  - env: BUILDVARIANT=steam.amd64
 branches:
   only:
   - master
