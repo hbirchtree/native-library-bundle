@@ -646,6 +646,7 @@ if(ZSTD_BUILD)
 
             -G${TOOLCHAIN_GENERATOR}
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/zstd
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
             -DZSTD_MULTITHREAD_SUPPORT=OFF
             -DZSTD_BUILD_PROGRAMS=OFF
@@ -683,6 +684,7 @@ if(LZ4_BUILD)
 
             -G${TOOLCHAIN_GENERATOR}
             -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/lz4
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
             ${CMAKE_BINARY_DIR}/source/lz4/lib
         )
