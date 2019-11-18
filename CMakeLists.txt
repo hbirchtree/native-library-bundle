@@ -19,6 +19,8 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" AND NOT ANDROID)
     set ( LINUX ON )
 endif()
 
+set ( GITCOMMAND "git" )
+
 #
 # We set up some toolchain-specific options
 #
