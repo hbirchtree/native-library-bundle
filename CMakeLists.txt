@@ -259,9 +259,9 @@ if(BULLET_BUILD)
         GIT_TAG ${BULLET_VER}
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/bullet-cmake.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/bullet-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -394,7 +394,7 @@ if(OPENSSL_BUILD)
             GIT_TAG OpenSSL_${OPENSSL_VER}
 
             PATCH_COMMAND
-                ${GIT_EXECUTABLE}
+                ${GITCOMMAND}
                     apply ${CMAKE_SOURCE_DIR}/patches/openssl-ios.patch
 
             CONFIGURE_COMMAND
@@ -546,9 +546,9 @@ if(ZLIB_BUILD)
         GIT_TAG v${ZLIB_VER}
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/zlib-export.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/zlib-export.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -592,9 +592,9 @@ if(ASSIMP_BUILD)
         GIT_TAG v${ASSIMP_VER}
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/assimp-zlib-find.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/assimp-zlib-find.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -641,9 +641,9 @@ if(ZSTD_BUILD)
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/zstd-export.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/zstd-export.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
 
@@ -679,9 +679,9 @@ if(LZ4_BUILD)
         GIT_TAG "v${LZ4_VERSION}"
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/lz4-cmake.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/lz4-cmake.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
 
@@ -717,9 +717,9 @@ if(DISCORD_BUILD)
         GIT_TAG "v${DISCORD_VERSION}"
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/discord-cmake.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/discord-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -753,9 +753,9 @@ if(SQUISH_BUILD)
         GIT_REPOSITORY https://github.com/Cavewhere/squish.git
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/squish-cmake.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/squish-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -818,9 +818,9 @@ if(SHADERC_BUILD)
         GIT_REPOSITORY https://github.com/hbirchtree/shaderc.git
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/shaderc-cmake.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/shaderc-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -855,9 +855,9 @@ if(SPIRVCROSS_BUILD)
         GIT_REPOSITORY https://github.com/hbirchtree/SPIRV-Cross.git
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/spirvcross-werror.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/spirvcross-werror.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -962,9 +962,9 @@ if(COMPRESSONATOR_BUILD)
         GIT_TAG v3.1.4064
 
         PATCH_COMMAND
-            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/compressonator-linux-mac.patch
+            COMMAND ${GITCOMMAND} config user.email "a@b.c"
+            COMMAND ${GITCOMMAND} config user.name "a@b.c"
+            COMMAND ${GITCOMMAND} apply ${CMAKE_SOURCE_DIR}/patches/compressonator-linux-mac.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
 
