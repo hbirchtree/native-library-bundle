@@ -1,0 +1,349 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 68e0a93bc..739845b9c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.4.3)
++cmake_minimum_required(VERSION 3.0)
+ set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true)
+ cmake_policy(SET CMP0017 NEW)
+ #this line has to appear before 'PROJECT' in order to be able to disable incremental linking
+@@ -396,7 +396,7 @@ ELSE(BUILD_BULLET3)
+ ENDIF(BUILD_BULLET3)
+ IF(BUILD_OPENGL3_DEMOS)
+ 	IF(EXISTS ${BULLET_PHYSICS_SOURCE_DIR}/Demos3 AND IS_DIRECTORY ${BULLET_PHYSICS_SOURCE_DIR}/Demos3)
+-		SUBDIRS(Demos3)
++		ADD_SUBDIRECTORY(Demos3)
+ 	ENDIF()
+ ELSE()
+ 	ADD_DEFINITIONS(-DNO_OPENGL3)
+@@ -406,21 +406,14 @@ OPTION(BUILD_BULLET2_DEMOS "Set when you want to build the Bullet 2 demos" ON)
+ IF(BUILD_BULLET2_DEMOS)
+ 
+ 	IF(EXISTS ${BULLET_PHYSICS_SOURCE_DIR}/examples AND IS_DIRECTORY ${BULLET_PHYSICS_SOURCE_DIR}/examples)
+-		SUBDIRS(examples)
++		ADD_SUBDIRECTORY(examples)
+ 	ENDIF()
+ 
+ ENDIF(BUILD_BULLET2_DEMOS)
+ 
+ 
+ 
+-OPTION(BUILD_EXTRAS "Set when you want to build the extras" ON)
+-IF(BUILD_EXTRAS)
+-  SUBDIRS(Extras)
+-ENDIF(BUILD_EXTRAS)
+-
+-
+ 
+-SUBDIRS(src)
+ 
+ IF("${CMAKE_GENERATOR}" MATCHES "Unix Makefiles")
+ 	OPTION(INSTALL_LIBS "Set when you want to install libraries" ON)
+@@ -445,7 +438,7 @@ IF(INSTALL_LIBS)
+ 	SET (LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
+ 	SET (LIB_DESTINATION "lib${LIB_SUFFIX}" CACHE STRING "Library directory name")
+ 	## the following are directories where stuff will be installed to
+-	SET(INCLUDE_INSTALL_DIR "include/bullet/" CACHE PATH "The subdirectory to the header prefix")
++	SET(INCLUDE_INSTALL_DIR "include/" CACHE PATH "The subdirectory to the header prefix")
+ 	SET(PKGCONFIG_INSTALL_PREFIX "lib${LIB_SUFFIX}/pkgconfig/" CACHE STRING "Base directory for pkgconfig files")
+ 	IF(NOT MSVC)
+ 	  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/bullet.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/bullet.pc @ONLY)
+@@ -457,31 +450,44 @@ IF(INSTALL_LIBS)
+ 	ENDIF(NOT MSVC)
+ ENDIF()
+ 
++OPTION(BUILD_EXTRAS "Set when you want to build the extras" ON)
++IF(BUILD_EXTRAS)
++  ADD_SUBDIRECTORY(Extras)
++ENDIF(BUILD_EXTRAS)
++
++ADD_SUBDIRECTORY(src)
+ 
+ OPTION(BUILD_UNIT_TESTS "Build Unit Tests"	ON)
+ 
+ IF (BUILD_UNIT_TESTS)
+ 	ENABLE_TESTING()
+-	SUBDIRS(test)
++	ADD_SUBDIRECTORY(test)
+ ENDIF()
+ 
+-set (BULLET_CONFIG_CMAKE_PATH lib${LIB_SUFFIX}/cmake/bullet )
+-list (APPEND BULLET_LIBRARIES LinearMath)
+-list (APPEND BULLET_LIBRARIES Bullet3Common)
+-list (APPEND BULLET_LIBRARIES BulletInverseDynamics)
+-list (APPEND BULLET_LIBRARIES BulletCollision)
+-list (APPEND BULLET_LIBRARIES BulletDynamics)
+-list (APPEND BULLET_LIBRARIES BulletSoftBody)
+-set (BULLET_USE_FILE ${BULLET_CONFIG_CMAKE_PATH}/UseBullet.cmake)
+-configure_file 	( ${CMAKE_CURRENT_SOURCE_DIR}/BulletConfig.cmake.in
+-					${CMAKE_CURRENT_BINARY_DIR}/BulletConfig.cmake
+-					@ONLY ESCAPE_QUOTES
+-				)
+-OPTION(INSTALL_CMAKE_FILES "Install generated CMake files" ON)
+-
+-IF (INSTALL_CMAKE_FILES)
+-	install ( FILES ${CMAKE_CURRENT_SOURCE_DIR}/UseBullet.cmake
+-		${CMAKE_CURRENT_BINARY_DIR}/BulletConfig.cmake
+-		DESTINATION ${BULLET_CONFIG_CMAKE_PATH}
+-	)
+-ENDIF (INSTALL_CMAKE_FILES)
++target_include_directories ( Bullet3Common PUBLIC
++    $<INSTALL_INTERFACE:include>
++    )
++
++install (
++    TARGETS 
++        Bullet3Common
++        Bullet3Collision Bullet3Dynamics Bullet3Geometry Bullet3OpenCL_clew
++
++        BulletCollision BulletDynamics BulletInverseDynamics BulletSoftBody
++        Bullet2FileLoader
++
++        ConvexDecomposition BulletInverseDynamicsUtils BulletFileLoader GIMPACTUtils
++
++        LinearMath
++    EXPORT Bullet
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    PUBLIC_HEADER DESTINATION include
++    )
++
++install (
++    EXPORT Bullet
++    FILE BulletConfig.cmake
++    NAMESPACE Bullet::
++    DESTINATION lib/cmake/Bullet
++    )
+diff --git a/Extras/CMakeLists.txt b/Extras/CMakeLists.txt
+index 6b35357a3..10136c5b5 100644
+--- a/Extras/CMakeLists.txt
++++ b/Extras/CMakeLists.txt
+@@ -1,4 +1,8 @@
+-SUBDIRS( InverseDynamics BulletRobotics obj2sdf Serialize ConvexDecomposition HACD GIMPACTUtils )
++ADD_SUBDIRECTORY ( InverseDynamics )
++ADD_SUBDIRECTORY ( Serialize )
++ADD_SUBDIRECTORY ( ConvexDecomposition )
++ADD_SUBDIRECTORY ( HACD )
++ADD_SUBDIRECTORY ( GIMPACTUtils )
+ 
+ 
+ 
+diff --git a/Extras/ConvexDecomposition/CMakeLists.txt b/Extras/ConvexDecomposition/CMakeLists.txt
+index 132a336fa..2e37444e8 100644
+--- a/Extras/ConvexDecomposition/CMakeLists.txt
++++ b/Extras/ConvexDecomposition/CMakeLists.txt
+@@ -37,10 +37,7 @@ SET(ConvexDecomposition_HDRS
+ ADD_LIBRARY(ConvexDecomposition ${ConvexDecomposition_SRCS} ${ConvexDecomposition_HDRS})
+ SET_TARGET_PROPERTIES(ConvexDecomposition PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(ConvexDecomposition PROPERTIES SOVERSION ${BULLET_VERSION})
+-
+-IF (BUILD_SHARED_LIBS)
+-  TARGET_LINK_LIBRARIES(ConvexDecomposition BulletCollision LinearMath)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(ConvexDecomposition PUBLIC BulletCollision LinearMath)
+ 
+ IF (INSTALL_EXTRA_LIBS)
+ 	IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+diff --git a/Extras/GIMPACTUtils/CMakeLists.txt b/Extras/GIMPACTUtils/CMakeLists.txt
+index c32a885df..e5fd805ab 100644
+--- a/Extras/GIMPACTUtils/CMakeLists.txt
++++ b/Extras/GIMPACTUtils/CMakeLists.txt
+@@ -10,10 +10,7 @@ btGImpactConvexDecompositionShape.cpp	btGImpactConvexDecompositionShape.h
+ )
+ SET_TARGET_PROPERTIES(GIMPACTUtils PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(GIMPACTUtils PROPERTIES SOVERSION ${BULLET_VERSION})
+-
+-IF (BUILD_SHARED_LIBS)
+-  TARGET_LINK_LIBRARIES(GIMPACTUtils ConvexDecomposition BulletCollision)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(GIMPACTUtils PUBLIC ConvexDecomposition BulletCollision)
+ 
+ IF (INSTALL_EXTRA_LIBS)
+ 	IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+diff --git a/Extras/InverseDynamics/CMakeLists.txt b/Extras/InverseDynamics/CMakeLists.txt
+index 22e953a44..252b6a6ce 100644
+--- a/Extras/InverseDynamics/CMakeLists.txt
++++ b/Extras/InverseDynamics/CMakeLists.txt
+@@ -20,10 +20,7 @@ User2InternalIndex.cpp
+ 
+ SET_TARGET_PROPERTIES(BulletInverseDynamicsUtils PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(BulletInverseDynamicsUtils PROPERTIES SOVERSION ${BULLET_VERSION})
+-
+-IF (BUILD_SHARED_LIBS)
+-	TARGET_LINK_LIBRARIES(BulletInverseDynamicsUtils BulletInverseDynamics BulletDynamics BulletCollision Bullet3Common LinearMath)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(BulletInverseDynamicsUtils PUBLIC BulletInverseDynamics BulletDynamics BulletCollision Bullet3Common LinearMath)
+ 
+ IF (INSTALL_EXTRA_LIBS)
+ 	IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+diff --git a/Extras/Serialize/BulletFileLoader/CMakeLists.txt b/Extras/Serialize/BulletFileLoader/CMakeLists.txt
+index 9b5dce7ea..f3146336e 100644
+--- a/Extras/Serialize/BulletFileLoader/CMakeLists.txt
++++ b/Extras/Serialize/BulletFileLoader/CMakeLists.txt
+@@ -20,9 +20,7 @@ btBulletFile.h
+ 
+ ADD_LIBRARY(BulletFileLoader ${BulletFileLoader_SRCS} ${BulletFileLoader_HDRS})
+ 
+-IF (BUILD_SHARED_LIBS)
+-	TARGET_LINK_LIBRARIES(BulletFileLoader LinearMath)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(BulletFileLoader PUBLIC LinearMath)
+ 
+ SET_TARGET_PROPERTIES(BulletFileLoader PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(BulletFileLoader PROPERTIES SOVERSION ${BULLET_VERSION})
+diff --git a/src/Bullet3Collision/CMakeLists.txt b/src/Bullet3Collision/CMakeLists.txt
+index 130095cc0..ea16472c4 100644
+--- a/src/Bullet3Collision/CMakeLists.txt
++++ b/src/Bullet3Collision/CMakeLists.txt
+@@ -58,9 +58,7 @@ SET(Bullet3Collision_HDRS
+ )
+ 
+ ADD_LIBRARY(Bullet3Collision ${Bullet3Collision_SRCS} ${Bullet3Collision_HDRS})
+-if (BUILD_SHARED_LIBS)
+-  target_link_libraries(Bullet3Collision Bullet3Geometry)
+-endif ()
++target_link_libraries(Bullet3Collision PUBLIC Bullet3Geometry)
+ SET_TARGET_PROPERTIES(Bullet3Collision PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3Collision PROPERTIES SOVERSION ${BULLET_VERSION})
+ 
+diff --git a/src/Bullet3Dynamics/CMakeLists.txt b/src/Bullet3Dynamics/CMakeLists.txt
+index 94c120d9b..304c204f5 100644
+--- a/src/Bullet3Dynamics/CMakeLists.txt
++++ b/src/Bullet3Dynamics/CMakeLists.txt
+@@ -30,9 +30,7 @@ SET(Bullet3Dynamics_HDRS
+ )
+ 
+ ADD_LIBRARY(Bullet3Dynamics ${Bullet3Dynamics_SRCS} ${Bullet3Dynamics_HDRS})
+-if (BUILD_SHARED_LIBS)
+-  target_link_libraries(Bullet3Dynamics Bullet3Collision)
+-endif ()
++target_link_libraries(Bullet3Dynamics PUBLIC Bullet3Collision)
+ SET_TARGET_PROPERTIES(Bullet3Dynamics PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3Dynamics PROPERTIES SOVERSION ${BULLET_VERSION})
+ 
+diff --git a/src/Bullet3Geometry/CMakeLists.txt b/src/Bullet3Geometry/CMakeLists.txt
+index 820687270..e63b1ea37 100644
+--- a/src/Bullet3Geometry/CMakeLists.txt
++++ b/src/Bullet3Geometry/CMakeLists.txt
+@@ -16,9 +16,7 @@ SET(Bullet3Geometry_HDRS
+ )
+ 
+ ADD_LIBRARY(Bullet3Geometry ${Bullet3Geometry_SRCS} ${Bullet3Geometry_HDRS})
+-if (BUILD_SHARED_LIBS)
+-  target_link_libraries(Bullet3Geometry Bullet3Common)
+-endif()
++target_link_libraries(Bullet3Geometry PUBLIC Bullet3Common)
+ SET_TARGET_PROPERTIES(Bullet3Geometry PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3Geometry PROPERTIES SOVERSION ${BULLET_VERSION})
+ 
+diff --git a/src/Bullet3OpenCL/CMakeLists.txt b/src/Bullet3OpenCL/CMakeLists.txt
+index 1da58d4a9..6a03dd24a 100644
+--- a/src/Bullet3OpenCL/CMakeLists.txt
++++ b/src/Bullet3OpenCL/CMakeLists.txt
+@@ -1,6 +1,5 @@
+ INCLUDE_DIRECTORIES( ${BULLET_PHYSICS_SOURCE_DIR}/src  )
+ 
+-ADD_DEFINITIONS(-DB3_USE_CLEW)
+ 
+ SET(Bullet3OpenCL_clew_SRCS
+ 	../clew/clew.c
+@@ -43,9 +42,9 @@ SET(Bullet3OpenCL_clew_HDRS
+ ADD_LIBRARY(Bullet3OpenCL_clew ${Bullet3OpenCL_clew_SRCS} ${Bullet3OpenCL_clew_HDRS})
+ SET_TARGET_PROPERTIES(Bullet3OpenCL_clew PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(Bullet3OpenCL_clew PROPERTIES SOVERSION ${BULLET_VERSION})
+-IF (BUILD_SHARED_LIBS)
+-  TARGET_LINK_LIBRARIES(Bullet3OpenCL_clew LinearMath Bullet3Dynamics ${CMAKE_DL_LIBS})
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(Bullet3OpenCL_clew PUBLIC LinearMath Bullet3Dynamics ${CMAKE_DL_LIBS})
++TARGET_COMPILE_DEFINITIONS ( Bullet3OpenCL_clew PUBLIC -DB3_USE_CLEW )
++ADD_DEFINITIONS(-DB3_USE_CLEW)
+ 
+ 
+ IF (INSTALL_LIBS)
+diff --git a/src/BulletCollision/CMakeLists.txt b/src/BulletCollision/CMakeLists.txt
+index f5d725562..96b4717c5 100644
+--- a/src/BulletCollision/CMakeLists.txt
++++ b/src/BulletCollision/CMakeLists.txt
+@@ -256,9 +256,7 @@ SET(BulletCollision_HDRS
+ ADD_LIBRARY(BulletCollision ${BulletCollision_SRCS} ${BulletCollision_HDRS})
+ SET_TARGET_PROPERTIES(BulletCollision PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(BulletCollision PROPERTIES SOVERSION ${BULLET_VERSION})
+-IF (BUILD_SHARED_LIBS)
+-  TARGET_LINK_LIBRARIES(BulletCollision LinearMath)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(BulletCollision PUBLIC LinearMath)
+ 
+ 
+ IF (INSTALL_LIBS)
+diff --git a/src/BulletDynamics/CMakeLists.txt b/src/BulletDynamics/CMakeLists.txt
+index 3332440f2..486e4dc28 100644
+--- a/src/BulletDynamics/CMakeLists.txt
++++ b/src/BulletDynamics/CMakeLists.txt
+@@ -139,9 +139,7 @@ SET(BulletDynamics_HDRS
+ ADD_LIBRARY(BulletDynamics ${BulletDynamics_SRCS} ${BulletDynamics_HDRS})
+ SET_TARGET_PROPERTIES(BulletDynamics PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(BulletDynamics PROPERTIES SOVERSION ${BULLET_VERSION})
+-IF (BUILD_SHARED_LIBS)
+-	TARGET_LINK_LIBRARIES(BulletDynamics BulletCollision LinearMath)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(BulletDynamics PUBLIC BulletCollision LinearMath)
+ 
+ IF (INSTALL_LIBS)
+ 	IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+diff --git a/src/BulletInverseDynamics/CMakeLists.txt b/src/BulletInverseDynamics/CMakeLists.txt
+index 3331c27ea..7913a6a85 100644
+--- a/src/BulletInverseDynamics/CMakeLists.txt
++++ b/src/BulletInverseDynamics/CMakeLists.txt
+@@ -32,9 +32,7 @@ SET(BulletInverseDynamics_HDRS
+ ADD_LIBRARY(BulletInverseDynamics ${BulletInverseDynamics_SRCS} ${BulletInverseDynamics_HDRS})
+ SET_TARGET_PROPERTIES(BulletInverseDynamics PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(BulletInverseDynamics PROPERTIES SOVERSION ${BULLET_VERSION})
+-IF (BUILD_SHARED_LIBS)
+-  TARGET_LINK_LIBRARIES(BulletInverseDynamics Bullet3Common LinearMath)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(BulletInverseDynamics PUBLIC Bullet3Common LinearMath)
+ 
+ 
+ IF (INSTALL_LIBS)
+diff --git a/src/BulletSoftBody/CMakeLists.txt b/src/BulletSoftBody/CMakeLists.txt
+index d43df1c67..0e58b45d5 100644
+--- a/src/BulletSoftBody/CMakeLists.txt
++++ b/src/BulletSoftBody/CMakeLists.txt
+@@ -42,9 +42,7 @@ SET(BulletSoftBody_HDRS
+ ADD_LIBRARY(BulletSoftBody  ${BulletSoftBody_SRCS} ${BulletSoftBody_HDRS})
+ SET_TARGET_PROPERTIES(BulletSoftBody PROPERTIES VERSION ${BULLET_VERSION})
+ SET_TARGET_PROPERTIES(BulletSoftBody PROPERTIES SOVERSION ${BULLET_VERSION})
+-IF (BUILD_SHARED_LIBS)
+-	TARGET_LINK_LIBRARIES(BulletSoftBody BulletDynamics)
+-ENDIF (BUILD_SHARED_LIBS)
++TARGET_LINK_LIBRARIES(BulletSoftBody PUBLIC BulletDynamics)
+ 
+ IF (INSTALL_LIBS)
+ 	IF (NOT INTERNAL_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c30125c53..9cf23c5e5 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,10 +1,19 @@
+ 
+ IF(BUILD_BULLET3)
+-	SUBDIRS(  Bullet3OpenCL Bullet3Serialize/Bullet2FileLoader Bullet3Dynamics Bullet3Collision Bullet3Geometry )
++	ADD_SUBDIRECTORY(  Bullet3OpenCL )
++    ADD_SUBDIRECTORY ( Bullet3Serialize/Bullet2FileLoader )
++    ADD_SUBDIRECTORY ( Bullet3Dynamics )
++    ADD_SUBDIRECTORY ( Bullet3Collision )
++    ADD_SUBDIRECTORY ( Bullet3Geometry )
+ ENDIF(BUILD_BULLET3)
+ 
+ 
+-SUBDIRS(   BulletInverseDynamics BulletSoftBody BulletCollision BulletDynamics LinearMath Bullet3Common)
++ADD_SUBDIRECTORY ( LinearMath )
++ADD_SUBDIRECTORY ( Bullet3Common)
++ADD_SUBDIRECTORY ( BulletInverseDynamics )
++ADD_SUBDIRECTORY ( BulletSoftBody )
++ADD_SUBDIRECTORY ( BulletCollision )
++ADD_SUBDIRECTORY ( BulletDynamics )
+ 
+ 
+ IF(INSTALL_LIBS)

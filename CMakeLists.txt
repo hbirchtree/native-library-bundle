@@ -258,6 +258,11 @@ if(BULLET_BUILD)
         GIT_REPOSITORY https://github.com/bulletphysics/bullet3.git
         GIT_TAG ${BULLET_VER}
 
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/bullet-cmake.patch
+
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
         CMAKE_ARGS
@@ -267,7 +272,7 @@ if(BULLET_BUILD)
             -DBUILD_BULLET2_DEMOS=OFF
             -DBUILD_UNIT_TESTS=OFF
             -DBUILD_CPU_DEMOS=OFF
-            -DBUILD_EXTRAS=OFF
+            -DBUILD_EXTRAS=ON
             -DUSE_GRAPHICAL_BENCHMARK=OFF
             -DINSTALL_LIBS=ON
 
@@ -734,16 +739,15 @@ if(DISCORD_BUILD)
 endif()
 
 #
-# libsquish (doesn't cross-compile)
+# libsquish
 #
 if(SQUISH_BUILD)
     ExternalProject_Add ( squish
 
         PREFIX ${CMAKE_BINARY_DIR}/squish
 
-        # libsquish doesn't support out-of-source compilation, bleh
         SOURCE_DIR ${CMAKE_BINARY_DIR}/source/squish
-        BINARY_DIR ${CMAKE_BINARY_DIR}/source/squish
+        BINARY_DIR ${CMAKE_BINARY_DIR}/build/squish
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/squish
 
         GIT_REPOSITORY https://github.com/Cavewhere/squish.git
@@ -751,21 +755,15 @@ if(SQUISH_BUILD)
         PATCH_COMMAND
             COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
             COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
-            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/squish-pic.patch
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/squish-cmake.patch
 
-        CONFIGURE_COMMAND
-            ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/lib
-            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/install/squish/include
+        CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
-        BUILD_COMMAND
-            COMMAND make
-                -f ${CMAKE_BINARY_DIR}/source/squish/Makefile
+        CMAKE_ARGS
 
-                install
-                -e INSTALL_DIR=${CMAKE_BINARY_DIR}/install/squish
-            COMMAND make clean
-
-        INSTALL_COMMAND make clean
+            ${TOOLCHAIN_OPTIONS}
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/install/squish
         )
 
     install (
@@ -818,6 +816,11 @@ if(SHADERC_BUILD)
         INSTALL_DIR ${CMAKE_BINARY_DIR}/install/shaderc
 
         GIT_REPOSITORY https://github.com/hbirchtree/shaderc.git
+
+        PATCH_COMMAND
+            COMMAND ${GIT_EXECUTABLE} config user.email "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} config user.name "a@b.c"
+            COMMAND ${GIT_EXECUTABLE} apply ${CMAKE_SOURCE_DIR}/patches/shaderc-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 659315c..04e5815 100644
+index 659315c..22264ca 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -35,7 +35,7 @@ endif()
@@ -11,3 +11,13 @@ index 659315c..04e5815 100644
    set(spirv-compiler-defines ${spirv-compiler-defines} __STDC_LIMIT_MACROS)
  
    if(SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS)
+@@ -71,8 +71,7 @@ macro(spirv_cross_add_library name config_name)
+       ARCHIVE DESTINATION lib
+       PUBLIC_HEADER DESTINATION include/spirv_cross)
+   install(FILES ${hdrs} DESTINATION include/spirv_cross)
+-  install(EXPORT ${config_name}Config DESTINATION share/${config_name}/cmake)
+-  export(TARGETS ${targets} FILE ${config_name}Config.cmake)
++  install(EXPORT ${config_name}Config FILE ${config_name}Config.cmake DESTINATION lib/cmake/${config_name})
+ endmacro()
+ 
+ 

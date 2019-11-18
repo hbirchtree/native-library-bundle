@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..83ebdeb
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,41 @@
++cmake_minimum_required ( VERSION 3.10 )
++project ( Squish )
++
++set ( SOURCE_FILES
++    alpha.cpp
++    clusterfit.cpp
++    colourblock.cpp
++    colourfit.cpp
++    colourset.cpp
++    maths.cpp
++    rangefit.cpp
++    singlecolourfit.cpp
++    squish.cpp
++    )
++
++add_library ( Squish STATIC ${SOURCE_FILES} )
++
++target_include_directories ( Squish 
++    PUBLIC $<INSTALL_INTERFACE:include>
++    PRIVATE ${CMAKE_SOURCE_DIR}
++    )
++
++install (
++    FILES ${CMAKE_SOURCE_DIR}/squish.h
++    DESTINATION include
++    )
++
++install (
++    TARGETS Squish
++    EXPORT Squish
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    )
++
++install (
++    EXPORT Squish
++    FILE SquishConfig.cmake
++    NAMESPACE Squish::
++    DESTINATION lib/cmake/Squish
++    )
++

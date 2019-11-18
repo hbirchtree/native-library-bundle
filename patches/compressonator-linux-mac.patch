@@ -23,7 +23,7 @@ index a71b3027..2ae82e6d 100644
  
  #ifdef __cplusplus
 diff --git a/Compressonator/Make/CMakeLists.txt b/Compressonator/Make/CMakeLists.txt
-index 413782ec..104d71e9 100644
+index 413782ec..be220fae 100644
 --- a/Compressonator/Make/CMakeLists.txt
 +++ b/Compressonator/Make/CMakeLists.txt
 @@ -1,4 +1,4 @@
@@ -45,7 +45,7 @@ index 413782ec..104d71e9 100644
  
  
  list(APPEND CMP_SOURCES1 ${CMP_SOURCES1} "${CMP_SOURCES2}")
-@@ -38,18 +36,23 @@ foreach (_headerFile ${CMP_HEADERS2})
+@@ -38,18 +36,30 @@ foreach (_headerFile ${CMP_HEADERS2})
      list (APPEND CMP_INCLUDE_DIRS ${_dir})
  endforeach()
  
@@ -74,6 +74,13 @@ index 413782ec..104d71e9 100644
 +    LIBRARY DESTINATION lib
 +    ARCHIVE DESTINATION lib
 +    INCLUDES DESTINATION include
++    )
++
++install (
++    EXPORT Compressonator
++    FILE CompressonatorConfig.cmake
++    NAMESPACE Compressonator::
++    DESTINATION lib/cmake/Compressonator
 +    )
 +
 +install (

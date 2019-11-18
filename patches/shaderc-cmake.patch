@@ -1,0 +1,12 @@
+diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
+index 2a5372d..00c84b2 100644
+--- a/libshaderc/CMakeLists.txt
++++ b/libshaderc/CMakeLists.txt
+@@ -31,6 +31,7 @@ if(SHADERC_ENABLE_INSTALL)
+       ${CMAKE_INSTALL_INCLUDEDIR}/shaderc)
+ 
+   install(TARGETS shaderc shaderc_shared
++    EXPORT shaderc
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif(SHADERC_ENABLE_INSTALL)
