@@ -58,7 +58,6 @@ testing:
 docs:
   - .
 emscripten:
-  - asmjs
   - wasm
   - wasm$(shell)
 maemo:
@@ -71,4 +70,5 @@ mingw:
   - w64
 gamecube:
   - .
-  - $(shell)
+gamecube$(shell):
+  - .

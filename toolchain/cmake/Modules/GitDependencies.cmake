@@ -68,14 +68,12 @@ function ( DEPENDENCY_GET )
             set (
                 CMAKE_PREFIX_PATH
                     "${CMAKE_PREFIX_PATH};${LOCAL_DIR}"
-                PARENT_SCOPE
                 )
 
             if(DEFINED CMAKE_FIND_ROOT_PATH)
                 set (
                     CMAKE_FIND_ROOT_PATH
                         "${CMAKE_FIND_ROOT_PATH};${LOCAL_DIR}"
-                    PARENT_SCOPE
                     )
             endif()
         endif()
@@ -138,6 +136,9 @@ function ( DEPENDENCY_GET )
             )
     endforeach()
 
+    set ( CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}" PARENT_SCOPE )
+    set ( CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${LOCAL_DIR}" PARENT_SCOPE )
+
 endfunction()
 
 function( DEPENDENCY_LINK )
@@ -172,11 +173,6 @@ function( DEPENDENCY_LINK )
         EXPORT_PROPERTIES
             git_deps
         )
-
-    get_property ( EXPORT_PROPS TARGET "${LINK_TARGET}" PROPERTY EXPORT_PROPERTIES )
-
-    # message ( "Export props: ${EXPORT_PROPS}" )
-
 endfunction()
 
 set ( GIT_DEPS_RESOLVED ";" )
