@@ -19,6 +19,10 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux" AND NOT ANDROID)
     set ( LINUX ON )
 endif()
 
+if(WIN32)
+    set ( TOOLCHAIN_GENERATOR "${CMAKE_GENERATOR}" )
+endif()
+
 set ( GITCOMMAND "git" )
 
 #
