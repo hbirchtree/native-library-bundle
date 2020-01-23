@@ -21,6 +21,7 @@ endif()
 
 if(WIN32)
     set ( TOOLCHAIN_GENERATOR "${CMAKE_GENERATOR}" )
+    list ( APPEND TOOLCHAIN_OPTIONS "-G${TOOLCHAIN_GENERATOR}" )
 endif()
 
 set ( GITCOMMAND "git" )
