@@ -81,7 +81,7 @@ if(
             (
                 LINUX
                 OR (APPLE AND NOT IOS)
-                OR WIN32
+                #OR WIN32
                 )
             )
         AND (
