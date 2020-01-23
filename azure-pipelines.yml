@@ -1,4 +1,10 @@
 trigger:
+  paths:
+    include:
+    - examples/*
+    - src/*
+    - tests/*
+    - toolchain/*
   branches:
     include:
     - master
@@ -95,7 +101,7 @@ jobs:
       AZURE_IMAGE: vs2019-win2019
       OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
   - powershell: ./cb.ps1 quick-build $(variant)
-    displayName: Downloading dependencies
+    displayName: Building project
     env:
       AZURE_IMAGE: vs2019-win2019
       OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
