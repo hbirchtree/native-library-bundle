@@ -455,7 +455,7 @@ if(OPENSSL_BUILD)
 
         if("${CMAKE_LIBRARY_ARCHITECTURE}" STREQUAL "arm-none-linux-gnueabihf")
             set ( OPENSSL_PLATFORM "linux-armv4" )
-            set ( OPENSSL_ARCH "armv6" )
+            set ( OPENSSL_ARCH "armv7" )
             set ( USE_CROSS_OPT ON )
         elseif(MINGW64)
             set ( OPENSSL_PLATFORM "mingw64" )
