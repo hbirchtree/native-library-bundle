@@ -101,7 +101,6 @@ endif()
 set ( SDL2_BUILD            OFF )
 set ( OPENAL_BUILD          OFF )
 set ( BULLET_BUILD          ON  )
-set ( ASSIMP_BUILD          ON  )
 set ( OPENSSL_BUILD         ON  )
 set ( ZLIB_BUILD            ON  )
 set ( ZSTD_BUILD            ON  )
@@ -120,6 +119,7 @@ set ( DISCORD_VERSION "3.4.0" )
 
 # Build libraries, only for desktop (x86/amd64)
 
+set ( ASSIMP_BUILD          OFF )
 set ( SQUISH_BUILD          OFF )
 set ( FFMPEG_BUILD          OFF )
 set ( COMPRESSONATOR_BUILD  OFF )
@@ -133,6 +133,7 @@ set ( FFMPEG_VER  "4.1.2"  )
 
 if(BUILD_PLATFORM)
     set ( ZLIB_BUILD            OFF ) # There are problems with shared libs and static zlib
+    set ( ASSIMP_BUILD          ON )
     set ( SQUISH_BUILD          ON )
     set ( FFMPEG_BUILD          ON )
     set ( COMPRESSONATOR_BUILD  ON )
