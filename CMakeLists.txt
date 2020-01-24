@@ -453,7 +453,7 @@ if(OPENSSL_BUILD)
         set ( OPENSSL_BUILT ON  )
         set ( USE_CROSS_OPT OFF )
 
-        if("${CMAKE_LIBRARY_ARCHITECTURE}" STREQUAL "arm-linux-gnueabihf")
+        if("${CMAKE_LIBRARY_ARCHITECTURE}" STREQUAL "arm-none-linux-gnueabihf")
             set ( OPENSSL_PLATFORM "linux-armv4" )
             set ( OPENSSL_ARCH "armv6" )
             set ( USE_CROSS_OPT ON )
