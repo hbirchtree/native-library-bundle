@@ -16,6 +16,8 @@ env:
   - CONFIGURATION=Release
   matrix:
   - BUILDVARIANT=android.armv7a.kitkat
+  - BUILDVARIANT=android.armv8a.oreo
+  - BUILDVARIANT=android.armv8a.q
   - BUILDVARIANT=android.x86.kitkat
   - BUILDVARIANT=android.x86_64.nougat
   - BUILDVARIANT=emscripten.wasm
@@ -31,6 +33,10 @@ matrix:
   exclude:
   - os: osx
     env: BUILDVARIANT=android.armv7a.kitkat
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.oreo
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.q
   - os: osx
     env: BUILDVARIANT=android.x86.kitkat
   - os: osx

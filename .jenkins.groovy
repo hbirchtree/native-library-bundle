@@ -1,4 +1,4 @@
-def linux_targets = ['ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.x86_64.nougat', 'android.x86.kitkat', 'android.armv7a.kitkat', ]
+def linux_targets = ['ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.x86_64.nougat', 'android.x86.kitkat', 'android.armv8a.q', 'android.armv8a.oreo', 'android.armv7a.kitkat', ]
 def osx_targets = ['osx', 'ios.x86_64', 'ios', ]
 def windows_targets = ['win32.x86.vs19', 'win32.x86.vs17', 'win32.amd64.vs19', 'win32.amd64.vs17', 'uwp.amd64.vs19', ]
 

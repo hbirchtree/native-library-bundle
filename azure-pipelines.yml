@@ -17,6 +17,10 @@ jobs:
     matrix:
       android.armv7a.kitkat:
         variant: android.armv7a.kitkat
+      android.armv8a.oreo:
+        variant: android.armv8a.oreo
+      android.armv8a.q:
+        variant: android.armv8a.q
       android.x86.kitkat:
         variant: android.x86.kitkat
       android.x86_64.nougat:
