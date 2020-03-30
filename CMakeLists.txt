@@ -75,7 +75,7 @@ endif()
 if(WIN32)
     message ( STATUS "Activating Windows workarounds" )
     set ( APPLY_OPTS --ignore-space-change )
-    message ( "Apply options: ${APPLY_OPTS}" )
+    message ( STATUS "git apply options: ${APPLY_OPTS}" )
 endif()
 
 #
