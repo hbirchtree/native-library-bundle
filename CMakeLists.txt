@@ -26,6 +26,8 @@ endif()
 
 set ( GITCOMMAND "git" )
 
+set ( APPLY_OPTS )
+
 #
 # We set up some toolchain-specific options
 #
@@ -70,6 +72,12 @@ if(APPLE)
     endif()
 endif()
 
+if(WIN32)
+    message ( STATUS "Activating Windows workarounds" )
+    set ( APPLY_OPTS --ignore-space-change )
+    message ( "Apply options: ${APPLY_OPTS}" )
+endif()
+
 #
 # For libraries that are not going to be cross-compiled
 # This applies to texture compressors, shader compilers and preprocessing models
@@ -81,7 +89,6 @@ if(
             (
                 LINUX
                 OR (APPLE AND NOT IOS)
-                #OR WIN32
                 )
             )
         AND (
@@ -147,6 +154,11 @@ endif()
 # Only used on desktop platforms, Android and iOS use custom backends
 if(LINUX OR (APPLE AND NOT IOS))
     set ( SDL2_BUILD ON )
+endif()
+
+# Just no
+if(WIN32)
+    set ( ZLIB_BUILD OFF )
 endif()
 
 # steam.amd64 is not used for building, and also does not support C++14
@@ -269,7 +281,7 @@ if(BULLET_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/bullet-cmake.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/bullet-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -403,7 +415,7 @@ if(OPENSSL_BUILD)
 
             PATCH_COMMAND
                 ${GITCOMMAND}
-                    apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/openssl-ios.patch
+                    apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/openssl-ios.patch
 
             CONFIGURE_COMMAND
                 ${CMAKE_COMMAND} -E env
@@ -556,7 +568,7 @@ if(ZLIB_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/zlib-export.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/zlib-export.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -602,7 +614,7 @@ if(ASSIMP_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/assimp-zlib-find.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/assimp-zlib-find.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -651,7 +663,7 @@ if(ZSTD_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/zstd-export.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/zstd-export.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
 
@@ -689,7 +701,7 @@ if(LZ4_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/lz4-cmake.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/lz4-cmake.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
 
@@ -727,7 +739,7 @@ if(DISCORD_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/discord-cmake.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/discord-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -763,7 +775,7 @@ if(SQUISH_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/squish-cmake.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/squish-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -828,7 +840,7 @@ if(SHADERC_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/shaderc-cmake.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/shaderc-cmake.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -865,7 +877,7 @@ if(SPIRVCROSS_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/spirvcross-werror.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/spirvcross-werror.patch
 
         CMAKE_GENERATOR "${TOOLCHAIN_GENERATOR}"
 
@@ -972,7 +984,7 @@ if(COMPRESSONATOR_BUILD)
         PATCH_COMMAND
             COMMAND ${GITCOMMAND} config user.email "a@b.c"
             COMMAND ${GITCOMMAND} config user.name "a@b.c"
-            COMMAND ${GITCOMMAND} apply --ignore-space-change --ignore-whitespace ${CMAKE_SOURCE_DIR}/patches/compressonator-linux-mac.patch
+            COMMAND ${GITCOMMAND} apply ${APPLY_OPTS} ${CMAKE_SOURCE_DIR}/patches/compressonator-linux-mac.patch
 
         CONFIGURE_COMMAND ${CMAKE_COMMAND}
 
