@@ -1,6 +1,6 @@
-def linux_targets = ['ubuntu.i686.gles2', 'ubuntu.i686.gles', 'ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.x86_64.nougat', 'android.x86.kitkat', 'android.armv8a.nougat.gles3', 'android.armv8a.lollipop.gles3', 'android.armv7a.nougat.gles3', 'android.armv7a.nougat.gles2', 'android.armv7a.lollipop.gles3', 'android.armv7a.kitkat.gles2', ]
+def linux_targets = ['ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.x86_64.nougat', 'android.x86.kitkat', 'android.armv8a.q', 'android.armv8a.oreo', 'android.armv7a.kitkat', ]
 def osx_targets = ['osx', 'ios.x86_64', 'ios', ]
-def windows_targets = ['win32.x86', 'win32.amd64', 'uwp.amd64', ]
+def windows_targets = ['win32.x86.vs19', 'win32.x86.vs17', 'win32.amd64.vs19', 'win32.amd64.vs17', 'uwp.amd64.vs19', ]
 
 String linux_label = 'linux && docker'
 String osx_label = 'osx'
@@ -103,7 +103,7 @@ linux_targets.each {
 
     def srcDir = '${WORKSPACE}'
 
-    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle.git', srcDir)
+    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle', srcDir)
     GetBuildStep(j, srcDir, 'linux', linux_label, it)
 }
 
@@ -112,7 +112,7 @@ osx_targets.each {
 
     def srcDir = '${WORKSPACE}'
 
-    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle.git', srcDir)
+    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle', srcDir)
     GetBuildStep(j, srcDir, 'osx', osx_label, it)
 }
 
@@ -121,6 +121,6 @@ windows_targets.each {
 
     def srcDir = '${WORKSPACE}'
 
-    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle.git', srcDir)
+    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle', srcDir)
     GetBuildStep(j, srcDir, 'windows', windows_label, it)
 }

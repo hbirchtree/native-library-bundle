@@ -15,18 +15,12 @@ jobs:
     vmImage: ubuntu-18.04
   strategy:
     matrix:
-      android.armv7a.kitkat.gles2:
-        variant: android.armv7a.kitkat.gles2
-      android.armv7a.lollipop.gles3:
-        variant: android.armv7a.lollipop.gles3
-      android.armv7a.nougat.gles2:
-        variant: android.armv7a.nougat.gles2
-      android.armv7a.nougat.gles3:
-        variant: android.armv7a.nougat.gles3
-      android.armv8a.lollipop.gles3:
-        variant: android.armv8a.lollipop.gles3
-      android.armv8a.nougat.gles3:
-        variant: android.armv8a.nougat.gles3
+      android.armv7a.kitkat:
+        variant: android.armv7a.kitkat
+      android.armv8a.oreo:
+        variant: android.armv8a.oreo
+      android.armv8a.q:
+        variant: android.armv8a.q
       android.x86.kitkat:
         variant: android.x86.kitkat
       android.x86_64.nougat:
@@ -43,10 +37,6 @@ jobs:
         variant: steam.amd64
       ubuntu.amd64:
         variant: ubuntu.amd64
-      ubuntu.i686.gles:
-        variant: ubuntu.i686.gles
-      ubuntu.i686.gles2:
-        variant: ubuntu.i686.gles2
   steps:
   - checkout: self
     submodules: true
@@ -103,12 +93,16 @@ jobs:
     vmImage: windows-2019
   strategy:
     matrix:
-      uwp.amd64:
-        variant: uwp.amd64
-      win32.amd64:
-        variant: win32.amd64
-      win32.x86:
-        variant: win32.x86
+      uwp.amd64.vs19:
+        variant: uwp.amd64.vs19
+      win32.amd64.vs17:
+        variant: win32.amd64.vs17
+      win32.amd64.vs19:
+        variant: win32.amd64.vs19
+      win32.x86.vs17:
+        variant: win32.x86.vs17
+      win32.x86.vs19:
+        variant: win32.x86.vs19
   steps:
   - checkout: self
     submodules: true

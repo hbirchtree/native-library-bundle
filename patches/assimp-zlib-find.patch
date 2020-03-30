@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dcafb649..b3d5c795 100644
+index dcafb649..da25b19f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -36,7 +36,7 @@
@@ -11,8 +11,16 @@ index dcafb649..b3d5c795 100644
  
  # Toggles the use of the hunter package manager
  option(HUNTER_ENABLED "Enable Hunter package manager support" OFF)
-@@ -437,10 +437,11 @@ IF(HUNTER_ENABLED)
-   set(ASSIMP_BUILD_MINIZIP TRUE)
+@@ -347,7 +347,7 @@ ENDIF()
+ 
+ # Only generate this target if no higher-level project already has
+ IF (NOT TARGET uninstall)
+-  # add make uninstall capability
++  # add make uninstall capabilityf
+   CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/cmake_uninstall.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
+   ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+ ENDIF()
+@@ -438,9 +438,10 @@ IF(HUNTER_ENABLED)
  ELSE(HUNTER_ENABLED)
    IF ( NOT ASSIMP_BUILD_ZLIB )
      FIND_PACKAGE(ZLIB)
@@ -20,24 +28,26 @@ index dcafb649..b3d5c795 100644
    ENDIF( NOT ASSIMP_BUILD_ZLIB )
  
 -  IF( NOT ZLIB_FOUND )
-+  IF( NOT zlib_FOUND AND FALSE )
++  IF( NOT zlib_FOUND AND WIN32 )
      MESSAGE(STATUS "compiling zlib from sources")
      INCLUDE(CheckIncludeFile)
      INCLUDE(CheckTypeSize)
-@@ -461,11 +461,19 @@ ELSE(HUNTER_ENABLED)
+@@ -459,13 +460,22 @@ ELSE(HUNTER_ENABLED)
+     SET(ZLIB_FOUND 1)
+     SET(ZLIB_LIBRARIES zlibstatic)
      SET(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/contrib/zlib ${CMAKE_CURRENT_BINARY_DIR}/contrib/zlib)
++    include_directories ( ${ZLIB_INCLUDE_DIR} )
      # need to ensure we don't link with system zlib or minizip as well.
      SET(ASSIMP_BUILD_MINIZIP 1)
 -  ELSE(NOT ZLIB_FOUND)
 +  ELSEIF( zlib_FOUND )
-     ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
--    SET(ZLIB_LIBRARIES_LINKED -lz)
--  ENDIF(NOT ZLIB_FOUND)
--  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
++    ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
 +    SET(ZLIB_LIBRARIES zlib::zlibstatic)
 +  ELSEIF( ZLIB_FOUND )
-+    ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
-+    SET(ZLIB_LIBRARIES_LINKED -lz)
+     ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
+     SET(ZLIB_LIBRARIES_LINKED -lz)
+-  ENDIF(NOT ZLIB_FOUND)
+-  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 +  ELSEIF( EMSCRIPTEN )
 +    ADD_DEFINITIONS(-DASSIMP_BUILD_NO_OWN_ZLIB)
 +    ADD_LIBRARY(zlibstatic INTERFACE)
@@ -48,3 +58,25 @@ index dcafb649..b3d5c795 100644
  ENDIF(HUNTER_ENABLED)
  
  IF( NOT IOS )
+diff --git a/code/Common/Exporter.cpp b/code/Common/Exporter.cpp
+index 34d49c47..04726df8 100644
+--- a/code/Common/Exporter.cpp
++++ b/code/Common/Exporter.cpp
+@@ -106,7 +106,7 @@ void ExportAssimp2Json(const char* , IOSystem*, const aiScene* , const Assimp::E
+ 
+ // ------------------------------------------------------------------------------------------------
+ // global array of all export formats which Assimp supports in its current build
+-Exporter::ExportFormatEntry gExporters[] =
++std::vector<Exporter::ExportFormatEntry> gExporters =
+ {
+ #ifndef ASSIMP_BUILD_NO_COLLADA_EXPORTER
+     Exporter::ExportFormatEntry( "collada", "COLLADA - Digital Asset Exchange Schema", "dae", &ExportSceneCollada ),
+@@ -207,7 +207,7 @@ public:
+         // grab all built-in exporters
+         if ( 0 != ( ASSIMP_NUM_EXPORTERS ) ) {
+             mExporters.resize( ASSIMP_NUM_EXPORTERS );
+-            std::copy( gExporters, gExporters + ASSIMP_NUM_EXPORTERS, mExporters.begin() );
++            std::copy( gExporters.begin(), gExporters.end(), mExporters.begin() );
+         }
+     }
+ 

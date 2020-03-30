@@ -15,12 +15,9 @@ env:
   - MAKEFILE_DIR=toolchain/makers
   - CONFIGURATION=Release
   matrix:
-  - BUILDVARIANT=android.armv7a.kitkat.gles2
-  - BUILDVARIANT=android.armv7a.lollipop.gles3
-  - BUILDVARIANT=android.armv7a.nougat.gles2
-  - BUILDVARIANT=android.armv7a.nougat.gles3
-  - BUILDVARIANT=android.armv8a.lollipop.gles3
-  - BUILDVARIANT=android.armv8a.nougat.gles3
+  - BUILDVARIANT=android.armv7a.kitkat
+  - BUILDVARIANT=android.armv8a.oreo
+  - BUILDVARIANT=android.armv8a.q
   - BUILDVARIANT=android.x86.kitkat
   - BUILDVARIANT=android.x86_64.nougat
   - BUILDVARIANT=emscripten.wasm
@@ -29,25 +26,17 @@ env:
   - BUILDVARIANT=raspberry.armhf
   - BUILDVARIANT=steam.amd64
   - BUILDVARIANT=ubuntu.amd64
-  - BUILDVARIANT=ubuntu.i686.gles
-  - BUILDVARIANT=ubuntu.i686.gles2
   - BUILDVARIANT=ios
   - BUILDVARIANT=ios.x86_64
   - BUILDVARIANT=osx
 matrix:
   exclude:
   - os: osx
-    env: BUILDVARIANT=android.armv7a.kitkat.gles2
+    env: BUILDVARIANT=android.armv7a.kitkat
   - os: osx
-    env: BUILDVARIANT=android.armv7a.lollipop.gles3
+    env: BUILDVARIANT=android.armv8a.oreo
   - os: osx
-    env: BUILDVARIANT=android.armv7a.nougat.gles2
-  - os: osx
-    env: BUILDVARIANT=android.armv7a.nougat.gles3
-  - os: osx
-    env: BUILDVARIANT=android.armv8a.lollipop.gles3
-  - os: osx
-    env: BUILDVARIANT=android.armv8a.nougat.gles3
+    env: BUILDVARIANT=android.armv8a.q
   - os: osx
     env: BUILDVARIANT=android.x86.kitkat
   - os: osx
@@ -64,10 +53,6 @@ matrix:
     env: BUILDVARIANT=steam.amd64
   - os: osx
     env: BUILDVARIANT=ubuntu.amd64
-  - os: osx
-    env: BUILDVARIANT=ubuntu.i686.gles
-  - os: osx
-    env: BUILDVARIANT=ubuntu.i686.gles2
   - os: linux
     env: BUILDVARIANT=ios
   - os: linux
