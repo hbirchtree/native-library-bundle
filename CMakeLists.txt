@@ -517,7 +517,27 @@ if(OPENSSL_BUILD)
 
             INSTALL_COMMAND make install
             )
-    elseif(LINUX OR APPLE)
+    elseif(APPLE)
+        ExternalProject_Add ( OpenSSL
+            
+            PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+            SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+            BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+            INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+            GIT_REPOSITORY https://github.com/openssl/openssl.git
+            GIT_TAG OpenSSL_${OPENSSL_VER}
+
+            CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/Configure
+                no-shared
+                darwin64-x86_64-cc
+
+            BUILD_COMMAND make
+
+            INSTALL_COMMAND make install -e INSTALLTOP=${CMAKE_BINARY_DIR}/install/openssl
+            )
+    elseif(LINUX)
         set ( OPENSSL_BUILT ON )
         ExternalProject_Add ( OpenSSL
 
