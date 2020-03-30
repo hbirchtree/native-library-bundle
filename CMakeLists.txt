@@ -535,7 +535,9 @@ if(OPENSSL_BUILD)
 
             BUILD_COMMAND make
 
-            INSTALL_COMMAND make install -e INSTALLTOP=${CMAKE_BINARY_DIR}/install/openssl
+            INSTALL_COMMAND make install 
+                    -e INSTALLTOP=${CMAKE_BINARY_DIR}/install/openssl 
+                    -e OPENSSLDIR=${CMAKE_BINARY_DIR}/install/openssl
             )
     elseif(LINUX)
         set ( OPENSSL_BUILT ON )
