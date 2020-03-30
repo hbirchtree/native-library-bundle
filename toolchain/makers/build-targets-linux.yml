@@ -1,45 +1,24 @@
 android:
   armv8a:
-    nougat:
-      - gles3
-      - gles3$(shell)
-    lollipop:
-      - gles3
+    - q
+    - oreo
   armv7a:
-    nougat:
-      - gles2
-      - gles2$(shell)
-      - gles3
-      - gles3$(shell)
-    lollipop:
-      - gles3
-    kitkat:
-      - gles2
-    gingerbread:
-      - gles2
+    - kitkat
+    - gingerbread
   mips:
-    kitkat:
-      - .
+    - kitkat
   mips64:
-    kitkat:
-      - .
+    - kitkat
   x86:
-    kitkat:
-      - .
+    - kitkat
   x86_64:
-    kitkat:
-      - .
-    nougat:
-      - .
+    - nougat
+    - kitkat
 ubuntu:
   amd64:
     - .
     - tools
-    - gles2
     - gles3
-  i686:
-    - gles
-    - gles2
 fedora:
   - amd64
   - amd64$(shell)
