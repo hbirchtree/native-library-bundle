@@ -79,12 +79,12 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'script': './toolchain/ci/travis-build.sh',
                         'displayName': 'Building project',
-                        'env': unix_env
+                        'env': unix_env.copy()
                     },
                     {
                         'script': './toolchain/ci/travis-deploy.sh',
                         'displayName': 'Deploying artifacts',
-                        'env': unix_env
+                        'env': unix_env.copy()
                     }
                     ]
                 },
@@ -110,12 +110,12 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'script': './toolchain/ci/travis-build.sh',
                         'displayName': 'Building project',
-                        'env': unix_env
+                        'env': unix_env.copy()
                     },
                     {
                         'script': './toolchain/ci/travis-deploy.sh',
                         'displayName': 'Deploying artifacts',
-                        'env': unix_env
+                        'env': unix_env.copy()
                     }
                     ]
                 },
@@ -142,7 +142,7 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'powershell': './toolchain/ci/appveyor-build.ps1',
                         'displayName': 'Configuring project',
-                        'env': windows_env
+                        'env': windows_env.copy()
                     },
                     {
                         'powershell': '& cmake.exe --build . --target install --config %CONFIGURATION%',
@@ -151,7 +151,7 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'powershell': './toolchain/ci/appveyor-deploy.ps1',
                         'displayName': 'Deploying artifacts',
-                        'env': windows_env
+                        'env': windows_env.copy()
                     }
                     ]
                 }
