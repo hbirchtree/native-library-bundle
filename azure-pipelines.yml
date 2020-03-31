@@ -47,11 +47,12 @@ jobs:
       PIPELINES: '1'
   - script: ./toolchain/ci/travis-build.sh
     displayName: Building project
-    env:
+    env: &id001
       CONFIGURATION: Release
       TRAVIS_OS_NAME: linux
       BUILDVARIANT: $(variant)
       PIPELINES: '1'
+      MAKEFILE_DIR: toolchain/makers
       BUILD_REPO_URI: $(Build.Repository.Uri)
       BUILD_REPO_BRANCH: $(Build.SourceBranch)
       BUILD_REPO_EVENT: $(Build.Reason)
@@ -60,17 +61,7 @@ jobs:
       GITHUB_TOKEN: $(Github.Token)
   - script: ./toolchain/ci/travis-deploy.sh
     displayName: Deploying artifacts
-    env:
-      CONFIGURATION: Release
-      TRAVIS_OS_NAME: linux
-      BUILDVARIANT: $(variant)
-      PIPELINES: '1'
-      BUILD_REPO_URI: $(Build.Repository.Uri)
-      BUILD_REPO_BRANCH: $(Build.SourceBranch)
-      BUILD_REPO_EVENT: $(Build.Reason)
-      BUILD_REPO_ID: $(variant)
-      BUILD_REPO_URL: ''
-      GITHUB_TOKEN: $(Github.Token)
+    env: *id001
 - job: macOS_and_iOS
   pool:
     vmImage: macos-10.14
@@ -92,30 +83,10 @@ jobs:
       PIPELINES: '1'
   - script: ./toolchain/ci/travis-build.sh
     displayName: Building project
-    env:
-      CONFIGURATION: Release
-      TRAVIS_OS_NAME: osx
-      BUILDVARIANT: $(variant)
-      PIPELINES: '1'
-      BUILD_REPO_URI: $(Build.Repository.Uri)
-      BUILD_REPO_BRANCH: $(Build.SourceBranch)
-      BUILD_REPO_EVENT: $(Build.Reason)
-      BUILD_REPO_ID: $(variant)
-      BUILD_REPO_URL: ''
-      GITHUB_TOKEN: $(Github.Token)
+    env: *id001
   - script: ./toolchain/ci/travis-deploy.sh
     displayName: Deploying artifacts
-    env:
-      CONFIGURATION: Release
-      TRAVIS_OS_NAME: linux
-      BUILDVARIANT: $(variant)
-      PIPELINES: '1'
-      BUILD_REPO_URI: $(Build.Repository.Uri)
-      BUILD_REPO_BRANCH: $(Build.SourceBranch)
-      BUILD_REPO_EVENT: $(Build.Reason)
-      BUILD_REPO_ID: $(variant)
-      BUILD_REPO_URL: ''
-      GITHUB_TOKEN: $(Github.Token)
+    env: *id001
 - job: Windows
   pool:
     vmImage: windows-2019
@@ -142,7 +113,7 @@ jobs:
       PIPELINES: '1'
   - powershell: ./toolchain/ci/appveyor-build.ps1
     displayName: Configuring project
-    env:
+    env: &id002
       AZURE_IMAGE: vs2019-win2019
       OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
       PIPELINES: '1'
@@ -163,12 +134,4 @@ jobs:
     displayName: Building project
   - powershell: ./toolchain/ci/appveyor-deploy.ps1
     displayName: Deploying artifacts
-    env:
-      AZURE_IMAGE: vs2019-win2019
-      SOURCE_DIR: $(Build.SourcesDirectory)
-      BUILD_DIR: $(Build.SourcesDirectory)
-      GITHUB_TOKEN: $(Github.Token)
-      BUILDVARIANT: $(variant)
-      APPVEYOR_PULL_REQUEST_NUMBER: '0'
-      APPVEYOR_REPO_NAME: $(Build.Repository.Name)
-      APPVEYOR_REPO_COMMIT: $(Build.SourceVersion)
+    env: *id002
