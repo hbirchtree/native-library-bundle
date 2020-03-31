@@ -49,7 +49,6 @@ jobs:
     displayName: Building project
     env:
       CONFIGURATION: Release
-      TRAVIS_OS_NAME: linux
       BUILDVARIANT: $(variant)
       PIPELINES: '1'
       MAKEFILE_DIR: toolchain/makers
@@ -59,11 +58,11 @@ jobs:
       BUILD_REPO_ID: $(variant)
       BUILD_REPO_URL: ''
       GITHUB_TOKEN: $(Github.Token)
+      TRAVIS_OS_NAME: linux
   - script: ./toolchain/ci/travis-deploy.sh
     displayName: Deploying artifacts
     env:
       CONFIGURATION: Release
-      TRAVIS_OS_NAME: linux
       BUILDVARIANT: $(variant)
       PIPELINES: '1'
       MAKEFILE_DIR: toolchain/makers
@@ -73,6 +72,7 @@ jobs:
       BUILD_REPO_ID: $(variant)
       BUILD_REPO_URL: ''
       GITHUB_TOKEN: $(Github.Token)
+      TRAVIS_OS_NAME: linux
 - job: macOS_and_iOS
   pool:
     vmImage: macos-10.14
@@ -96,7 +96,6 @@ jobs:
     displayName: Building project
     env:
       CONFIGURATION: Release
-      TRAVIS_OS_NAME: linux
       BUILDVARIANT: $(variant)
       PIPELINES: '1'
       MAKEFILE_DIR: toolchain/makers
@@ -106,11 +105,11 @@ jobs:
       BUILD_REPO_ID: $(variant)
       BUILD_REPO_URL: ''
       GITHUB_TOKEN: $(Github.Token)
+      TRAVIS_OS_NAME: osx
   - script: ./toolchain/ci/travis-deploy.sh
     displayName: Deploying artifacts
     env:
       CONFIGURATION: Release
-      TRAVIS_OS_NAME: linux
       BUILDVARIANT: $(variant)
       PIPELINES: '1'
       MAKEFILE_DIR: toolchain/makers
@@ -120,6 +119,7 @@ jobs:
       BUILD_REPO_ID: $(variant)
       BUILD_REPO_URL: ''
       GITHUB_TOKEN: $(Github.Token)
+      TRAVIS_OS_NAME: osx
 - job: Windows
   pool:
     vmImage: windows-2019

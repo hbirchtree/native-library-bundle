@@ -17,7 +17,6 @@ def pipelines_gen_config(build_info, repo_dir):
 
     unix_env = { 
                 'CONFIGURATION': 'Release',
-                'TRAVIS_OS_NAME': 'linux',
                 'BUILDVARIANT': '$(variant)',
                 'PIPELINES': '1',
                 'MAKEFILE_DIR': 'toolchain/makers',
@@ -28,6 +27,12 @@ def pipelines_gen_config(build_info, repo_dir):
                 'BUILD_REPO_URL': '',
                 'GITHUB_TOKEN': '$(Github.Token)'
         }
+    linux_env = unix_env.copy()
+    osx_env = unix_env.copy()
+
+    linux_env['TRAVIS_OS_NAME'] = 'linux'
+    osx_env['TRAVIS_OS_NAME'] = 'osx'
+
     windows_env = {
             'AZURE_IMAGE': 'vs2019-win2019',
             'OPENSSL_ROOT_DIR': '$(Build.SourcesDirectory)/openssl-libs/',
@@ -79,12 +84,12 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'script': './toolchain/ci/travis-build.sh',
                         'displayName': 'Building project',
-                        'env': unix_env.copy()
+                        'env': linux_env.copy()
                     },
                     {
                         'script': './toolchain/ci/travis-deploy.sh',
                         'displayName': 'Deploying artifacts',
-                        'env': unix_env.copy()
+                        'env': linux_env.copy()
                     }
                     ]
                 },
@@ -110,12 +115,12 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'script': './toolchain/ci/travis-build.sh',
                         'displayName': 'Building project',
-                        'env': unix_env.copy()
+                        'env': osx_env.copy()
                     },
                     {
                         'script': './toolchain/ci/travis-deploy.sh',
                         'displayName': 'Deploying artifacts',
-                        'env': unix_env.copy()
+                        'env': osx_env.copy()
                     }
                     ]
                 },
