@@ -32,6 +32,19 @@ set ( APPLY_OPTS )
 # We set up some toolchain-specific options
 #
 if(ANDROID)
+
+    if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux")
+        set ( NDK_PREFIX "linux-x86_64" )
+    elseif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Darwin")
+        set ( NDK_PREFIX "darwin-x86_64" )
+    elseif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+        set ( NDK_PREFIX "windows-x86_64" )
+    endif()
+
+    set ( NDK_PATH "${ANDROID_NDK}/toolchains/llvm/prebuilt/${NDK_PREFIX}/bin" )
+
+    string ( REGEX REPLACE "android-([0-9]+)" "\\1" ANDROID_NDK_API "${ANDROID_PLATFORM}" )
+
     add_custom_target ( AndroidPackage ) # Dummy package to make CI happy
 
     set ( TOOLCHAIN_OPTIONS
@@ -168,12 +181,6 @@ endif()
 
 if(ANDROID OR LINUX)
     set ( OPENAL_BUILD ON )
-endif()
-
-# Android's OpenSSL build is just impossible to understand
-# It currently uses a custom process for building
-if(ANDROID)
-    set ( OPENSSL_VER "1.0.2t" )
 endif()
 
 if(EMSCRIPTEN)
@@ -313,10 +320,17 @@ if(OPENSSL_BUILD)
     set ( OPENSSL_BUILT OFF )
 
     if(ANDROID)
-        # Android isn't compatible with every version?
-        set ( OPENSSL_TARGET_PATH
-            ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/${ANDROID_ABI}
-            )
+        if(${ANDROID_ABI} MATCHES "^arm64")
+            set ( SSL_ARCH arm64 )
+        elseif(${ANDROID_ABI} MATCHES "^armeabi$")
+            set ( SSL_ARCH arm )
+        elseif(${ANDROID_ABI} MATCHES "^armeabi-v7a")
+            set ( SSL_ARCH arm -D__ARM_MAX_ARCH__=8 )
+        else()
+            set ( SSL_ARCH ${ANDROID_ABI} )
+        endif()
+
+        set ( ENV{PATH} ${NDK_PATH}:$ENV{PATH} )
 
         ExternalProject_Add ( OpenSSL
 
@@ -326,46 +340,33 @@ if(OPENSSL_BUILD)
             BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
             INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
 
-            URL https://github.com/paulo-raca/android-openssl/archive/master.zip
+            GIT_REPOSITORY https://github.com/openssl/openssl.git
+            GIT_TAG OpenSSL_${OPENSSL_VER}
 
-            PATCH_COMMAND
-                COMMAND patch
-                    -p0
-                    -i ${CMAKE_SOURCE_DIR}/patches/openssl-android.patch
+            CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env 
+                CC=${NDK_PATH}/clang
+                PATH=$ENV{PATH}
+                        ${CMAKE_BINARY_DIR}/source/openssl/Configure
+                            android-${SSL_ARCH}
+                            no-shared
+                            -D__ANDROID_API__=${ANDROID_NDK_API}
 
-            CONFIGURE_COMMAND true
+            BUILD_COMMAND ${CMAKE_COMMAND} -E env
+                PATH=$ENV{PATH}
+                        make
 
-            BUILD_COMMAND
-                ${CMAKE_COMMAND} -E env
-
-                ANDROID_NDK_ROOT=${ANDROID_NDK}
-                ANDROID_API=${ANDROID_PLATFORM}
-
-                ${CMAKE_BINARY_DIR}/source/openssl/build-all-arch.sh
-                    ${OPENSSL_VER}
-                    ${ANDROID_ABI}
-
-            INSTALL_COMMAND true
+            INSTALL_COMMAND ${CMAKE_COMMAND} -E env
+                PATH=$ENV{PATH}
+                    make install 
+                            -e INSTALLTOP=${CMAKE_BINARY_DIR}/install/openssl
+                            -e OPENSSLDIR=${CMAKE_BINARY_DIR}/install/openssl
             )
         install (
             FILES
-            ${CMAKE_BINARY_DIR}/build/openssl/openssl-${OPENSSL_VER}/LICENSE
+            ${CMAKE_BINARY_DIR}/source/openssl/LICENSE
 
             DESTINATION
             ${CMAKE_BINARY_DIR}/install/openssl/license
-            )
-
-        install (
-            FILES
-            ${OPENSSL_TARGET_PATH}/libcrypto.a
-            ${OPENSSL_TARGET_PATH}/libssl.a
-
-            DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/lib
-            )
-
-        install (
-            DIRECTORY ${CMAKE_BINARY_DIR}/build/openssl/prebuilt/include/openssl
-            DESTINATION ${CMAKE_BINARY_DIR}/install/openssl/include
             )
 
     elseif(APPLE AND IOS) # Just in case
