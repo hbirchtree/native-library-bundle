@@ -150,6 +150,7 @@ jobs:
     displayName: Configuring project
     env:
       AZURE_IMAGE: vs2019-win2019
+      VSVERSION: '2019'
       OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
       PIPELINES: '1'
       BUILD_REPO_URI: $(Build.Repository.Uri)
@@ -164,12 +165,14 @@ jobs:
       NOBUILD: '1'
       SOURCE_DIR: $(Build.SourcesDirectory)
       BUILD_DIR: $(Build.SourcesDirectory)/build
+      APPVEYOR_BUILD_FOLDER: $(Build.SourcesDirectory)/build
       BUILDVARIANT: $(variant)
       CONFIGURATION: Debug
   - powershell: '& cmake.exe --build $env:BUILD_DIR --target install --config $env:CONFIGURATION'
     displayName: Building project
     env:
       AZURE_IMAGE: vs2019-win2019
+      VSVERSION: '2019'
       OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
       PIPELINES: '1'
       BUILD_REPO_URI: $(Build.Repository.Uri)
@@ -184,6 +187,7 @@ jobs:
       NOBUILD: '1'
       SOURCE_DIR: $(Build.SourcesDirectory)
       BUILD_DIR: $(Build.SourcesDirectory)/build
+      APPVEYOR_BUILD_FOLDER: $(Build.SourcesDirectory)/build
       BUILDVARIANT: $(variant)
       CONFIGURATION: Debug
   - powershell: ./toolchain/ci/appveyor-deploy.ps1
@@ -191,6 +195,7 @@ jobs:
     continueOnError: true
     env:
       AZURE_IMAGE: vs2019-win2019
+      VSVERSION: '2019'
       OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
       PIPELINES: '1'
       BUILD_REPO_URI: $(Build.Repository.Uri)
@@ -205,5 +210,6 @@ jobs:
       NOBUILD: '1'
       SOURCE_DIR: $(Build.SourcesDirectory)
       BUILD_DIR: $(Build.SourcesDirectory)/build
+      APPVEYOR_BUILD_FOLDER: $(Build.SourcesDirectory)/build
       BUILDVARIANT: $(variant)
       CONFIGURATION: Debug

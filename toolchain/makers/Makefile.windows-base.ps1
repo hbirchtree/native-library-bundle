@@ -43,18 +43,9 @@ function ConfigProject([String] $SrcDir,[String] $arch,[String] $toolchain, `
     if(-Not $env:AZURE_IMAGE -eq "")
     {
 		echo "Azure Pipelines detected: $env:AZURE_IMAGE"
-    } elseif(-Not $env:APPVEYOR_BUILD_WORKER_IMAGE -eq "")
-    {
-        echo "Appveyor detected: $env:APPVEYOR_BUILD_WORKER_IMAGE"
     }
 
-    if($env:APPVEYOR_BUILD_WORKER_IMAGE -eq "Visual Studio 2017")
-    {
-        $Generator = "Visual Studio 15 2017 $arch"
-    }elseif($env:APPVEYOR_BUILD_WORKER_IMAGE -eq "Visual Studio 2015")
-    {
-        $Generator = "Visual Studio 14 2015 $arch"
-    }elseif($env:AZURE_IMAGE.substring(0, 2) -eq "vs")
+    if($env:AZURE_IMAGE.substring(0, 2) -eq "vs")
     {
         $VsYear = $env:AZURE_IMAGE.substring(2, 4)
         $Generator = "Visual Studio " + (yearToVsVersion $VsYear) + " $VsYear"

@@ -35,6 +35,7 @@ def pipelines_gen_config(build_info, repo_dir):
 
     windows_env = {
             'AZURE_IMAGE': 'vs2019-win2019',
+            'VSVERSION': '2019',
             'OPENSSL_ROOT_DIR': '$(Build.SourcesDirectory)/openssl-libs/',
             'PIPELINES': '1',
             'BUILD_REPO_URI': '$(Build.Repository.Uri)',
@@ -49,8 +50,9 @@ def pipelines_gen_config(build_info, repo_dir):
             'NOBUILD': '1',
             'SOURCE_DIR': '$(Build.SourcesDirectory)',
             'BUILD_DIR': '$(Build.SourcesDirectory)/build',
+            'APPVEYOR_BUILD_FOLDER': '$(Build.SourcesDirectory)/build',
             'BUILDVARIANT': '$(variant)',
-            'CONFIGURATION': 'Debug'
+            'CONFIGURATION': 'Debug',
         }
 
     return {
