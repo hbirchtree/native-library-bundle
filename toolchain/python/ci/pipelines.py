@@ -174,7 +174,7 @@ def pipelines_gen_config(build_info, repo_dir):
                         }
                     },
                     {
-                        'cmd': 'cmake --build . --target install --config %CONFIGURATION%',
+                        'powershell': '& cmake.exe --build . --target install --config %CONFIGURATION%',
                         'displayName': 'Building project'
                     },
                     {

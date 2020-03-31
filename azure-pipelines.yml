@@ -159,7 +159,7 @@ jobs:
       SOURCE_DIR: $(Build.SourcesDirectory)
       BUILD_DIR: $(Build.SourcesDirectory)
       BUILDVARIANT: $(variant)
-  - cmd: cmake --build . --target install --config %CONFIGURATION%
+  - powershell: '& cmake.exe --build . --target install --config %CONFIGURATION%'
     displayName: Building project
   - powershell: ./toolchain/ci/appveyor-deploy.ps1
     displayName: Deploying artifacts
