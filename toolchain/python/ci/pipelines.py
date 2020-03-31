@@ -89,6 +89,7 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'script': './toolchain/ci/travis-deploy.sh',
                         'displayName': 'Deploying artifacts',
+                        'continueOnError': True,
                         'env': linux_env.copy()
                     }
                     ]
@@ -120,6 +121,7 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'script': './toolchain/ci/travis-deploy.sh',
                         'displayName': 'Deploying artifacts',
+                        'continueOnError': True,
                         'env': osx_env.copy()
                     }
                     ]
@@ -156,6 +158,7 @@ def pipelines_gen_config(build_info, repo_dir):
                     {
                         'powershell': './toolchain/ci/appveyor-deploy.ps1',
                         'displayName': 'Deploying artifacts',
+                        'continueOnError': True,
                         'env': windows_env.copy()
                     }
                     ]

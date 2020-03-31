@@ -61,6 +61,7 @@ jobs:
       TRAVIS_OS_NAME: linux
   - script: ./toolchain/ci/travis-deploy.sh
     displayName: Deploying artifacts
+    continueOnError: true
     env:
       CONFIGURATION: Release
       BUILDVARIANT: $(variant)
@@ -108,6 +109,7 @@ jobs:
       TRAVIS_OS_NAME: osx
   - script: ./toolchain/ci/travis-deploy.sh
     displayName: Deploying artifacts
+    continueOnError: true
     env:
       CONFIGURATION: Release
       BUILDVARIANT: $(variant)
@@ -167,6 +169,7 @@ jobs:
     displayName: Building project
   - powershell: ./toolchain/ci/appveyor-deploy.ps1
     displayName: Deploying artifacts
+    continueOnError: true
     env:
       AZURE_IMAGE: vs2019-win2019
       OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
