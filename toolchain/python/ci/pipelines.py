@@ -25,6 +25,8 @@ def pipelines_gen_config(build_info, repo_dir):
                 'BUILD_REPO_EVENT': '$(Build.Reason)',
                 'BUILD_REPO_ID': '$(variant)',
                 'BUILD_REPO_URL': '',
+                'TRAVIS_COMMIT': '$(Build.SourceVersion)',
+                'TRAVIS_REPO_SLUG': '$(Build.Repository.Name)',
                 'GITHUB_TOKEN': '$(Github.Token)'
         }
     linux_env = unix_env.copy()
@@ -51,6 +53,8 @@ def pipelines_gen_config(build_info, repo_dir):
             'SOURCE_DIR': '$(Build.SourcesDirectory)',
             'BUILD_DIR': '$(Build.SourcesDirectory)/build',
             'APPVEYOR_BUILD_FOLDER': '$(Build.SourcesDirectory)/build',
+            'APPVEYOR_REPO_NAME': '$(Build.Repository.Name)',
+            'APPVEYOR_REPO_COMMIT': '$(Build.SourceVersion)',
             'BUILDVARIANT': '$(variant)',
             'CONFIGURATION': 'Debug',
         }
