@@ -48,7 +48,7 @@ def pipelines_gen_config(build_info, repo_dir):
             'SAME_BUILD_DIR': '1',
             'NOBUILD': '1',
             'SOURCE_DIR': '$(Build.SourcesDirectory)',
-            'BUILD_DIR': '$(Build.SourcesDirectory)',
+            'BUILD_DIR': '$(Build.SourcesDirectory)/build',
             'BUILDVARIANT': '$(variant)'
         }
 

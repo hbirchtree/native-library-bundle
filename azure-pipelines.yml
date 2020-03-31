@@ -163,7 +163,7 @@ jobs:
       SAME_BUILD_DIR: '1'
       NOBUILD: '1'
       SOURCE_DIR: $(Build.SourcesDirectory)
-      BUILD_DIR: $(Build.SourcesDirectory)
+      BUILD_DIR: $(Build.SourcesDirectory)/build
       BUILDVARIANT: $(variant)
   - powershell: '& cmake.exe --build . --target install --config %CONFIGURATION%'
     displayName: Building project
@@ -185,5 +185,5 @@ jobs:
       SAME_BUILD_DIR: '1'
       NOBUILD: '1'
       SOURCE_DIR: $(Build.SourcesDirectory)
-      BUILD_DIR: $(Build.SourcesDirectory)
+      BUILD_DIR: $(Build.SourcesDirectory)/build
       BUILDVARIANT: $(variant)
