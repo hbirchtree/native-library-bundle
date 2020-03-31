@@ -57,6 +57,7 @@ jobs:
       BUILD_REPO_EVENT: $(Build.Reason)
       BUILD_REPO_ID: $(variant)
       BUILD_REPO_URL: ''
+      GITHUB_TOKEN: $(Github.Token)
 - job: macOS_and_iOS
   pool:
     vmImage: macos-10.14
@@ -88,6 +89,7 @@ jobs:
       BUILD_REPO_EVENT: $(Build.Reason)
       BUILD_REPO_ID: $(variant)
       BUILD_REPO_URL: ''
+      GITHUB_TOKEN: $(Github.Token)
 - job: Windows
   pool:
     vmImage: windows-2019
@@ -123,3 +125,5 @@ jobs:
       BUILD_REPO_EVENT: $(Build.Reason)
       BUILD_REPO_ID: $(variant)
       BUILD_REPO_URL: ''
+      GITHUB_TOKEN: $(Github.Token)
+
