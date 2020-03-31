@@ -88,6 +88,7 @@ function ConfigProject([String] $SrcDir,[String] $arch,[String] $toolchain, `
 		# CMake may emit warnings, which are caught here
 		echo "CMake emitted:"
 		echo $PSItem.Exception.Message
+		exit 0
 	}
 }
 
