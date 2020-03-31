@@ -49,7 +49,8 @@ def pipelines_gen_config(build_info, repo_dir):
             'NOBUILD': '1',
             'SOURCE_DIR': '$(Build.SourcesDirectory)',
             'BUILD_DIR': '$(Build.SourcesDirectory)/build',
-            'BUILDVARIANT': '$(variant)'
+            'BUILDVARIANT': '$(variant)',
+            'CONFIGURATION': 'Debug'
         }
 
     return {
@@ -152,8 +153,9 @@ def pipelines_gen_config(build_info, repo_dir):
                         'env': windows_env.copy()
                     },
                     {
-                        'powershell': '& cmake.exe --build . --target install --config %CONFIGURATION%',
-                        'displayName': 'Building project'
+                        'powershell': '& cmake.exe --build $env:BUILD_DIR --target install --config $env:CONFIGURATION',
+                        'displayName': 'Building project',
+                        'env': windows_env.copy()
                     },
                     {
                         'powershell': './toolchain/ci/appveyor-deploy.ps1',

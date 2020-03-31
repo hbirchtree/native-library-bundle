@@ -165,8 +165,27 @@ jobs:
       SOURCE_DIR: $(Build.SourcesDirectory)
       BUILD_DIR: $(Build.SourcesDirectory)/build
       BUILDVARIANT: $(variant)
-  - powershell: '& cmake.exe --build . --target install --config %CONFIGURATION%'
+      CONFIGURATION: Debug
+  - powershell: '& cmake.exe --build $env:BUILD_DIR --target install --config $env:CONFIGURATION'
     displayName: Building project
+    env:
+      AZURE_IMAGE: vs2019-win2019
+      OPENSSL_ROOT_DIR: $(Build.SourcesDirectory)/openssl-libs/
+      PIPELINES: '1'
+      BUILD_REPO_URI: $(Build.Repository.Uri)
+      BUILD_REPO_BRANCH: $(Build.SourceBranch)
+      BUILD_REPO_EVENT: $(Build.Reason)
+      BUILD_REPO_ID: $(variant)
+      BUILD_REPO_URL: ''
+      GITHUB_TOKEN: $(Github.Token)
+      CMAKE_BIN: cmake.exe
+      MAKEFILE_DIR: toolchain/makers
+      SAME_BUILD_DIR: '1'
+      NOBUILD: '1'
+      SOURCE_DIR: $(Build.SourcesDirectory)
+      BUILD_DIR: $(Build.SourcesDirectory)/build
+      BUILDVARIANT: $(variant)
+      CONFIGURATION: Debug
   - powershell: ./toolchain/ci/appveyor-deploy.ps1
     displayName: Deploying artifacts
     continueOnError: true
@@ -187,3 +206,4 @@ jobs:
       SOURCE_DIR: $(Build.SourcesDirectory)
       BUILD_DIR: $(Build.SourcesDirectory)/build
       BUILDVARIANT: $(variant)
+      CONFIGURATION: Debug
