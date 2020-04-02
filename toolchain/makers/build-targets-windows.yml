@@ -8,8 +8,6 @@ uwp:
 win32:
   amd64:
     - vs19
-    - vs17
   x86:
     - vs19
-    - vs17
 

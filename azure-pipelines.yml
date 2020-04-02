@@ -15,16 +15,26 @@ jobs:
     vmImage: ubuntu-18.04
   strategy:
     matrix:
-      android.armv7a.kitkat:
-        variant: android.armv7a.kitkat
-      android.armv8a.oreo:
-        variant: android.armv8a.oreo
-      android.armv8a.q:
-        variant: android.armv8a.q
-      android.x86.kitkat:
-        variant: android.x86.kitkat
-      android.x86_64.nougat:
-        variant: android.x86_64.nougat
+      android.armv7a.v19:
+        variant: android.armv7a.v19
+      android.armv7a.v21:
+        variant: android.armv7a.v21
+      android.armv7a.v23:
+        variant: android.armv7a.v23
+      android.armv7a.v27:
+        variant: android.armv7a.v27
+      android.armv8a.v21:
+        variant: android.armv8a.v21
+      android.armv8a.v24:
+        variant: android.armv8a.v24
+      android.armv8a.v27:
+        variant: android.armv8a.v27
+      android.armv8a.v29:
+        variant: android.armv8a.v29
+      android.x86.v19:
+        variant: android.x86.v19
+      android.x86_64.v21:
+        variant: android.x86_64.v21
       emscripten.wasm:
         variant: emscripten.wasm
       fedora.amd64:
@@ -137,12 +147,8 @@ jobs:
     matrix:
       uwp.amd64.vs19:
         variant: uwp.amd64.vs19
-      win32.amd64.vs17:
-        variant: win32.amd64.vs17
       win32.amd64.vs19:
         variant: win32.amd64.vs19
-      win32.x86.vs17:
-        variant: win32.x86.vs17
       win32.x86.vs19:
         variant: win32.x86.vs19
   steps:

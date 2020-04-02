@@ -212,18 +212,20 @@ testing.linux.*:
   # Native API
   .*(gingerbread).*:
     =android.api: 5
-  .*(kitkat).*:
+  .*(v19).*:
     =android.api: 19
-  .*(lollipop|marshmallow).*:
+  .*(v21).*:
     =android.api: 21
-  .*(nougat).*:
+  .*(v23).*:
+    =android.api: 23
+  .*(v24).*:
     =android.api: 24
-  .*(oreo).*:
+  .*(v27).*:
     =android.api: 27
-  .*(q).*:
+  .*(v28).*:
+    =android.api: 28
+  .*(v29).*:
     =android.api: 29
-  .*es2.*:
-    =android.gles20: ON
 
   =android.toolchain: clang
   =android.ssl.dir: $(cmake.native-lib)/$(build.prettyname)/libraries/$(android.abi)/ssl

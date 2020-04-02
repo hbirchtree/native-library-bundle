@@ -52,10 +52,12 @@ testing.linux.*:
 .*android.*:
   +cmake-opts:
     - -DBUILD_GLES=ON
-    - -DBUILD_GLES_20=$(android.gles20)
     - -DBUILD_ANATIVE=ON
     - -DBUILD_TESTS=OFF
     - -DBUILD_SDL2=OFF
+  .*(gingerbread|v19).*:
+    +cmake-opts:
+      - -DBUILD_GLES_20=ON
   ^((?!\$\(shell\)).)*$:
     =target: multi.ensureinstall
   =cmake-target:
