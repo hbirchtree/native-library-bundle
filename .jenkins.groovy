@@ -1,6 +1,6 @@
-def linux_targets = ['ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.x86_64.nougat', 'android.x86.kitkat', 'android.armv8a.q', 'android.armv8a.oreo', 'android.armv7a.kitkat', ]
+def linux_targets = ['ubuntu.amd64', 'steam.amd64', 'raspberry.armhf', 'mingw.w64', 'fedora.amd64', 'emscripten.wasm', 'android.x86_64.v21', 'android.x86.v19', 'android.armv8a.v29', 'android.armv8a.v27', 'android.armv8a.v24', 'android.armv8a.v21', 'android.armv7a.v27', 'android.armv7a.v23', 'android.armv7a.v21', 'android.armv7a.v19', ]
 def osx_targets = ['osx', 'ios.x86_64', 'ios', ]
-def windows_targets = ['win32.x86.vs19', 'win32.x86.vs17', 'win32.amd64.vs19', 'win32.amd64.vs17', 'uwp.amd64.vs19', ]
+def windows_targets = ['win32.x86.vs19', 'win32.amd64.vs19', 'uwp.amd64.vs19', ]
 
 String linux_label = 'linux && docker'
 String osx_label = 'osx'
@@ -103,7 +103,7 @@ linux_targets.each {
 
     def srcDir = '${WORKSPACE}'
 
-    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle', srcDir)
+    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle.git', srcDir)
     GetBuildStep(j, srcDir, 'linux', linux_label, it)
 }
 
@@ -112,7 +112,7 @@ osx_targets.each {
 
     def srcDir = '${WORKSPACE}'
 
-    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle', srcDir)
+    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle.git', srcDir)
     GetBuildStep(j, srcDir, 'osx', osx_label, it)
 }
 
@@ -121,6 +121,6 @@ windows_targets.each {
 
     def srcDir = '${WORKSPACE}'
 
-    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle', srcDir)
+    GetSourceStep(j, 'https://github.com/hbirchtree/native-library-bundle.git', srcDir)
     GetBuildStep(j, srcDir, 'windows', windows_label, it)
 }

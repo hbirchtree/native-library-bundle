@@ -15,11 +15,16 @@ env:
   - MAKEFILE_DIR=toolchain/makers
   - CONFIGURATION=Release
   matrix:
-  - BUILDVARIANT=android.armv7a.kitkat
-  - BUILDVARIANT=android.armv8a.oreo
-  - BUILDVARIANT=android.armv8a.q
-  - BUILDVARIANT=android.x86.kitkat
-  - BUILDVARIANT=android.x86_64.nougat
+  - BUILDVARIANT=android.armv7a.v19
+  - BUILDVARIANT=android.armv7a.v21
+  - BUILDVARIANT=android.armv7a.v23
+  - BUILDVARIANT=android.armv7a.v27
+  - BUILDVARIANT=android.armv8a.v21
+  - BUILDVARIANT=android.armv8a.v24
+  - BUILDVARIANT=android.armv8a.v27
+  - BUILDVARIANT=android.armv8a.v29
+  - BUILDVARIANT=android.x86.v19
+  - BUILDVARIANT=android.x86_64.v21
   - BUILDVARIANT=emscripten.wasm
   - BUILDVARIANT=fedora.amd64
   - BUILDVARIANT=mingw.w64
@@ -32,15 +37,25 @@ env:
 matrix:
   exclude:
   - os: osx
-    env: BUILDVARIANT=android.armv7a.kitkat
+    env: BUILDVARIANT=android.armv7a.v19
   - os: osx
-    env: BUILDVARIANT=android.armv8a.oreo
+    env: BUILDVARIANT=android.armv7a.v21
   - os: osx
-    env: BUILDVARIANT=android.armv8a.q
+    env: BUILDVARIANT=android.armv7a.v23
   - os: osx
-    env: BUILDVARIANT=android.x86.kitkat
+    env: BUILDVARIANT=android.armv7a.v27
   - os: osx
-    env: BUILDVARIANT=android.x86_64.nougat
+    env: BUILDVARIANT=android.armv8a.v21
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.v24
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.v27
+  - os: osx
+    env: BUILDVARIANT=android.armv8a.v29
+  - os: osx
+    env: BUILDVARIANT=android.x86.v19
+  - os: osx
+    env: BUILDVARIANT=android.x86_64.v21
   - os: osx
     env: BUILDVARIANT=emscripten.wasm
   - os: osx

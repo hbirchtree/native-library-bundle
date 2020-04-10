@@ -19,14 +19,19 @@ name: CoffeeDependencies
 platforms:
   android:
     armv7a:
-    - kitkat
+    - v27
+    - v23
+    - v21
+    - v19
     armv8a:
-    - q
-    - oreo
+    - v29
+    - v27
+    - v24
+    - v21
     x86:
-    - kitkat
+    - v19
     x86_64:
-    - nougat
+    - v21
   emscripten:
   - wasm
   fedora:

@@ -29,9 +29,7 @@ matrix:
 environment:
   matrix:
   - BUILDVARIANT: uwp.amd64.vs19
-  - BUILDVARIANT: win32.amd64.vs17
   - BUILDVARIANT: win32.amd64.vs19
-  - BUILDVARIANT: win32.x86.vs17
   - BUILDVARIANT: win32.x86.vs19
   BUILD_DIR: C:\projects\%APPVEYOR_PROJECT_SLUG%
   SOURCE_DIR: C:\projects\%APPVEYOR_PROJECT_SLUG%\src

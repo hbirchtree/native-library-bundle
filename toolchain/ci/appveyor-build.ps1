@@ -85,6 +85,10 @@ switch -regex ($env:BUILDVARIANT)
                  "-DSKIP_HIGHMEM_TESTS=ON","-DSKIP_LINKAGE_TEST=ON", "-DCOFFEE_ROOT_DIR=$env:BUILD_DIR\libraries",`
 	         "-DCOFFEE_BUILD_ASSIMP=OFF", "-DCOFFEE_BUILD_ASIO=OFF")
     }
+    default {
+        echo "Failed to match $env:BUILDVARIANT"
+        throw;
+    }
 }
 
 . $env:SOURCE_DIR\$env:MAKEFILE_DIR\Makefile.windows.ps1 `
