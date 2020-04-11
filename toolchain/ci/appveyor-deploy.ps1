@@ -1,3 +1,9 @@
+if(test-path $env:SOURCE_DIR/deploy-script.ps1)
+{
+    . $env:SOURCE_DIR/deploy-script.ps1
+    exit
+}
+
 $ErrorActionPreference = "Stop"
 
 if($env:SAME_BUILD_DIR) {
