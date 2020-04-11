@@ -25,7 +25,7 @@ if($TARGET_TAG.Length -eq 0)
 
 ForEach($a in $ASSETS)
 {
-    $ASSET_NAME = "$a_$env:BUILDVARIANT.zip"
+    $ASSET_NAME = $a + "_" + $env:BUILDVARIANT + ".zip"
     $ASSET = "$PWD/$ASSET_NAME"
 
     if (-not (test-path "$INSTALL_BASE_DIR/$a" ))
