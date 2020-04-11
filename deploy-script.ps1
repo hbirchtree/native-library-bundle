@@ -6,7 +6,12 @@ $GITHUBAPI = "$env:SOURCE_DIR/toolchain/ci/github_api.py"
 
 function github_api()
 {
-    . python $GITHUBAPI --api-token $env:GITHUB_TOKEN $args
+    try {
+        . python $GITHUBAPI --api-token $env:GITHUB_TOKEN $args
+    } catch {
+        echo "Call to: github_api $args"
+        echo $_.Exception.Message
+    }
 }
 
 $TARGET_TAG = (github_api list tag $env:APPVEYOR_REPO_NAME "^$env:APPVEYOR_REPO_COMMIT$")
@@ -27,6 +32,8 @@ ForEach($a in $ASSETS)
     {
         continue
     }
+
+    echo " * Packaging dependency $a as $ASSET_NAME -> $ASSET"
 
     $PrevWD = $PWD
     cd "$INSTALL_BASE_DIR/$a"
