@@ -6,7 +6,7 @@ $GITHUBAPI = "$env:SOURCE_DIR/toolchain/ci/github_api.py"
 
 function github_api($Operation, $Element, $Repo, $Item)
 {
-    echo " -- github_api.py $Operation $Element $Repo $Item"
+    Write-Host " -- github_api.py $Operation $Element $Repo $Item"
     try {
         cmd /c python $GITHUBAPI --api-token "$env:GITHUB_TOKEN" $Operation $Element $Repo $Item 2> github_error.log
     } catch {
