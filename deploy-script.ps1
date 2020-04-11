@@ -24,6 +24,8 @@ if($TARGET_TAG.Length -eq 0)
     exit
 }
 
+$TARGET_REPO = $env:APPVEYOR_REPO_NAME + ":" + $TARGET_TAG
+
 ForEach($a in $ASSETS)
 {
     $ASSET_NAME = $a + "_" + $env:BUILDVARIANT + ".zip"
@@ -42,6 +44,6 @@ ForEach($a in $ASSETS)
 
     $FILENAME = ([System.IO.Path]::GetFileName($ASSET))
 
-    github_api push asset $env:APPVEYOR_REPO_NAME + ":" + $TARGET_TAG "$ASSET_NAME"
+    github_api push asset $TARGET_REPO "$ASSET_NAME"
     cat github_error.log
 }
