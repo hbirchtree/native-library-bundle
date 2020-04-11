@@ -42,6 +42,6 @@ ForEach($a in $ASSETS)
 
     $FILENAME = ([System.IO.Path]::GetFileName($ASSET))
 
-    github_api push asset "$env:APPVEYOR_REPO_NAME:$TARGET_TAG" "$ASSET_NAME"
+    github_api push asset $env:APPVEYOR_REPO_NAME + ":" + $TARGET_TAG "$ASSET_NAME"
     cat github_error.log
 }
