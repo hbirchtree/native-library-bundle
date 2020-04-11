@@ -6,16 +6,13 @@ $GITHUBAPI = "$env:SOURCE_DIR/toolchain/ci/github_api.py"
 
 function github_api($Operation, $Element, $Repo, $Item)
 {
-    try {
-        cmd /c python $GITHUBAPI --api-token "$env:GITHUB_TOKEN" $Operation $Element $Repo $Item
-    } catch {
-        echo "Command github_api.py $Operation $Elemenet $Repo $Item"
-        echo $_.Exception | Format-List -Force
-    }
+    echo " -- github_api.py $Operation $Element $Repo $Item"
+    cmd /c python $GITHUBAPI --api-token "$env:GITHUB_TOKEN" $Operation $Element $Repo $Item 2> github_error.log
 }
 
 $TARGET_TAG = (github_api list tag $env:APPVEYOR_REPO_NAME "^$env:APPVEYOR_REPO_COMMIT$")
 $TARGET_TAG = $TARGET_TAG.split("|")[1]
+cat github_error.log
 
 if($TARGET_TAG.Length -eq 0)
 {
@@ -42,4 +39,5 @@ ForEach($a in $ASSETS)
     $FILENAME = ([System.IO.Path]::GetFileName($ASSET))
 
     github_api push asset "$env:APPVEYOR_REPO_NAME:$TARGET_TAG" "$ASSET_NAME"
+    cat github_error.log
 }
