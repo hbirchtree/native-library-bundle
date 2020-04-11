@@ -4,14 +4,9 @@ $INSTALL_BASE_DIR = "$env:BUILD_DIR/install"
 
 $GITHUBAPI = "$env:SOURCE_DIR/toolchain/ci/github_api.py"
 
-function github_api()
+function github_api($Operation, $Element, $Repo, $Item)
 {
-    try {
-        . python $GITHUBAPI --api-token $env:GITHUB_TOKEN $args
-    } catch {
-        echo "Call to: github_api $args"
-        echo $_.Exception.Message
-    }
+    cmd /c python $GITHUBAPI --api-token "$env:GITHUB_TOKEN" $Operation $Element $Repo $Item
 }
 
 $TARGET_TAG = (github_api list tag $env:APPVEYOR_REPO_NAME "^$env:APPVEYOR_REPO_COMMIT$")
@@ -35,10 +30,9 @@ ForEach($a in $ASSETS)
 
     echo " * Packaging dependency $a as $ASSET_NAME -> $ASSET"
 
-    $PrevWD = $PWD
-    cd "$INSTALL_BASE_DIR/$a"
+    pushd "$INSTALL_BASE_DIR/$a"
     7z a $ASSET "*"
-    cd $PrevWD
+    popd
 
     $FILENAME = ([System.IO.Path]::GetFileName($ASSET))
 
