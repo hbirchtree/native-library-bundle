@@ -6,7 +6,12 @@ $GITHUBAPI = "$env:SOURCE_DIR/toolchain/ci/github_api.py"
 
 function github_api($Operation, $Element, $Repo, $Item)
 {
-    cmd /c python $GITHUBAPI --api-token "$env:GITHUB_TOKEN" $Operation $Element $Repo $Item
+    try {
+        cmd /c python $GITHUBAPI --api-token "$env:GITHUB_TOKEN" $Operation $Element $Repo $Item
+    } catch {
+        echo "Command github_api.py $Operation $Elemenet $Repo $Item"
+        echo $_.Exception | Format-List -Force
+    }
 }
 
 $TARGET_TAG = (github_api list tag $env:APPVEYOR_REPO_NAME "^$env:APPVEYOR_REPO_COMMIT$")
