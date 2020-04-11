@@ -1,6 +1,6 @@
 $ASSETS = @(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl ffmpeg compressonator zlib lz4 zstd discord-rpc)
 
-$INSTALL_BASE_DIR = $env:BUILD_DIR/install
+$INSTALL_BASE_DIR = "$env:BUILD_DIR/install"
 
 $GITHUBAPI = "$env:SOURCE_DIR/toolchain/ci/github_api.py"
 
@@ -23,13 +23,13 @@ ForEach($a in $ASSETS)
     $ASSET_NAME = "$a_$env:BUILDVARIANT.zip"
     $ASSET = "$PWD/$ASSET_NAME"
 
-    if (-not (test-path $INSTALL_BASE_DIR/$a ))
+    if (-not (test-path "$INSTALL_BASE_DIR/$a" ))
     {
         continue
     }
 
     $PrevWD = $PWD
-    cd $INSTALL_BASE_DIR/$a
+    cd "$INSTALL_BASE_DIR/$a"
     7z a $ASSET "*"
     cd $PrevWD
 
