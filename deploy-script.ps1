@@ -1,4 +1,4 @@
-$ASSETS = @(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl ffmpeg compressonator zlib lz4 zstd discord-rpc)
+$ASSETS = @(openal,bullet,assimp,squish,glslang,shaderc,spirvcross,sdl2,openssl,ffmpeg,compressonator,zlib,lz4,zstd,discord-rpc)
 
 $INSTALL_BASE_DIR = "$env:BUILD_DIR/install"
 
