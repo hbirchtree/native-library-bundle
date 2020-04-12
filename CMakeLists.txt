@@ -172,6 +172,7 @@ endif()
 # Just no
 if(WIN32)
     set ( ZLIB_BUILD OFF )
+    set ( SDL2_BUILD ON  )
 endif()
 
 # steam.amd64 is not used for building, and also does not support C++14
