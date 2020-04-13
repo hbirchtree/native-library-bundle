@@ -556,6 +556,7 @@ if(OPENSSL_BUILD)
 
             CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/source/openssl/config
                 --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                --openssldir=${CMAKE_BINARY_DIR}/install/openssl
                 no-shared
 
             BUILD_COMMAND make
@@ -563,7 +564,35 @@ if(OPENSSL_BUILD)
             INSTALL_COMMAND make install
             )
     elseif(WIN32)
+        set ( OPENSSL_BUILT ON )
 
+        set ( OPENSSL_TARGET "VC-WIN64A" )
+
+        if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86")
+            set ( OPENSSL_TARGET "VC-WIN32" )
+        endif()
+
+        ExternalProject_Add ( OpenSSL
+
+            PREFIX ${CMAKE_BINARY_DIR}/openssl
+
+            SOURCE_DIR ${CMAKE_BINARY_DIR}/source/openssl
+            BINARY_DIR ${CMAKE_BINARY_DIR}/build/openssl
+            INSTALL_DIR ${CMAKE_BINARY_DIR}/install/openssl
+
+            GIT_REPOSITORY https://github.com/openssl/openssl.git
+            GIT_TAG OpenSSL_${OPENSSL_VER}
+
+            CONFIGURE_COMMAND perl ${CMAKE_BINARY_DIR}/source/openssl/Configure
+                --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                --openssldir=${CMAKE_BINARY_DIR}/install/openssl
+                no-shared
+                ${OPENSSL_TARGET}
+
+            BUILD_COMMAND nmake
+
+            INSTALL_COMMAND nmake install
+            )
     endif()
 
     if(OPENSSL_BUILT)
