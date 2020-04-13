@@ -583,11 +583,14 @@ if(OPENSSL_BUILD)
             GIT_REPOSITORY https://github.com/openssl/openssl.git
             GIT_TAG OpenSSL_${OPENSSL_VER}
 
-            CONFIGURE_COMMAND perl ${CMAKE_BINARY_DIR}/source/openssl/Configure
-                --prefix=${CMAKE_BINARY_DIR}/install/openssl
-                --openssldir=${CMAKE_BINARY_DIR}/install/openssl
-                no-shared
-                ${OPENSSL_TARGET}
+            CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env
+                PATH="$ENV{PATH};C:/Program Files/NASM"
+
+                perl ${CMAKE_BINARY_DIR}/source/openssl/Configure
+                    --prefix=${CMAKE_BINARY_DIR}/install/openssl
+                    --openssldir=${CMAKE_BINARY_DIR}/install/openssl
+                    no-shared
+                    ${OPENSSL_TARGET}
 
             BUILD_COMMAND nmake
 
