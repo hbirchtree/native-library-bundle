@@ -15,23 +15,21 @@ Listed beneath are versions for the libraries across the board
 
 | **Library** | **Version** |
 |:-----------:|:-----------:|
-| **Assimp**  | 5.0.0       |
+| **Assimp**  | 5.0.1       |
 | **Bullet**  | 2.88        |
-| **OpenSSL** | 1.1.1d<sup>1</sup><sup>,3</sup>  |
-| **OpenAL**  | 1.19.1<sup>2</sup>    |
-| **zlib**    | 1.2.11<sup>3</sup>    |
+| **OpenSSL** | 1.1.1g<sup>2</sup>  |
+| **OpenAL**  | 1.20.1<sup>1</sup>    |
+| **zlib**    | 1.2.11<sup>2</sup>    |
 
-<sup>1</sup> Android uses 1.0.2t
+<sup>1</sup> Only for Android and Linux
 
-<sup>2</sup> Only for Android and Linux
-
-<sup>3</sup> All platforms except Emscripten, `emscripten-ports` provides it
+<sup>2</sup> All platforms except Emscripten, `emscripten-ports` provides it
 
 SDL2 is only built for desktop platforms, with `emscripten-ports` providing SDL2 already.
 
 | **Library** | **Linux** | **macOS** | **Windows** |
 |:-----------:|:---------:|:---------:|:-----------:|
-| **SDL2**    | 2.0.10    | 2.0.10    | 2.0.10      |
+| **SDL2**    | 2.0.12    | 2.0.12    | 2.0.12      |
 
 ## Build dependencies
 
@@ -40,7 +38,7 @@ Desktop-only dependencies, not intended for client binaries. These are available
 | **Library**        | **Version**        |
 |:------------------:|:------------------:|
 | **Squish**         | Latest             |
-| **FFMPEG**         | 4.1.2              |
+| **FFMPEG**         | 4.1.5              |
 | **glslang**        | Patched version<sup>1</sup>  |
 | **shaderc**        | Patched version<sup>1</sup>  |
 | **spirv-cross**    | Patched version<sup>2</sup> |

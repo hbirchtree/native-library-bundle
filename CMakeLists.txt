@@ -127,15 +127,15 @@ set ( ZSTD_BUILD            ON  )
 set ( LZ4_BUILD             ON  )
 set ( DISCORD_BUILD         OFF )
 
-set ( OPENSSL_VER "1_1_1d" )
-set ( SDL2_VER    "2.0.10" )
-set ( ASSIMP_VER  "5.0.0"  )
-set ( BULLET_VER  "2.89"   )
-set ( ZLIB_VER    "1.2.11" )
-set ( OPENAL_VER  "1.19.1" )
-set ( ZSTD_VERSION "1.4.4" )
-set ( LZ4_VERSION "1.9.2"  )
-set ( DISCORD_VERSION "3.4.0" )
+set ( OPENSSL_VER     "1_1_1g" )
+set ( SDL2_VER        "2.0.12" )
+set ( ASSIMP_VER      "5.0.1"  )
+set ( BULLET_VER      "2.89"   )
+set ( ZLIB_VER        "1.2.11" )
+set ( OPENAL_VER      "1.20.1" )
+set ( ZSTD_VERSION    "1.4.4"  )
+set ( LZ4_VERSION     "1.9.2"  )
+set ( DISCORD_VERSION "3.4.0"  )
 
 # Build libraries, only for desktop (x86/amd64)
 
@@ -147,7 +147,7 @@ set ( SPIRVCROSS_BUILD      OFF )
 set ( GLSLANG_BUILD         OFF )
 set ( SHADERC_BUILD         OFF )
 
-set ( FFMPEG_VER  "4.1.2"  )
+set ( FFMPEG_VER  "4.1.5"  )
 
 # Turning builds on/off
 
