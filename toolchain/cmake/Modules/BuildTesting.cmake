@@ -109,9 +109,6 @@ function(COFFEE_TEST)
 
     if(IOS)
         # There is not solution for iOS as of yet
-
-        message ( "Skipping unit test: ${TEST_TITLE}" )
-        message ( "Please run the tests somehow!" )
         return()
     elseif(EMSCRIPTEN)
         add_test (
@@ -146,7 +143,7 @@ function(COFFEE_TEST)
         add_test (
             NAME "${TEST_TITLE}"
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMAND $<TARGET_FILE:${TEST_TITLE}>
+            COMMAND $<TARGET_FILE:${TEST_TITLE}> -vvvvvvvvvvvvvv
             )
     endif()
 

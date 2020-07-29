@@ -25,20 +25,11 @@ ifeq ($(BUILD_MODE), containerized)
 	CMAKE_INSTALL_DIR := /home/coffee/out
 	CMAKE_SOURCE_DIR := /home/coffee/project
 	COFFEE_ROOT_DIR := /home/coffee/library
+	EMSCRIPTEN := /home/coffee/emsdk_portable
 	RUNNER := Makefile.multi
 endif
 
 FORCE:
-
-native-libs:
-	mkdir -p $(BUILD_DIR)/dependencies/native-libs
-	-git clone --recursive --depth 1 https://github.com/hbirchtree/native-library-bundle.git $(BUILD_DIR)/dependencies/native-libs
-	-git -C $(BUILD_DIR)/dependencies/native-libs pull
-
-rpi-sdk:
-	mkdir -p $(BUILD_DIR)/dependencies/raspberry-sysroot
-	-git clone --recursive --depth 1 https://github.com/hbirchtree/raspberry-sysroot.git $(BUILD_DIR)/dependencies/raspberry-sysroot
-	-git -C $(BUILD_DIR)/dependencies/raspberry-sysroot pull
 
 # Android builds, ARMv8-A and ARMv7-A mostly
 # Compiler: Clang
@@ -1285,6 +1276,70 @@ android.x86_64.v21: FORCE
 	-e BUILD_NAME=android.x86_64.v21 \
 	-e CMAKE_TARGET=AndroidPackage
 
+# BeagleBone Black ARM 32-bit build
+# Compiler: GCC 9.x
+beaglebone.black: FORCE
+	make -f $(ROOT_DIR)/$(RUNNER) multi \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_OPENAL=OFF \
+	-DBUILD_OPENSSL=OFF \
+	-DBUILD_SDL2=OFF \
+	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/beaglebone.black \
+	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/linux-beagle-armv7hf_linux.toolchain.cmake \
+	-DGIT_DEP_BUILDVARIANT=beaglebone.black \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'CodeBlocks - Ninja'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	 \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/beaglebone.black:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONFIG=beaglebone \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=beaglebone.black \
+	-e CMAKE_TARGET=install
+
+# BeagleBone Black ARM 32-bit build
+# Compiler: GCC 9.x
+beaglebone.black.shell: FORCE
+	make -f $(ROOT_DIR)/$(RUNNER) shell \
+	-e EXTRA_OPTIONS=" \
+	$(CMAKE_SOURCE_DIR) \
+	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
+	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_GLES=ON \
+	-DBUILD_GLES_20=ON \
+	-DBUILD_OPENAL=OFF \
+	-DBUILD_OPENSSL=OFF \
+	-DBUILD_SDL2=OFF \
+	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
+	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/beaglebone.black \
+	-DCMAKE_TOOLCHAIN_FILE=$(CMAKE_SOURCE_DIR)/toolchain/cmake/Toolchains/linux-beagle-armv7hf_linux.toolchain.cmake \
+	-DGIT_DEP_BUILDVARIANT=beaglebone.black \
+	-DSKIP_GRAPHIC_TESTS=$(HEADLESS) \
+	-G'CodeBlocks - Ninja'" \
+	-e DOCKER_EXTRA_OPTIONS=" \
+	 \
+	-v $(SOURCE_DIR):/home/coffee/project:ro \
+	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
+	-v $(BUILD_DIR)/beaglebone.black:/home/coffee/build:rw \
+	-v $(COFFEE_DIR):/home/coffee/library:ro \
+	--workdir \"$(CMAKE_BUILD_DIR)\"" \
+	-e DOCKER_CONFIG=beaglebone \
+	-e CMAKE_BUILD_DIR=$(CMAKE_BUILD_DIR) \
+	-e OUTPUT_DIR=$(BUILD_DIR) \
+	-e BUILD_NAME=beaglebone.black \
+	-e CMAKE_TARGET=install
+
 # Coverage build using same config as Ubuntu
 # Compiler: GCC 7+
 coverage: FORCE
@@ -1371,8 +1426,7 @@ emscripten.wasm: FORCE
 	-DBUILD_SDL2=ON \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/emscripten.wasm \
-	-DCMAKE_TOOLCHAIN_FILE=/home/coffee/emsdk_portable/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
-	-DEMSCRIPTEN_ROOT_PATH=/home/coffee/emsdk_portable/upstream/emscripten \
+	-DCMAKE_TOOLCHAIN_FILE=$(EMSCRIPTEN)/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
 	-DGENERATE_HTML=ON \
 	-DGENERATE_HTML=ON \
 	-DGIT_DEP_BUILDVARIANT=emscripten.wasm \
@@ -1380,7 +1434,6 @@ emscripten.wasm: FORCE
 	-G'Ninja'" \
 	-e DOCKER_EXTRA_OPTIONS=" \
 	 \
-	-e EMSCRIPTEN=/home/coffee/emsdk_portable/upstream/emscripten \
 	-e CMAKE='emcmake cmake' \
 	-v $(SOURCE_DIR):/home/coffee/project:ro \
 	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
@@ -1413,8 +1466,7 @@ emscripten.wasm.shell: FORCE
 	-DBUILD_SDL2=ON \
 	-DCMAKE_BUILD_TYPE=$(CONFIGURATION) \
 	-DCMAKE_INSTALL_PREFIX=$(CMAKE_INSTALL_DIR)/emscripten.wasm \
-	-DCMAKE_TOOLCHAIN_FILE=/home/coffee/emsdk_portable/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
-	-DEMSCRIPTEN_ROOT_PATH=/home/coffee/emsdk_portable/upstream/emscripten \
+	-DCMAKE_TOOLCHAIN_FILE=$(EMSCRIPTEN)/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
 	-DGENERATE_HTML=ON \
 	-DGENERATE_HTML=ON \
 	-DGIT_DEP_BUILDVARIANT=emscripten.wasm \
@@ -1422,7 +1474,6 @@ emscripten.wasm.shell: FORCE
 	-G'Ninja'" \
 	-e DOCKER_EXTRA_OPTIONS=" \
 	 \
-	-e EMSCRIPTEN=/home/coffee/emsdk_portable/upstream/emscripten \
 	-e CMAKE='emcmake cmake' \
 	-v $(SOURCE_DIR):/home/coffee/project:ro \
 	-v $(BUILD_DIR)/build:/home/coffee/out:rw \
@@ -1672,7 +1723,7 @@ mingw.w64: FORCE
 
 # Raspberry Pi ARM 32-bit build
 # Compiler: GCC 9.x
-raspberry.armhf: FORCE rpi-sdk
+raspberry.armhf: FORCE
 	make -f $(ROOT_DIR)/$(RUNNER) multi \
 	-e EXTRA_OPTIONS=" \
 	$(CMAKE_SOURCE_DIR) \
@@ -1703,7 +1754,7 @@ raspberry.armhf: FORCE rpi-sdk
 
 # Raspberry Pi ARM 32-bit build
 # Compiler: GCC 9.x
-raspberry.armhf.shell: FORCE rpi-sdk
+raspberry.armhf.shell: FORCE
 	make -f $(ROOT_DIR)/$(RUNNER) shell \
 	-e EXTRA_OPTIONS=" \
 	$(CMAKE_SOURCE_DIR) \
@@ -1901,7 +1952,6 @@ ubuntu.amd64: FORCE
 	-e EXTRA_OPTIONS=" \
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
-	-DAPPIMAGE_RUNTIME_BINARY=$(NATIVE_LIBRARY_DIR)/Ubuntu/util/x86_64-linux-gnu/runtime \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
@@ -1934,7 +1984,6 @@ ubuntu.amd64.tools: FORCE
 	-e EXTRA_OPTIONS=" \
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
-	-DAPPIMAGE_RUNTIME_BINARY=$(NATIVE_LIBRARY_DIR)/Ubuntu/util/x86_64-linux-gnu/runtime \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
@@ -1976,7 +2025,6 @@ ubuntu.amd64.gles3: FORCE
 	-e EXTRA_OPTIONS=" \
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
-	-DAPPIMAGE_RUNTIME_BINARY=$(NATIVE_LIBRARY_DIR)/Ubuntu/util/x86_64-linux-gnu/runtime \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_ASSIMP=ON \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
