@@ -53,8 +53,15 @@ jobs:
     - name: Uploading artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: '{{matrix.variant}}'
+        name: ${{matrix.variant}}
         path: '*.tar.bz2'
+    - name: Uploading assets
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        file: '*.tar.bz2'
+        tag: ${{github.ref}}
+        file_glob: 'true'
   Coverage:
     runs-on: ubuntu-18.04
     strategy:
@@ -144,8 +151,15 @@ jobs:
     - name: Uploading artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: '{{matrix.variant}}'
+        name: ${{matrix.variant}}
         path: '*.tar.bz2'
+    - name: Uploading assets
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        file: '*.tar.bz2'
+        tag: ${{github.ref}}
+        file_glob: 'true'
   macOS:
     runs-on: macos-latest
     strategy:
@@ -190,8 +204,15 @@ jobs:
     - name: Uploading artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: '{{matrix.variant}}'
+        name: ${{matrix.variant}}
         path: '*.tar.bz2'
+    - name: Uploading assets
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        file: '*.tar.bz2'
+        tag: ${{github.ref}}
+        file_glob: 'true'
   Windows:
     runs-on: windows-2019
     strategy:

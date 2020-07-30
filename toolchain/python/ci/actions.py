@@ -108,8 +108,18 @@ def github_gen_config(build_info, repo_dir):
                 'name': 'Uploading artifacts',
                 'uses': 'actions/upload-artifact@v2',
                 'with': {
-                    'name': '{{matrix.variant}}',
+                    'name': '${{matrix.variant}}',
                     'path': '*.tar.bz2'
+                }
+            },
+            {
+                'name': 'Uploading assets',
+                'uses': 'svenstaro/upload-release-action@v2',
+                'with': {
+                    'repo_token': '${{secrets.GITHUB_TOKEN}}',
+                    'file': '*.tar.bz2',
+                    'tag': '${{github.ref}}',
+                    'file_glob': 'true'
                 }
             }
             ]
