@@ -114,13 +114,7 @@ def github_gen_config(build_info, repo_dir):
             },
             {
                 'name': 'Uploading assets',
-                'uses': 'svenstaro/upload-release-action@v2',
-                'with': {
-                    'repo_token': '${{secrets.GITHUB_TOKEN}}',
-                    'file': '*.tar.bz2',
-                    'tag': '${{github.ref}}',
-                    'file_glob': 'true'
-                }
+                'run': 'source/cb push-asset *.tar.bz2'
             }
             ]
 

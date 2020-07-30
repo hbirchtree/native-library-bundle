@@ -21,6 +21,10 @@ function all_source_files()
     find "${SRC_BASE_DIR}"/src/coffee "${SRC_BASE_DIR}"/src/include -regex '.*\.\(cpp\|h\)' -type f $@      
 }
 
+function githup_api() {
+    ${TC_DIR}/ci/github_api.py --github-token ${GITHUB_TOKEN} $@
+}
+
 case $1 in
 "quick-build")
     if [ -z "$BUILD_CI" ]; then
@@ -81,6 +85,19 @@ case $1 in
     ;;
     esac
     popd
+;;
+"push-asset")
+    TAG_NAME=$(github_api list tag "$TRAVIS_REPO_SLUG" "^$TRAVIS_COMMIT$" | cut -d'|' -f 2)
+
+    [ -z "$TAG_NAME" ] && exit 1
+
+    RELEASE_NAME=$(github_api list release "$TRAVIS_REPO_SLUG" "^$TRAVIS_COMMIT$" | cut -d'|' -f 1)
+
+    [ -z "$RELEASE_NAME"] && github_api push release "$TRAVIS_REPO_SLUG" "$TAG_NAME" "Release $TAG_NAME" "Automated release"
+
+    for FILE in $(find . -maxdepth 1 -type f -name "$2"); do
+        github_api push asset "$TRAVIS_REPO_SLUG:$TAG_NAME" "$FILE"
+    done
 ;;
 "lint")
     find src/ -regextype egrep -regex '.*\.(h|hpp|c|cpp)' -exec ${0} lint-file {} \;
