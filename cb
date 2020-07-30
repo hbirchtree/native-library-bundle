@@ -30,12 +30,11 @@ case $1 in
     fi
 ;;
 "ci-build")
-    mkdir -p build
-    pushd build
+    pushd /build/build
     export GENERATE_PROGRAMS=${GENERATE_PROGRAMS:-ON}
     export CONFIGURATION=${CONFIGURATION:-Debug}
     export CMAKE_SOURCE_DIR=${BASE_DIR}
-    export CMAKE_INSTALL_DIR=$(realpath .)/install
+    export CMAKE_INSTALL_DIR=/build/install
     cmake -C${BASE_DIR}/.github/cmake/${BUILDVARIANT}.preload.cmake ${BASE_DIR} ${@:2}
     cmake --build . --target ${BUILD_TARGET:-all}
     cmake --build . --target install
@@ -46,24 +45,25 @@ case $1 in
         source ${BASE_DIR}/.github/cmake/select/${BUILDVARIANT}.sh
     fi
     docker run --rm \
-        -v ${BASE_DIR}:/build \
+        -v ${BASE_DIR}:/build/src \
+        -v $(realpath .)/build:/build/build \
+        -v $(realpath .)/install:/build/install \
         -e BUILDVARIANT=${BUILDVARIANT} \
         -e CONFIGURATION=${CONFIGURATION} \
         -e GENERATE_PROGRAMS=${GENERATE_PROGRAMS} \
         -e BUILD_TARGET=${BUILD_TARGET:-all} \
         -u root \
-        ${CONTAINER} /build/cb ci-build ${@:2}
+        ${CONTAINER} /build/src/cb ci-build ${@:2}
 ;;
 "compress-usr-dir")
     OUTPUT=$(realpath .)/${2}_${BUILDVARIANT}.tar.bz2
-    INSTALL_DIR=$(realpath .)/build/install/${BUILDVARIANT}
+    INSTALL_DIR=$(realpath .)/install
 
     echo "Creating $OUTPUT from $INSTALL_DIR"
 
     pwd
     ls $(realpath .)/build
-    ls $(realpath .)/build/install
-    ls $(realpath .)/build/install/${BUILDVARIANT}
+    ls $(realpath .)/install
     ls ${INSTALL_DIR}
     ls -R
 
