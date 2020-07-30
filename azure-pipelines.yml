@@ -35,6 +35,8 @@ jobs:
         variant: android.x86.v19
       android.x86_64.v21:
         variant: android.x86_64.v21
+      beaglebone.black:
+        variant: beaglebone.black
       emscripten.wasm:
         variant: emscripten.wasm
       fedora.amd64:

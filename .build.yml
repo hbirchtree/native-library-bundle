@@ -32,6 +32,8 @@ platforms:
     - v19
     x86_64:
     - v21
+  beaglebone:
+  - .
   emscripten:
   - wasm
   fedora:
