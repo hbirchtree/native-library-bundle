@@ -55,16 +55,17 @@ case $1 in
         ${CONTAINER} /build/cb ci-build ${@:2}
 ;;
 "compress-usr-dir")
-    OUTPUT=${BASE_DIR}/${2}_${BUILDVARIANT}.tar.bz2
-    INSTALL_DIR=${BASE_DIR}/build/install/${BUILDVARIANT}
+    OUTPUT=$(realpath .)/${2}_${BUILDVARIANT}.tar.bz2
+    INSTALL_DIR=$(realpath .)/build/install/${BUILDVARIANT}
 
     echo "Creating $OUTPUT from $INSTALL_DIR"
 
     pwd
-    ls
     ls $(realpath .)/build
     ls $(realpath .)/build/install
     ls $(realpath .)/build/install/${BUILDVARIANT}
+    ls ${INSTALL_DIR}
+    ls -R
 
     pushd ${INSTALL_DIR}
     case $2 in
