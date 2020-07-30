@@ -62,22 +62,19 @@ case $1 in
     echo "Creating $OUTPUT from $INSTALL_DIR"
 
     pwd
-    ls $(realpath .)/build
-    ls $(realpath .)/install
     ls ${INSTALL_DIR}
-    ls -R
 
     pushd ${INSTALL_DIR}
     case $2 in
     "bin")
-        tar zcf ${OUTPUT} \
+        tar vcf ${OUTPUT} \
             --exclude=${INSTALL_DIR}/include \
             --exclude=${INSTALL_DIR}/lib \
             --exclude=${INSTALL_DIR}/share \
             ${INSTALL_DIR}
     ;;
     "libraries")
-        tar zcf ${OUTPUT} \
+        tar vcf ${OUTPUT} \
             --exclude=${INSTALL_DIR}/bin \
             --exclude=${INSTALL_DIR}/packaged \
             ${INSTALL_DIR}
