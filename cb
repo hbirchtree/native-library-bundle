@@ -21,7 +21,7 @@ function all_source_files()
     find "${SRC_BASE_DIR}"/src/coffee "${SRC_BASE_DIR}"/src/include -regex '.*\.\(cpp\|h\)' -type f $@      
 }
 
-function githup_api() {
+function github_api() {
     ${TC_DIR}/ci/github_api.py --github-token ${GITHUB_TOKEN} $@
 }
 
