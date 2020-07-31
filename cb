@@ -22,7 +22,8 @@ function all_source_files()
 }
 
 function github_api() {
-    ${TC_DIR}/ci/github_api.py --github-token ${GITHUB_TOKEN} $@
+    echo $@
+    ${TC_DIR}/ci/github_api.py --api-token ${GITHUB_TOKEN} $@
 }
 
 case $1 in
