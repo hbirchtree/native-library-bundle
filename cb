@@ -23,7 +23,7 @@ function all_source_files()
 
 function github_api() {
     echo github_api $@ >&2
-    ${TC_DIR}/ci/github_api.py --api-token ${GITHUB_TOKEN} $@
+    ${TC_DIR}/ci/github_api.py --api-token ${GITHUB_TOKEN} "$@"
 }
 
 case $1 in
