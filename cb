@@ -94,7 +94,7 @@ case $1 in
 
     RELEASE_NAME=$(github_api list release "$TRAVIS_REPO_SLUG" "^$TRAVIS_COMMIT$" | cut -d'|' -f 1)
 
-    [ -z "$RELEASE_NAME"] && github_api push release "$TRAVIS_REPO_SLUG" "$TAG_NAME" "Release $TAG_NAME" "Automated release"
+    [ -z "$RELEASE_NAME" ] && github_api push release "$TRAVIS_REPO_SLUG" "$TAG_NAME" "Release $TAG_NAME" "Automated release"
 
     for FILE in $(find . -maxdepth 1 -type f -name "$2"); do
         github_api push asset "$TRAVIS_REPO_SLUG:$TAG_NAME" "$FILE"
