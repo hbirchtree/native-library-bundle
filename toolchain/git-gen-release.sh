@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 WDIR="$(dirname "$(realpath "$0")")"
 
 function die()

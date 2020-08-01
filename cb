@@ -57,6 +57,7 @@ case $1 in
     if [ -z "$CONTAINER" ]; then
         source ${BASE_DIR}/.github/cmake/select/${BUILDVARIANT}.sh
     fi
+    pwd
     docker run --rm \
         -v ${BASE_DIR}:/build/src \
         -v $(realpath .)/build:/build/build \
@@ -80,7 +81,7 @@ case $1 in
     ls ${BASE_DIR}
     echo "-- Build dir: $(realpath .)/build"
     ls $(realpath .)/build
-    echo "-- Install dir: $(realpath .)/install"
+    echo "-- Install dir: ${INSTALL_DIR}"
     ls ${INSTALL_DIR}
 
     echo "-- Install dir contents:"
