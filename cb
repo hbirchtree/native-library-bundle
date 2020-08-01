@@ -122,7 +122,7 @@ case $1 in
 
     [ -z "$RELEASE_NAME" ] && github_api push release "$TRAVIS_REPO_SLUG" "$TAG_NAME" "Release $TAG_NAME" "Automated release"
 
-    for FILE in $(find . -maxdepth 1 -type f -name "$2"); do
+    for FILE in $(find . -maxdepth 1 -type f -name '*.'$2); do
         github_api push asset "$TRAVIS_REPO_SLUG:$TAG_NAME" "$FILE"
     done
 ;;

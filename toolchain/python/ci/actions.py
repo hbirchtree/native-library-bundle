@@ -114,7 +114,7 @@ def github_gen_config(build_info, repo_dir):
             },
             {
                 'name': 'Uploading assets',
-                'run': 'source/cb push-asset *.tar.bz2'
+                'run': 'source/cb push-asset tar.bz2'
             }
             ]
 
