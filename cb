@@ -65,8 +65,8 @@ case $1 in
     pwd
     docker run --rm \
         -v ${BASE_DIR}:/build/src \
-        -v $(realpath .)/build:/build/build \
-        -v $(realpath .)/install:/build/install \
+        -v $PWD/build:/build/build \
+        -v $PWD/install:/build/install \
         -e BUILDVARIANT=${BUILDVARIANT} \
         -e CONFIGURATION=${CONFIGURATION} \
         -e GENERATE_PROGRAMS=${GENERATE_PROGRAMS} \
@@ -75,21 +75,21 @@ case $1 in
         ${CONTAINER} /build/src/cb ci-build ${@:2}
 ;;
 "compress-usr-dir")
-    INSTALL_DIR=$(realpath .)/build/install
+    INSTALL_DIR=$PWD/build/install
 
     if [ -f "${BASE_DIR}/deploy-script.sh" ]; then
         echo "-- Using customized deploy script"
         source ${BASE_DIR}/deploy-script.sh
     else
-        OUTPUT=$(realpath .)/${2}_${BUILDVARIANT}.tar.bz2
+        OUTPUT=$PWD/${2}_${BUILDVARIANT}.tar.bz2
         echo "-- Creating $OUTPUT from $INSTALL_DIR"
 
         echo "-- Current directory: $(pwd)"
 
         echo "-- Source dir: ${BASE_DIR}"
         ls ${BASE_DIR}
-        echo "-- Build dir: $(realpath .)/build"
-        ls $(realpath .)/build
+        echo "-- Build dir: $PWD/build"
+        ls $PWD/build
         echo "-- Install dir: ${INSTALL_DIR}"
         ls ${INSTALL_DIR}
 
