@@ -74,7 +74,7 @@ case $1 in
 ;;
 "compress-usr-dir")
     OUTPUT=$(realpath .)/${2}_${BUILDVARIANT}.tar.bz2
-    INSTALL_DIR=$(realpath .)/install
+    INSTALL_DIR=$(realpath .)/build/install
 
     echo "-- Creating $OUTPUT from $INSTALL_DIR"
 
@@ -87,12 +87,12 @@ case $1 in
     echo "-- Install dir: ${INSTALL_DIR}"
     ls ${INSTALL_DIR}
 
-    echo "-- Install dir contents:"
-    ls -R ${INSTALL_DIR}
-    echo "-- Build dir contents:"
-    ls ${INSTALL_DIR}
-    echo "-- Root dir contents:"
-    ls -R $(realpath .)
+    #echo "-- Install dir contents:"
+    #ls -R ${INSTALL_DIR}
+    #echo "-- Build dir contents:"
+    #ls ${INSTALL_DIR}
+    #echo "-- Root dir contents:"
+    #ls -R $(realpath .)
 
     pushd ${INSTALL_DIR}
     case $2 in
@@ -108,6 +108,9 @@ case $1 in
             --exclude=${INSTALL_DIR}/bin \
             --exclude=${INSTALL_DIR}/packaged \
             ${INSTALL_DIR}
+    ;;
+    *)
+        echo "-- Unhandled case $2"
     ;;
     esac
     popd
