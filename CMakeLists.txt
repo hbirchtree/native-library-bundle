@@ -91,6 +91,10 @@ if(WIN32)
     message ( STATUS "git apply options: ${APPLY_OPTS}" )
 endif()
 
+if(APPLE)
+    set ( APPLY_OPTS )
+endif()
+
 #
 # For libraries that are not going to be cross-compiled
 # This applies to texture compressors, shader compilers and preprocessing models

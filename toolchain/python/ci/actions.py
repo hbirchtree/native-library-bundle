@@ -252,7 +252,7 @@ def github_gen_config(build_info, repo_dir):
                         'name': 'Uploading artifacts',
                         'uses': 'actions/upload-artifact@v2',
                         'with': {
-                            'name': '{{matrix.variant}}',
+                            'name': '${{matrix.variant}}',
                             'path': 'build/*.7z'
                         }
                     }
