@@ -73,47 +73,45 @@ case $1 in
         ${CONTAINER} /build/src/cb ci-build ${@:2}
 ;;
 "compress-usr-dir")
-    OUTPUT=$(realpath .)/${2}_${BUILDVARIANT}.tar.bz2
     INSTALL_DIR=$(realpath .)/build/install
 
-    echo "-- Creating $OUTPUT from $INSTALL_DIR"
+    if [ -f "${BASE_DIR}/deploy-script.sh" ]; then
+        echo "-- Using customized deploy script"
+        source ${BASE_DIR}/deploy-script.sh
+    else
+        OUTPUT=$(realpath .)/${2}_${BUILDVARIANT}.tar.bz2
+        echo "-- Creating $OUTPUT from $INSTALL_DIR"
 
-    echo "-- Current directory: $(pwd)"
+        echo "-- Current directory: $(pwd)"
 
-    echo "-- Source dir: ${BASE_DIR}"
-    ls ${BASE_DIR}
-    echo "-- Build dir: $(realpath .)/build"
-    ls $(realpath .)/build
-    echo "-- Install dir: ${INSTALL_DIR}"
-    ls ${INSTALL_DIR}
+        echo "-- Source dir: ${BASE_DIR}"
+        ls ${BASE_DIR}
+        echo "-- Build dir: $(realpath .)/build"
+        ls $(realpath .)/build
+        echo "-- Install dir: ${INSTALL_DIR}"
+        ls ${INSTALL_DIR}
 
-    #echo "-- Install dir contents:"
-    #ls -R ${INSTALL_DIR}
-    #echo "-- Build dir contents:"
-    #ls ${INSTALL_DIR}
-    #echo "-- Root dir contents:"
-    #ls -R $(realpath .)
-
-    pushd ${INSTALL_DIR}
-    case $2 in
-    "bin")
-        tar vcf ${OUTPUT} \
-            --exclude=${INSTALL_DIR}/include \
-            --exclude=${INSTALL_DIR}/lib \
-            --exclude=${INSTALL_DIR}/share \
-            ${INSTALL_DIR}
-    ;;
-    "libraries")
-        tar vcf ${OUTPUT} \
-            --exclude=${INSTALL_DIR}/bin \
-            --exclude=${INSTALL_DIR}/packaged \
-            ${INSTALL_DIR}
-    ;;
-    *)
-        echo "-- Unhandled case $2"
-    ;;
-    esac
-    popd
+        pushd ${INSTALL_DIR}
+        case $2 in
+        "bin")
+            tar cvf ${OUTPUT} \
+                --exclude=${INSTALL_DIR}/include \
+                --exclude=${INSTALL_DIR}/lib \
+                --exclude=${INSTALL_DIR}/share \
+                ${INSTALL_DIR}
+        ;;
+        "libraries")
+            tar cvf ${OUTPUT} \
+                --exclude=${INSTALL_DIR}/bin \
+                --exclude=${INSTALL_DIR}/packaged \
+                ${INSTALL_DIR}
+        ;;
+        *)
+            echo "-- Unhandled case $2"
+        ;;
+        esac
+        popd
+    fi
 ;;
 "push-asset")
     TAG_NAME=$(github_api list tag "$TRAVIS_REPO_SLUG" "^$TRAVIS_COMMIT$" | cut -d'|' -f 2)

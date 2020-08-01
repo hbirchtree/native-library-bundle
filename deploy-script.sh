@@ -1,17 +1,15 @@
 ASSETS=(openal bullet assimp squish glslang shaderc spirvcross sdl2 openssl ffmpeg compressonator zlib lz4 zstd discord-rpc)
 
-INSTALL_BASE_DIR=$BUILD_DIR/$BUILDVARIANT/install
-
 for a in ${ASSETS[@]}; do
-    ASSET="${PWD}/${a}_${BUILDVARIANT}.tar.gz"
+    ASSET="${PWD}/${a}_${BUILDVARIANT}.tar.bz2"
 
-    if [[ ! -d "$INSTALL_BASE_DIR/$a" ]]; then
+    if [[ ! -d "$INSTALL_DIR/$a" ]]; then
         continue
     fi
 
-    pushd $INSTALL_BASE_DIR/$a
-    tar -zcvf "$ASSET" *
-    popd
+    echo "-- Packaging ${a} => ${ASSET}"
 
-    deploy_asset "$(basename ${ASSET})" ${TARGET_SLUG}
+    pushd $INSTALL_DIR/$a
+    tar -cvf "$ASSET" *
+    popd
 done
