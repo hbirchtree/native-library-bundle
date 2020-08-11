@@ -1284,6 +1284,7 @@ beaglebone.black: FORCE
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_OPENAL=OFF \
@@ -1316,6 +1317,7 @@ beaglebone.black.shell: FORCE
 	$(CMAKE_SOURCE_DIR) \
 	-C$(CMAKE_SOURCE_DIR)/toolchain/cmake/Preload/nothing.cmake \
 	-DBUILD_BINARIES=$(GENERATE_PROGRAMS) \
+	-DBUILD_EGL=ON \
 	-DBUILD_GLES=ON \
 	-DBUILD_GLES_20=ON \
 	-DBUILD_OPENAL=OFF \

@@ -97,4 +97,5 @@ gamecube.*:
     - -DBUILD_OPENAL=OFF
     - -DBUILD_OPENSSL=OFF
     - -DBUILD_SDL2=OFF
+    - -DBUILD_EGL=ON
 

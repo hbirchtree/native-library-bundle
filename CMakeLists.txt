@@ -490,6 +490,12 @@ if(OPENSSL_BUILD)
                 )
         endif()
 
+        if(BEAGLE)
+            list ( APPEND EXTRA_OPTS
+                /usr/local/gcc-arm/arm-none-linux-gnueabihf/libc/usr/lib/libc.a
+                )
+        endif()
+
         ExternalProject_Add ( OpenSSL
 
             PREFIX ${CMAKE_BINARY_DIR}/openssl
@@ -514,6 +520,7 @@ if(OPENSSL_BUILD)
                     no-hw
                     no-engine
                     no-async
+                    no-tests
 
                     --prefix=${CMAKE_BINARY_DIR}/install/openssl
                     --openssldir=${CMAKE_BINARY_DIR}/install/openssl/data

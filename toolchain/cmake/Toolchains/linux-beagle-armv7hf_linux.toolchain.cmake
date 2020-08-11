@@ -27,26 +27,41 @@ if(NOT SGX_SYSROOT)
     # Contains EGL, GLESv2 etc.
     set ( SGX_SYSROOT /sysroots/sgx-root )
 endif()
+if(NOT DEB_SYSROOT)
+    # Contains sys libs for Wayland and DRM
+    set ( DEB_SYSROOT /sysroots/${TOOLCHAIN_ARCH} )
+endif()
 
 set ( CMAKE_FIND_ROOT_PATH
     ${CMAKE_SYSROOT}
     ${CMAKE_SYSROOT}/usr
+    ${SGX_SYSROOT}
+    ${DEB_SYSROOT}/usr
+    ${DEB_SYSROOT}
     )
 
 set ( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
-set ( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
-set ( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
+#set ( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
+#set ( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
 
 set ( CMAKE_LIBRARY_ARCHITECTURE "${TOOLCHAIN_ARCH}" CACHE STRING "" )
 
 include_directories (
     ${LIBC_SYSROOT}/usr/include
     ${SGX_SYSROOT}/include
+    ${DEB_SYSROOT}/usr/include
     )
 link_directories (
     ${LIBC_SYSROOT}/lib
     ${LIBC_SYSROOT}/usr/lib
     ${SGX_SYSROOT}/lib
+    )
+
+set ( CMAKE_LIBRARY_PATH
+    ${LIBC_SYSROOT}/lib
+    ${LIBC_SYSROOT}/usr/lib
+    ${SGX_SYSROOT}/lib
+    ${DEB_SYSROOT}/usr/lib/${TOOLCHAIN_ARCH}
     )
 
 add_definitions(-D__BEAGLEBONE__ -D__BEAGLEBONEBLACK__)
