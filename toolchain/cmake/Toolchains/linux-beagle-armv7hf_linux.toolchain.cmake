@@ -16,7 +16,7 @@ set ( SHARED_FLAGS "-mtune=cortex-a8 -march=armv7-a+simd+vfpv3 -mfloat-abi=hard"
 set ( CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} ${SHARED_FLAGS}" CACHE STRING "" )
 set ( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${SHARED_FLAGS}" CACHE STRING "" )
 
-set ( SHARED_LINK_FLAGS "-static-libgcc -static-libstdc++" )
+set ( SHARED_LINK_FLAGS "-static-libgcc -static-libstdc++ /usr/local/gcc-arm/${TOOLCHAIN_ARCH}/libc/usr/lib/libc.a" )
 
 set ( CMAKE_EXE_LINKER_FLAGS "${CMAKE_CXX_FLAGS} ${SHARED_FLAGS} ${SHARED_LINK_FLAGS}" CACHE STRING "" )
 set ( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_CXX_FLAGS} ${SHARED_FLAGS} ${SHARED_LINK_FLAGS}" CACHE STRING "" )
