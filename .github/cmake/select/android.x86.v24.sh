@@ -1,2 +1,1 @@
-echo "::set-env name=CONTAINER::hbirch/coffeecutie:android"
-CONTAINER=hbirch/coffeecutie:android
+export CONTAINER=hbirchtree/android:r21
