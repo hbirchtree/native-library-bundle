@@ -1,1 +1,1 @@
-export CONTAINER=hbirchtree/android:r21
+export CONTAINER=hbirch/android:r21
