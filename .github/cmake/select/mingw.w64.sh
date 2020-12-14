@@ -1,1 +1,1 @@
-export CONTAINER=hbirchtree/coffeecutie:mingw64
+export CONTAINER=hbirch/coffeecutie:mingw64

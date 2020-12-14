@@ -1,1 +1,1 @@
-export CONTAINER=hbirchtree/coffeecutie:hbirch/devkit:ppc
+export CONTAINER=hbirch/coffeecutie:hbirch/devkit:ppc

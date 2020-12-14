@@ -74,7 +74,7 @@
         - -DIOS_PLATFORM=SIMULATOR
 
 ^(?!apple|osx|ios|win|uwp).*$:
-  =container-image: hbirchtree/coffeecutie:$(container)
+  =container-image: hbirch/coffeecutie:$(container)
 
 # For Ubuntu, Fedora, docs and coverage, specify generic preload
 (ubuntu|docs|coverage|testing.linux|fedora).*:

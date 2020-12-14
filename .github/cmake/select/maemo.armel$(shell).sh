@@ -1,1 +1,1 @@
-export CONTAINER=hbirchtree/coffeecutie:hbirch/maemo-builder:v3
+export CONTAINER=hbirch/coffeecutie:hbirch/maemo-builder:v3

@@ -1,1 +1,1 @@
-export CONTAINER=hbirchtree/coffeecutie:ubuntu
+export CONTAINER=hbirch/coffeecutie:ubuntu
