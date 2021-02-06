@@ -128,9 +128,9 @@ def github_gen_config(build_info, repo_dir):
             'name': 'CMake Build',
             'on': {
                 'push': {
-                    'branches': ['master', 'testing', 'feature**']
-                },
-                'tags': '*'
+                    'branches': ['master', 'testing', 'feature**'],
+                    'tags': '*'
+                }
             },
             'jobs': {
                 'Release': {
