@@ -274,9 +274,7 @@ def github_gen_config(build_info, repo_dir):
                         'name': 'Upload assets',
                         'if': release_condition,
                         'shell': 'powershell',
-                        'run': [
-                            'gh release upload -R ${{ github.repository }} --clobber "${{ github.ref }}".substring(10) $env:BUILD_DIR/*.7z'
-                        ]
+                        'run': 'gh release upload -R ${{ github.repository }} --clobber "${{ github.ref }}".substring(10) $env:BUILD_DIR/*.7z'
                     }
                     ]
                 }

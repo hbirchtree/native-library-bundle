@@ -270,6 +270,5 @@ jobs:
     - name: Upload assets
       if: startsWith(github.ref, "refs/tags/")
       shell: powershell
-      run:
-      - gh release upload -R ${{ github.repository }} --clobber "${{ github.ref }}".substring(10)
-        $env:BUILD_DIR/*.7z
+      run: gh release upload -R ${{ github.repository }} --clobber "${{ github.ref
+        }}".substring(10) $env:BUILD_DIR/*.7z
