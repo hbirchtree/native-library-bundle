@@ -91,7 +91,7 @@ def github_gen_config(build_info, repo_dir):
     windows_strategy = dict(windows_strategy)
     android_strategy = dict(android_strategy)
 
-    release_condition = 'startsWith(github.ref, "refs/tags/")'
+    release_condition = "startsWith(github.ref, 'refs/tags/')"
 
     checkout_step = {
             'uses': 'actions/checkout@v2',
