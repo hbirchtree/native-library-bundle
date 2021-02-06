@@ -129,8 +129,9 @@ def github_gen_config(build_info, repo_dir):
             'on': {
                 'push': {
                     'branches': ['master', 'testing', 'feature**']
-                    }
                 },
+                'tags': '*'
+            },
             'jobs': {
                 'Release': {
                     'runs-on': 'ubuntu-latest',

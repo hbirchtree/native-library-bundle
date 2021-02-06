@@ -5,6 +5,7 @@ name: CMake Build
     - master
     - testing
     - feature**
+  tags: '*'
 jobs:
   Release:
     runs-on: ubuntu-latest
