@@ -150,7 +150,7 @@ def github_gen_config(build_info, repo_dir):
                 },
                 'Linux': {
                     'runs-on': 'ubuntu-latest',
-                    'needs': 'ReleaseCreate',
+                    'needs': 'Release',
                     'strategy': {
                         'fail-fast': False,
                         'matrix': linux_strategy
@@ -190,7 +190,7 @@ def github_gen_config(build_info, repo_dir):
                 },
                 'Android': {
                     'runs-on': 'ubuntu-18.04',
-                    'needs': 'ReleaseCreate',
+                    'needs': 'Release',
                     'strategy': {
                         'fail-fast': False,
                         'matrix': android_strategy
@@ -206,7 +206,7 @@ def github_gen_config(build_info, repo_dir):
                 },
                 'macOS': {
                     'runs-on': 'macos-latest',
-                    'needs': 'ReleaseCreate',
+                    'needs': 'Release',
                     'strategy': {
                         'fail-fast': False,
                         'matrix': macos_strategy
@@ -229,7 +229,7 @@ def github_gen_config(build_info, repo_dir):
                 },
                 'Windows': {
                     'runs-on': 'windows-2019',
-                    'needs': 'ReleaseCreate',
+                    'needs': 'Release',
                     'strategy': {
                         'fail-fast': False,
                         'matrix': windows_strategy

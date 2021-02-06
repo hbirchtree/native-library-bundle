@@ -21,7 +21,7 @@ jobs:
         ${{ github.sha }}
   Linux:
     runs-on: ubuntu-latest
-    needs: ReleaseCreate
+    needs: Release
     strategy:
       fail-fast: false
       matrix:
@@ -108,7 +108,7 @@ jobs:
       uses: codecov/codecov-action@v1
   Android:
     runs-on: ubuntu-18.04
-    needs: ReleaseCreate
+    needs: Release
     strategy:
       fail-fast: false
       matrix:
@@ -161,7 +161,7 @@ jobs:
       run: source/cb push-asset tar.bz2
   macOS:
     runs-on: macos-latest
-    needs: ReleaseCreate
+    needs: Release
     strategy:
       fail-fast: false
       matrix:
@@ -211,7 +211,7 @@ jobs:
       run: source/cb push-asset tar.bz2
   Windows:
     runs-on: windows-2019
-    needs: ReleaseCreate
+    needs: Release
     strategy:
       fail-fast: false
       matrix:
